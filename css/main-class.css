@@ -1,0 +1,27 @@
+.nopadding-top
+{
+	padding-top: 0;
+}
+
+.title-container
+{
+	background-image: url("../image/title-top569x22.png");
+	background-repeat: no-repeat;
+	background-position: top center;
+	text-align: center;
+}
+
+.title-text
+{
+	margin: 10px;
+	padding-top: 15px;
+    border-bottom: #d6d6d6 1px solid;
+    font-size: 40px;
+    color: #a70101;
+    font-style: italic;
+    text-shadow: #cc7b7b 0px 0px 3px;
+}
+
+
+
+
