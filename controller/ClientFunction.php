@@ -18,7 +18,7 @@
 			
 			if ($this->_dataMapper->isClientExist($client))
 			{
-				return Utilities::getResponseResult(false, 'Membership Number ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] are already exist, please check the infotmation.');
+				return Utilities::getResponseResult(false, 'Membership Number ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.');
 			}
 			else
 			{

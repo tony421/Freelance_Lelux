@@ -149,7 +149,7 @@ function initPage()
 function addClient()
 {
 	var clientInfo = getClientInfo();
-	main_request_ajax('client-add-boundary.php', 'ADD_CLIENT', clientInfo, onRequestDone);
+	main_request_ajax('client-boundary.php', 'ADD_CLIENT', clientInfo, onRequestDone);
 }
 
 function onRequestDone(response)
