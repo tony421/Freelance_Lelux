@@ -1,11 +1,16 @@
 <?php
-	date_default_timezone_set('Australia/Adelaide');
+	date_default_timezone_set('Australia/Melbourne');
 
 	class Utilities
 	{
 		public static function getUniqueID()
 		{
 			return uniqid();			
+		}
+		
+		public static function getResponseMassage($success, $msg)
+		{
+			return array('success' => $success, 'msg' => $msg);
 		}
 		
 		public static function getDateTimeNow()

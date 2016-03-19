@@ -131,8 +131,10 @@ function initPage()
 	$txtEmerConNo = $('#txtEmerConNo');
 	
 	$btnAddClient.click(function(){
+		addClient();
+		/*
 		var x = getClientInfo();
-		//alert(x.client_gender + ' | ' + x.client_membership_no);
+		alert(x.client_gender + ' | ' + x.client_membership_no);
 		
 		var y = '';
 		var find = getClientConditions();
@@ -140,7 +142,22 @@ function initPage()
 			y += '[id: ' + find[i].id + ', checked: ' + find[i].checked + ', remark: ' + find[i].remark + '] \n ';	
 		}
 		alert(y);
+		*/
 	}); // btnAddClient.click
+}
+
+function addClient()
+{
+	var clientInfo = getClientInfo();
+	main_request_ajax('client-add-boundary.php', 'ADD_CLIENT', clientInfo, onRequestDone);
+}
+
+function onRequestDone(result)
+{
+	if (result.success)
+		main_info_message(result.msg);
+	else
+		main_alert_message(result.msg);
 }
 
 function getClientInfo()

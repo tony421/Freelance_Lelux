@@ -47,6 +47,6 @@ cbSoreBack
 txtSoreBack
 txtOtherCon
 txtEmerConName
-txtEmerConID
+txtEmerConNo
 btnAddClient
 

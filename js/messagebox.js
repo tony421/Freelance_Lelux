@@ -69,7 +69,7 @@
 
     var messageboxIconPatternID = 'messagebox-icon-';
     var messageboxButtonPatternID = 'messagebox-button-';
-    var messageboxIconPatternImage = '../images/messagebox_';
+    var messageboxIconPatternImage = '../image/messagebox_';
 
     var messageboxPanel;
     var messageboxPanelID = 'messagebox-panel';

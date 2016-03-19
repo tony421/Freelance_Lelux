@@ -185,7 +185,7 @@
 			return $this->_otherConditions;
 		}
 		
-		public function setEmergencyContanctName($emergencyContactName)
+		public function setEmergencyContactName($emergencyContactName)
 		{
 			$this->_emergencyContactName = $emergencyContactName;
 		}
@@ -200,7 +200,7 @@
 			$this->_emergencyContactNo = $emergencyContactNo;
 		}
 		
-		public function getEmergenctContactNo()
+		public function getEmergencyContactNo()
 		{
 			return $this->_emergencyContactNo;
 		}
