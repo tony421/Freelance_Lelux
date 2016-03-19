@@ -9,7 +9,7 @@
 	    <title>Client - Search client</title>
 	    
 	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../script/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
 	    
 	    <!-- Bootstrap -->
 	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
@@ -17,6 +17,19 @@
 	    
 	    <link rel="stylesheet" href="../css/main-id.css">
 	    <link rel="stylesheet" href="../css/main-class.css">
+	    <link rel="stylesheet" href="../css/messagebox.css">
+	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
+	    
+	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="../js/messagebox.js"></script>
+	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+	    <script type="text/javascript" src="client-search.js"></script>
+	    
+	    <script type="text/javascript">
+	    	$(document).ready(function(){
+	    		initPage();
+		    });
+	    </script>
 	</head>
 	<body>
 		<div id="header">
@@ -30,6 +43,7 @@
 		<div id="content">
 			<div class="title-container">
 				<div class="title-text">~:: Search Client ::~</div>
+				<button type="button" id="btnSelect">select row</button>
 			</div>
 			<div class="container">
 				<form class="form-horizontal">
@@ -37,23 +51,32 @@
 						<label class="col-sm-3 control-label">Search By</label>
 						<div class="col-sm-2">
 							<label class="radio-inline">
-								<input type="radio" name="gender" value="1"> Membership Number
+								<input type="radio" id="radSearchMem" name="gender" value="1" checked="checked"> Membership Number
 							</label>
 						</div>
 						<div class="col-sm-2">
 							<label class="radio-inline">
-								<input type="radio" name="gender" value="2"> Client Name
+								<input type="radio" id="radSearchName" name="gender" value="2"> Client Name
 							</label>
 						</div>
 						<div class="col-sm-3">
-							<input type="text" class="form-control">
+							<input type="text" id="txtText" class="form-control">
 						</div>
 						<div class="col-sm-2">
-							<button type="button" class="btn btn-primary">Search</button>
+							<button type="button" id="btnSearchClient" class="btn btn-primary">Search</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12">
+							<table id="tableClient" class="display" cellspacing="0" width="100%">
+				            </table>
 						</div>
 					</div>
 				</form> <!-- /form-horizontal -->
 			</div> <!-- /container -->
 		</div> <!-- /content -->
+		
+		<div id="footer">
+		</div> <!-- footer -->
 	</body>
 </html>

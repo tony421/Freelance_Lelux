@@ -131,7 +131,7 @@ function initPage()
 	$txtEmerConNo = $('#txtEmerConNo');
 	
 	$btnAddClient.click(function(){
-		addClient();
+		main_confirm_message('Do you want to add a client?', addClient);
 		/*
 		var x = getClientInfo();
 		alert(x.client_gender + ' | ' + x.client_membership_no);
@@ -152,12 +152,12 @@ function addClient()
 	main_request_ajax('client-add-boundary.php', 'ADD_CLIENT', clientInfo, onRequestDone);
 }
 
-function onRequestDone(result)
+function onRequestDone(response)
 {
-	if (result.success)
-		main_info_message(result.msg);
+	if (response.success)
+		main_info_message(response.msg);
 	else
-		main_alert_message(result.msg);
+		main_alert_message(response.msg);
 }
 
 function getClientInfo()

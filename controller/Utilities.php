@@ -13,6 +13,11 @@
 			return array('success' => $success, 'msg' => $msg);
 		}
 		
+		public static function getResponseResult($success, $msg, $result = [])
+		{
+			return array('success' => $success, 'msg' => $msg, 'result' => $result);
+		}
+		
 		public static function getDateTimeNow()
 		{
 			return date('d-m-Y H:i:s');

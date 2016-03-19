@@ -69,6 +69,39 @@ values (
 				throw $e;
 			}
 		} // insertClient
+		
+		public function searchClient($search)
+		{
+			try {
+				$sql = "";
+				$sql_format = "
+select health_fund.health_fund_name, client.client_membership_no, client_patient_id
+	, concat(client_first_name, ' ', client_last_name) as client_name, client.client_id
+from client
+join health_fund on client.health_fund_id = health_fund.health_fund_id";
+				
+				if ($search['search_membership'] == "true") {
+					$sql_format .= "
+where client_membership_no like '%%%s%%'";
+					
+					$sql = sprintf($sql_format, $search['search_text']);
+				}
+				else {
+					$sql_format .= "
+where client_first_name like '%%%s%%'
+	or client_last_name like '%%%s%%'
+	or concat(client_first_name, ' ', client_last_name) like '%%%s%%'";
+					
+					$sql = sprintf($sql_format, $search['search_text'], $search['search_text'], $search['search_text']);
+				}
+				
+				//return $sql;
+				return $this->_dataAccess->select($sql);
+			}
+			catch(Exception $e) {
+				throw $e;
+			}
+		}
 	}
 ?>
 

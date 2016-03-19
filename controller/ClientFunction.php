@@ -18,7 +18,7 @@
 			
 			if ($this->_dataMapper->isClientExist($client))
 			{
-				return Utilities::getResponseMassage(false, 'Membership Number ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] are already exist, please check the infotmation.');
+				return Utilities::getResponseResult(false, 'Membership Number ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] are already exist, please check the infotmation.');
 			}
 			else
 			{
@@ -26,13 +26,29 @@
 				$affectedRow = $this->_dataMapper->insertClient($client);
 					
 				if ($affectedRow > 0)
-						return Utilities::getResponseMassage(true, 'New client has been inserted successfully.');
+						return Utilities::getResponseResult(true, 'New client has been inserted successfully.');
 					else
-						return Utilities::getResponseMassage(false, 'Inserting new client has failed!');
+						return Utilities::getResponseResult(false, 'Inserting new client has failed!');
 			}
 			
 			//return print_r($client->getConditions());
 			//return 'Example Return';
+		}
+		
+		public function searchClient($search)
+		{
+			$result = $this->_dataMapper->searchClient($search);
+			$countResult = count($result);
+			
+			if ($countResult > 0)
+			{
+				$msg = ($countResult > 1) ? 'The '.$countResult.' clients are found' : 'The only 1 client is found';
+				return Utilities::getResponseResult(true, $msg, $result);
+			}
+			else 
+			{
+				return Utilities::getResponseResult(false, 'The search has not found!');
+			}
 		}
 		
 		private function generateClientModel($clientInfo)
