@@ -5,6 +5,9 @@
 	class Client
 	{
 		private $_id;
+		private $_membershipNo;
+		private $_patientID;
+		private $_healthFundID;
 		private $_firstName;
 		private $_lastName;
 		private $_gender;
@@ -14,13 +17,10 @@
 		private $_contactNo;
 		private $_birthday;
 		private $_occupation;
-		private $_activities;
+		private $_sports;
 		private $_otherConditions;
 		private $_emergencyContactName;
 		private $_emergencyContactNo;
-		private $_membershipNo;
-		private $_patientID;
-		private $_healthFundID;
 		private $_findings; // array of ClientFinding
 		private $_conditions; // array of ClientCondition
 		private $_createDateTime;
@@ -43,6 +43,36 @@
 		public function getID()
 		{
 			return $this->_id;
+		}
+		
+		public function setMembershipNo($membershipNo)
+		{
+			$this->_membershipNo = $membershipNo;
+		}
+		
+		public function getMembershipNo()
+		{
+			return $this->_membershipNo;
+		}
+		
+		public function setPatientID($patientID)
+		{
+			$this->_patientID = $patientID;
+		}
+		
+		public function getPatientID()
+		{
+			return $this->_patientID;
+		}
+		
+		public function setHealthFundID($healthFundID)
+		{
+			$this->_healthFundID = $healthFundID;
+		}
+		
+		public function getHealthFundID()
+		{
+			return $this->_healthFundID;
 		}
 		
 		public function setFirstName($firstName)
@@ -135,14 +165,14 @@
 			return $this->_occupation;
 		}
 		
-		public function setActivities($activities)
+		public function setSports($sports)
 		{
-			$this->_activities = $activities;
+			$this->_sports = $sports;
 		}
 		
-		public function getActivities()
+		public function getSports()
 		{
-			return $this->_activities;
+			return $this->_sports;
 		}
 		
 		public function setOtherConditions($otherConditions)
@@ -175,37 +205,7 @@
 			return $this->_emergencyContactNo;
 		}
 		
-		public function setMembershipNo($membershipNo)
-		{
-			$this->_membershipNo = $membershipNo;
-		}
-		
-		public function getMembershipNo()
-		{
-			return $this->_membershipNo;
-		}
-		
-		public function setPatientID($patientID)
-		{
-			$this->_patientID = $patientID;
-		}
-		
-		public function getPatientID()
-		{
-			return $this->_patientID;
-		}
-		
-		public function setHealthFundID($healthFundID)
-		{
-			$this->_healthFundID = $healthFundID;
-		}
-		
-		public function getHealthFundID()
-		{
-			return $this->_healthFundID;
-		}
-		
-		public function setFinding($findings)
+		public function setFindings($findings)
 		{
 			$this->_findings = $findings;
 		}

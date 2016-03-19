@@ -6,10 +6,10 @@
 		private $_remark;
 		private $_checked;
 		
-		public function ClientFinding($clientID, $_findingTypeID)
+		public function ClientFinding($clientID, $findingTypeID)
 		{
 			$this->setClientID($clientID);
-			$this->setFindingTypeID($_findingTypeID);
+			$this->setFindingTypeID($findingTypeID);
 		}
 		
 		public function setClientID($clientID)
