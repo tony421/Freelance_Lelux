@@ -63,14 +63,67 @@ values (
 						, $client->getEmergencyContactName(), $client->getEmergencyContactNo()
 						, $client->getCreateUser(), $client->getCreateDateTime());
 				
-				//return $sql;
 				return $this->_dataAccess->insert($sql);
 			} catch (Exception $e) {
 				throw $e;
 			}
 		} // insertClient
 		
-		public function searchClient($search)
+		public function insertFindings($client)
+		{
+			try {
+				$sql_format = "
+insert into client_finding(finding_type_id, client_id, client_finding_remark, client_finding_checked)
+values %s";
+				
+				$findings = $client->getFindings();
+				$findingValues = [];
+				
+				foreach ($findings as $item) {
+					array_push($findingValues, sprintf("(%d, '%s', '%s', %s)"
+							, $item->getFindingTypeID()
+							, $item->getClientID()
+							, $item->getRemark()
+							, $item->getChecked()));
+				}
+				
+				$sql = sprintf($sql_format, join(",", $findingValues));
+				
+				//return $sql;
+				return $this->_dataAccess->insert($sql);
+			} catch (Exception $e) {
+				throw $e;
+			}
+		} // insertFindings
+		
+		public function insertConditions($client)
+		{
+			try {
+				$sql_format = "
+insert into client_condition(condition_type_id, client_id, client_condition_remark, client_condition_checked)
+values %s";
+				
+				$conditions = $client->getConditions();
+				$conditionValues = [];
+				
+				foreach ($conditions as $item) {
+					array_push($conditionValues, sprintf("(%d, '%s', '%s', %s)"
+							, $item->getConditionTypeID()
+							, $item->getClientID()
+							, $item->getRemark()
+							, $item->getChecked()));
+				}
+				
+				$sql = sprintf($sql_format, join(",", $conditionValues));
+				
+				//return $sql;
+				return $this->_dataAccess->insert($sql);
+			} catch (Exception $e) {
+				throw $e;
+			}
+		} // insertCondition
+		
+		public function searchClients($search)
 		{
 			try {
 				$sql = "";
@@ -101,7 +154,40 @@ where client_first_name like '%%%s%%'
 			catch(Exception $e) {
 				throw $e;
 			}
-		}
+		} // searchClient
+		
+		public function getClientInfo($clientID)
+		{
+			try {
+				$sql_format = "select * from client where clinet_id = '%s'";
+				$sql = sprintf($sql_format, $clientID);
+				
+				return $this->_dataAccess->select($sql);
+			}
+			catch(Exception $e) {
+				throw $e;
+			}
+		} // getClientInfo
+		
+		public function getFindingsInfo($clientID)
+		{
+			try {
+				
+			}
+			catch(Exception $e) {
+				throw $e;
+			}
+		} // getFindingsInfo
+		
+		public function getConditionsInfo($clientID)
+		{
+			try {
+				$sql_format = "";
+			}
+			catch(Exception $e) {
+				throw $e;
+			}
+		} // getConditionsInfo
 	}
 ?>
 

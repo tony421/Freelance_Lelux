@@ -154,6 +154,7 @@ function addClient()
 
 function onRequestDone(response)
 {
+	//alert(response);	
 	if (response.success)
 		main_info_message(response.msg);
 	else
@@ -211,7 +212,8 @@ function getClientConditions()
 		conditions.push({
 			condition_type_id: conditionElements[i].id,
 			client_condition_checked: $('#cb' + conditionElements[i].suffix).is(':checked'),
-			client_condition_remark: ($('#txt' + conditionElements[i].suffix).length) ? $('#txt' + conditionElements[i].suffix).val() : ''
+			client_condition_remark: $('#txt' + conditionElements[i].suffix).val(),
+			//client_condition_remark: ($('#txt' + conditionElements[i].suffix).length) ? $('#txt' + conditionElements[i].suffix).val() : ''
 		});
 	}
 	

@@ -44,7 +44,7 @@
 		
 		public function setChecked($checked)
 		{
-			$this->_ = $checked;
+			$this->_checked = $checked;
 		}
 		
 		public function getChecked()

@@ -16,28 +16,40 @@
 		{
 			$client = $this->generateClientModel($clientInfo);
 			
+			// test
+			//return print_r($client->getFindings());
+			
 			if ($this->_dataMapper->isClientExist($client))
 			{
 				return Utilities::getResponseResult(false, 'Membership Number ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.');
 			}
 			else
 			{
-				//return $this->_dataMapper->insertClient($client);
+				// test
+				//return $this->_dataMapper->insertFindings($client);
+				//return $this->_dataMapper->insertCondition($client);
+				
 				$affectedRow = $this->_dataMapper->insertClient($client);
-					
+				$this->_dataMapper->insertFindings($client);
+				$this->_dataMapper->insertConditions($client);
+				
+				return Utilities::getResponseResult(true, 'New client has been inserted successfully.');
+				
+				/*
 				if ($affectedRow > 0)
 						return Utilities::getResponseResult(true, 'New client has been inserted successfully.');
 					else
 						return Utilities::getResponseResult(false, 'Inserting new client has failed!');
+				*/
 			}
 			
 			//return print_r($client->getConditions());
 			//return 'Example Return';
-		}
+		} // addClient
 		
-		public function searchClient($search)
+		public function searchClients($search)
 		{
-			$result = $this->_dataMapper->searchClient($search);
+			$result = $this->_dataMapper->searchClients($search);
 			$countResult = count($result);
 			
 			if ($countResult > 0)
@@ -49,13 +61,39 @@
 			{
 				return Utilities::getResponseResult(false, 'The search has not found!');
 			}
-		}
+		} // searchClient
 		
-		private function generateClientModel($clientInfo)
+		public function getClientInfo($clientID)
 		{
-			$client = new Client(Utilities::getUniqueID());
+			$result = $this->_dataMapper->getClientInfo($clientID);
+			$client = $this->generateClientModel($result, true);
+			
+			return $client;
+		} // getClientInfo
+		
+		private function generateClientModel($clientInfo, $clone = false)
+		{
+			$client;
+			
+			if ($clone)
+			{
+				$client = new Client($clientInfo['client_id']);
+				$client->setCreateUser($clientInfo['client_create_user']);
+				$client->setCreateDateTime($clientInfo['client_create_datetime']);
+				$client->setCreateUser($clientInfo['client_update_user']);
+				$client->setCreateDateTime($clientInfo['client_update_datetime']);
+			}
+			else
+			{
+				$client = new Client(Utilities::getUniqueID());
+				$client->setFindings($this->generateClientFindingModels($client->getID(), $clientInfo['client_findings']));
+				$client->setConditions($this->generateClientConditionModels($client->getID(), $clientInfo['client_conditions']));
+				$client->setCreateUser('default');
+				$client->setCreateDateTime(Utilities::getDateTimeNowForDB());
+			}
+			
 			$client->setMembershipNo($clientInfo['client_membership_no']);
-			$client->setPatientID($clientInfo['client_patient_id']);
+			$client->setPatientID(empty($clientInfo['client_patient_id']) ? 0 : $clientInfo['client_patient_id']);
 			$client->setHealthFundID($clientInfo['health_fund_id']);
 			$client->setFirstName($clientInfo['client_first_name']);
 			$client->setLastName($clientInfo['client_last_name']);
@@ -70,13 +108,9 @@
 			$client->setOtherConditions($clientInfo['client_other_conditions']);
 			$client->setEmergencyContactName($clientInfo['client_emergency_contact_name']);
 			$client->setEmergencyContactNo($clientInfo['client_emergency_contact_no']);
-			$client->setFindings($this->generateClientFindingModels($client->getID(), $clientInfo['client_findings']));
-			$client->setConditions($this->generateClientConditionModels($client->getID(), $clientInfo['client_conditions']));
-			$client->setCreateUser('default');
-			$client->setCreateDateTime(Utilities::getDateTimeNowForDB());
 			
 			return $client;
-		}
+		} // generateClientModel
 		
 		private function generateClientFindingModels($clientID, $clientFindingsInfo)
 		{
@@ -85,14 +119,19 @@
 			
 			foreach ($clientFindingsInfo as $finding) {
 				$clientFinding = new ClientFinding($clientID, $finding['finding_type_id']);
+				
+				//$checked = ($finding['client_finding_checked'] === 'true') ? true : false;
+				//$clientFinding->setChecked($checked);
 				$clientFinding->setChecked($finding['client_finding_checked']);
-				$clientFinding->setRemark($finding['client_finding_remark']);
+				
+				if ($clientFinding->getChecked() === 'true')
+					$clientFinding->setRemark($finding['client_finding_remark']);
 				
 				array_push($clientFindings, $clientFinding);
 			}
 			
 			return $clientFindings;
-		}
+		} // generateClientFindingModels
 		
 		private function generateClientConditionModels($clientID, $clientConditionsInfo)
 		{
@@ -101,14 +140,19 @@
 				
 			foreach ($clientConditionsInfo as $condition) {
 				$clientCondition = new ClientCondition($clientID, $condition['condition_type_id']);
+				
+				//$checked = ($condition['client_condition_checked'] === 'true') ? true : false;
+				//$clientCondition->setChecked($checked);
 				$clientCondition->setChecked($condition['client_condition_checked']);
-				$clientCondition->setRemark($condition['client_condition_remark']);
+				
+				if ($clientCondition->getChecked() === 'true')
+					$clientCondition->setRemark($condition['client_condition_remark']);
 		
 				array_push($clientConditions, $clientCondition);
 			}
 				
 			return $clientConditions;
-		}
+		} // generateClientConditionModels
 	}
 ?>
 

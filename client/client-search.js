@@ -120,7 +120,8 @@ function setClientRowSelection()
     });
 	
 	$tableClientBody.on('dblclick', 'tr', function () {
-		main_alert_message(dtTableClient.row().id());
+		main_redirect('../client/client-report.php?id=' + dtTableClient.row('.selected').id());
+		//main_alert_message(dtTableClient.row('.selected').id());
 	});
 }
 
