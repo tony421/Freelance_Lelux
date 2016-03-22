@@ -36,10 +36,6 @@ function initPage()
 	$btnSearchClient.click(function(){
 		searchClient();
 	});
-	
-	$('#btnSelect').on('click', function(){
-		main_alert_message(dtTableClient.row('.selected').id());
-	});
 }
 
 function searchClient()

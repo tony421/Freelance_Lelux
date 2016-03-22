@@ -22,6 +22,7 @@
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/main.js"></script>
 	    <script type="text/javascript" src="client-report.js"></script>
+	    <script type="text/javascript" src="client-variable.js"></script>
 	    
 	    <script type="text/javascript">
 	    	$(document).ready(function(){
@@ -35,7 +36,31 @@
 		</div><!-- header -->
 		
 		<div id="menu">
-			
+			<nav class="navbar navbar-default">
+  				<div class="container">
+  					<!-- Brand and toggle get grouped for better mobile display -->
+  					<div class="navbar-header">
+      					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					        <span class="sr-only">Toggle navigation</span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+      					</button>
+						<a class="navbar-brand" href="#">Lulex</a>
+    				</div>
+    				
+    				<div class="collapse navbar-collapse">
+      					<ul class="nav navbar-nav">
+      						<li>
+      							<a href="../client/client-add.php">Add Client</a>
+      						</li>
+        					<li>
+        						<a href="../client/client-search.php">Search Client</a>
+        					</li>
+      					</ul>
+      				</div> <!-- /.navbar-collapse -->
+  				</div> <!-- /.container-fluid -->
+  			</nav> <!-- /nav.navbar -->
 		</div> <!-- /menu -->
 		
 		<div id="content">
@@ -47,7 +72,7 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Health Fund</label>
 						<div class="col-sm-4">
-							<select id="ddlHealfund" class="form-control" disabled>
+							<select id="ddlHealthFund" class="form-control" disabled>
 								<option value="1">ACA Health</option>
 								<option value="2">AHM Health Insurance</option>
 								<option value="3">Australian Unity Health Ltd</option>

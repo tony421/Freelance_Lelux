@@ -1,4 +1,27 @@
-var $btnAddClient;
+var ID = 'client_id';
+var HEALTH_FUND_ID = 'health_fund_id';
+var MEMBERSHIP_NO = 'client_membership_no';
+var PATIENT_ID = 'client_patient_id';
+var FIRST_NAME = 'client_first_name';
+var LAST_NAME = 'client_last_name';
+var GENDER = 'client_gender';
+var ADDRESS = 'client_address';
+var POSTCODE = 'client_postcode';
+var EMAIL = 'client_email';
+var CONTACT_NO = 'client_contact_no';
+var BIRTHDAY = 'client_birthday';
+var OCCUPATION = 'client_occupation';
+var SPORTS = 'client_sports';
+var OTHER_CON = 'client_other_conditions';
+var EMER_CON_NAME = 'client_emergency_contact_name';
+var EMER_CON_NO = 'client_emergency_contact_no';
+var CREATE_DATETIME = 'client_create_datetime';
+var CREATE_USER = 'client_create_user';
+var UPDATE_DATETIME = 'client_update_datetime';
+var UPDATE_USER = 'client_update_user';
+var CREATE_DATETIME = 'client_void_datetime';
+var CREATE_USER = 'client_void_user';
+
 var $ddlHealthFund;
 var $txtMemNo;
 var $txtPatientID;
@@ -76,9 +99,8 @@ var conditionElements = [
                          { id: '12', name: 'Sore Back', suffix: 'SoreBack' },
                          ];
 
-function initPage()
+function initElementVariables()
 {
-	$btnAddClient = $('#btnAddClient');
 	$ddlHealthFund = $('#ddlHealthFund');
 	$txtMemNo = $('#txtMemNo');
 	$txtPatientID = $('#txtPatientID');
@@ -129,99 +151,8 @@ function initPage()
 	$txtOtherCon = $('#txtOtherCon');
 	$txtEmerConName = $('#txtEmerConName');
 	$txtEmerConNo = $('#txtEmerConNo');
-	
-	$btnAddClient.click(function(){
-		main_confirm_message('Do you want to add a client?', addClient);
-		/*
-		var x = getClientInfo();
-		alert(x.client_gender + ' | ' + x.client_membership_no);
-		
-		var y = '';
-		var find = getClientConditions();
-		for (var i = 0; i < find.length; i++) {
-			y += '[id: ' + find[i].id + ', checked: ' + find[i].checked + ', remark: ' + find[i].remark + '] \n ';	
-		}
-		alert(y);
-		*/
-	}); // btnAddClient.click
 }
 
-function addClient()
-{
-	var clientInfo = getClientInfo();
-	main_request_ajax('client-boundary.php', 'ADD_CLIENT', clientInfo, onRequestDone);
-}
-
-function onRequestDone(response)
-{
-	//alert(response);
-	if (response.success) {
-		main_info_message(response.msg, function(){
-			main_redirect('../client/client-report.php?id=' + response.result);
-		});
-	}
-	else
-		main_alert_message(response.msg);
-}
-
-function getClientInfo()
-{
-	var clientInfo = {
-			client_id: '',
-			client_membership_no: $txtMemNo.val(),
-			client_patient_id: $txtPatientID.val(),
-			health_fund_id: $ddlHealthFund.val(),
-			client_first_name: $txtFirstName.val(),
-			client_last_name: $txtLastName.val(),
-			client_gender: ($radMale.is(':checked')) ? $radMale.val() : $radFemale.val(),
-			client_address: $txtAddress.val(),
-			client_postcode: $txtPostcode.val(), 
-			client_email: $txtEmail.val(),
-			client_contact_no: $txtContactNo.val(),
-			client_birthday: $txtBirthday.val(),
-			client_occupation: $txtOccupation.val(),
-			client_sports: $txtSports.val(),
-			client_other_conditions: $txtOtherCon.val(),
-			client_emergency_contact_name: $txtEmerConName.val(),
-			client_emergency_contact_no: $txtEmerConNo.val(),
-			client_findings: getClientFindings(),
-			client_conditions: getClientConditions()
-	};
-	
-	return clientInfo;
-}
-
-function getClientFindings()
-{
-	var findings = [];
-	
-	// ***json does not work with for..in
-	for (var i = 0; i < findingElements.length; i++) {
-		findings.push({
-			finding_type_id: findingElements[i].id,
-			client_finding_checked: $('#cb' + findingElements[i].suffix).is(':checked'),
-			client_finding_remark: ($('#txt' + findingElements[i].suffix).length) ? $('#txt' + findingElements[i].suffix).val() : ''
-		});
-	}
-	
-	return findings;
-}
-
-function getClientConditions()
-{
-	var conditions = [];
-	
-	for (var i = 0; i < conditionElements.length; i++) {
-		conditions.push({
-			condition_type_id: conditionElements[i].id,
-			client_condition_checked: $('#cb' + conditionElements[i].suffix).is(':checked'),
-			client_condition_remark: $('#txt' + conditionElements[i].suffix).val(),
-			//client_condition_remark: ($('#txt' + conditionElements[i].suffix).length) ? $('#txt' + conditionElements[i].suffix).val() : ''
-		});
-	}
-	
-	return conditions;
-}
 
 
 

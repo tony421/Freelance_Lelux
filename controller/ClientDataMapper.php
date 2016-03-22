@@ -159,7 +159,7 @@ where client_first_name like '%%%s%%'
 		public function getClientInfo($clientID)
 		{
 			try {
-				$sql_format = "select * from client where clinet_id = '%s'";
+				$sql_format = "select * from client where client_id = '%s'";
 				$sql = sprintf($sql_format, $clientID);
 				
 				return $this->_dataAccess->select($sql);
@@ -172,7 +172,13 @@ where client_first_name like '%%%s%%'
 		public function getFindingsInfo($clientID)
 		{
 			try {
+				$sql_format = "select * 
+						from client_finding
+						join finding_type on client_finding.finding_type_id = finding_type.finding_type_id
+						where client_id = '%s'";
+				$sql = sprintf($sql_format, $clientID);
 				
+				return $this->_dataAccess->select($sql);
 			}
 			catch(Exception $e) {
 				throw $e;
@@ -182,7 +188,13 @@ where client_first_name like '%%%s%%'
 		public function getConditionsInfo($clientID)
 		{
 			try {
-				$sql_format = "";
+				$sql_format = "select * 
+						from client_condition
+						join condition_type on client_condition.condition_type_id = condition_type.condition_type_id
+						where client_id = '%s'";
+				$sql = sprintf($sql_format, $clientID);
+				
+				return $this->_dataAccess->select($sql);
 			}
 			catch(Exception $e) {
 				throw $e;
