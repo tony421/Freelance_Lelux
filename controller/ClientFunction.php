@@ -34,18 +34,14 @@
 				//return $this->_dataMapper->insertCondition($client);
 				
 				$affectedRow = $this->_dataMapper->insertClient($client);
-				$this->_dataMapper->insertFindings($client);
-				$this->_dataMapper->insertConditions($client);
 				
-				//return Utilities::getResponseResult(true, 'New client has been inserted successfully.');
-				return Utilities::getResponseResult(true, 'New client has been inserted successfully.', $client->getID());
-				
-				/*
-				if ($affectedRow > 0)
-						return Utilities::getResponseResult(true, 'New client has been inserted successfully.');
-					else
-						return Utilities::getResponseResult(false, 'Inserting new client has failed!');
-				*/
+				if ($affectedRow > 0) {
+					$this->_dataMapper->insertFindings($client);
+					$this->_dataMapper->insertConditions($client);
+					return Utilities::getResponseResult(true, 'New client has been inserted successfully.', $client->getID());
+				}
+				else
+					return Utilities::getResponseResult(false, 'Inserting new client has failed!');
 			}
 			
 			//return print_r($client->getConditions());
@@ -95,8 +91,9 @@
 			
 			$affectedRow = $this->_dataMapper->updateClient($client);
 			$affectedRow = $this->_dataMapper->updateClientFindings($client->getFindings());
+			$affectedRow = $this->_dataMapper->updateClientConditions($client->getConditions());
 			
-			return Utilities::getResponseResult(true, 'test return | updated row: '.$affectedRow);
+			return Utilities::getResponseResult(true, 'Client information has been updated successfully.');
 		} // updateClient
 		
 		private function generateClientModel($clientInfo, $mode = self::MODE_ADD)
@@ -121,10 +118,11 @@
 					break;
 			}
 			
-			$client->setFindings($this->generateClientFindingModels($client->getID(), $clientInfo['client_findings']));
-			$client->setConditions($this->generateClientConditionModels($client->getID(), $clientInfo['client_conditions']));
 			$client->setPatientID(empty($clientInfo['client_patient_id']) ? 1 : $clientInfo['client_patient_id']);
 			$client->setBirthday(empty($clientInfo['client_birthday']) ? "" : Utilities::convertDateForDB($clientInfo['client_birthday']));
+			
+			$client->setFindings($this->generateClientFindingModels($client->getID(), $clientInfo['client_findings']));
+			$client->setConditions($this->generateClientConditionModels($client->getID(), $clientInfo['client_conditions']));
 			
 			$client->setMembershipNo($clientInfo['client_membership_no']);
 			$client->setHealthFundID($clientInfo['health_fund_id']);
@@ -185,6 +183,35 @@
 				
 			return $clientConditions;
 		} // generateClientConditionModels
+		
+		public function addReport($reportInfo)
+		{
+			$reportInfo['report_id'] = Utilities::getUniqueID();
+			$reportInfo['report_hour'] = $reportInfo['report_hour'] / 60.0;
+			$reportInfo['report_date'] = Utilities::convertDateForDB($reportInfo['report_date']);
+			
+			$reportInfo['report_create_user'] = 'default';
+			$reportInfo['report_create_datetime'] = Utilities::getDateTimeNowForDB();
+			$reportInfo['report_update_user'] = 'default';
+			$reportInfo['report_update_datetime'] = Utilities::getDateTimeNowForDB();
+			
+			$afffectedRow = $this->_dataMapper->insertReport($reportInfo);
+			
+			if ($afffectedRow > 0)
+				return Utilities::getResponseResult(true, 'The report has been inserted successfully.', $reportInfo);
+			else
+				return Utilities::getResponseResult(false, 'Inserting new report has been failed!');
+		} // addClientReport
+		
+		public function getReports($clientID)
+		{
+			$reports = $this->_dataMapper->getReports($clientID);
+				
+			if (count($reports) > 0)
+				return Utilities::getResponseResult(true, '', $reports);
+			else
+				return Utilities::getResponseResult(false, 'Client reports are not found!');
+		}
 	}
 ?>
 

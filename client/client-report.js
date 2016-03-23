@@ -3,6 +3,10 @@ var _clientInfo;
 
 var $btnEditClient;
 var $btnUpdateClient;
+var $btnCancelEdit;
+var $btnAddReport;
+
+var $ddlReportTherapist, $txtReportDate, $ddlReportHour, $txtReportDetail, $txtReportRecom;
 
 function initPage()
 {
@@ -17,16 +21,41 @@ function initPage()
 		
 		$btnEditClient = $('#btnEditClient');
 		$btnUpdateClient = $('#btnUpdateClient');
+		$btnCancelEdit = $('#btnCancelEdit');
+		$btnAddReport = $('#btnAddReport');
+		
+		$ddlReportTherapist = $('#ddlReportTherapist');
+		$txtReportDate = $('#txtReportDate');
+		$ddlReportHour = $('#ddlReportHour');
+		$txtReportDetail = $('#txtReportDetail');
+		$txtReportRecom = $('#txtReportRecom');
+		
+		$txtReportDate.val(main_convert_date_format(new Date())); // default ReportDate = today
+//		$txtReportHour.TouchSpin({
+//		      verticalbuttons: true
+//	    });
 		
 		$btnEditClient.click(function(){
 			setEditMode();
-			$btnUpdateClient.removeClass('hidden');
-			$btnEditClient.addClass('hidden');
 			
 		});
 		
 		$btnUpdateClient.click(function(){
 			updateClient();
+		});
+		
+		$btnCancelEdit.click(function(){
+			cancelEditClient();
+		});
+		
+		$btnAddReport.click(function(){
+			main_confirm_message('Do you want to add a report?', addReport);
+		});
+		
+		//test
+		//
+		$('#btn421ton').click(function(){
+			alert($('#ddlReportHour').prop('name'));
 		});
 	}
 	else {
@@ -42,7 +71,6 @@ function getClientInfo(clientID)
 
 function onGetClientInfoDone(response)
 {
-	//alert(response);
 	if (response.success) {
 		_clientInfo = response.result;
 		
@@ -87,6 +115,8 @@ function setClientFindings(clientFindings)
 		//alert(clientFindings[i]['finding_type_suffix']);
 		if (clientFindings[i]['client_finding_checked'] == true)
 			$('#cb' + clientFindings[i]['finding_type_suffix']).prop('checked', true);
+		else
+			$('#cb' + clientFindings[i]['finding_type_suffix']).prop('checked', false);
 		
 		if ($('#txt' + clientFindings[i]['finding_type_suffix']).length)
 			$('#txt' + clientFindings[i]['finding_type_suffix']).val(clientFindings[i]['client_finding_remark']);
@@ -99,6 +129,8 @@ function setClientConditions(clientConditions)
 		//alert(clientConditions[i]['condition_type_suffix']);
 		if (clientConditions[i]['client_condition_checked'] == true)
 			$('#cb' + clientConditions[i]['condition_type_suffix']).prop('checked', true);
+		else
+			$('#cb' + clientConditions[i]['condition_type_suffix']).prop('checked', false);
 		
 		$('#txt' + clientConditions[i]['condition_type_suffix']).val(clientConditions[i]['client_condition_remark']);
 	}
@@ -106,7 +138,10 @@ function setClientConditions(clientConditions)
 
 function setEditMode()
 {
-	//alert($txtFirstName.prop('readonly'));
+	$btnUpdateClient.removeClass('hidden');
+	$btnCancelEdit.removeClass('hidden');
+	$btnEditClient.addClass('hidden');
+	
 	$txtFirstName.prop('readonly', '');
 	$txtLastName.prop('readonly', '');
 	$radMale.prop('disabled', '');
@@ -137,6 +172,10 @@ function setEditMode()
 
 function setViewMode()
 {
+	$btnEditClient.removeClass('hidden');
+	$btnUpdateClient.addClass('hidden');
+	$btnCancelEdit.addClass('hidden');
+	
 	$txtFirstName.prop('readonly', 'true');
 	$txtLastName.prop('readonly', 'true');
 	$radMale.prop('disabled', 'true');
@@ -173,16 +212,19 @@ function updateClient()
 
 function onUpdateClientDone(response)
 {
-	//alert(response);
 	if (response.success) {
 		main_info_message(response.msg);
 		
 		setViewMode();
-		$btnEditClient.removeClass('hidden');
-		$btnUpdateClient.addClass('hidden');
 	}
 	else
 		main_alert_message(response.msg);
+}
+
+function cancelEditClient()
+{
+	setViewMode();
+	setClientInfo(_clientInfo);
 }
 
 function getEditedClientInfo()
@@ -243,6 +285,54 @@ function getClientConditions()
 	
 	return conditions;
 }
+
+function addReport()
+{
+	reportInfo = getReportInfo();
+	main_request_ajax('client-boundary.php', 'ADD_CLIENT_REPORT', reportInfo, onAddReportDone);
+}
+
+function onAddReportDone(response)
+{
+	if (response.success) {
+		main_info_message(response.msg);
+	}
+	else
+		main_alert_message(response.msg);
+}
+
+function getReportInfo()
+{
+	var reportInfo = {
+			report_id: '',
+			client_id: _clientID,
+			therapist_id: $ddlReportTherapist.val(),
+			report_date: $txtReportDate.val(),
+			report_hour: $ddlReportHour.val(),
+			report_detail: $txtReportDetail.val(),
+			report_recommendation: $txtReportRecom.val(),
+	};
+	
+	return reportInfo;
+}
+
+function getReports()
+{
+	main_request_ajax('client-boundary.php', 'GET_REPORTS', _clientID, onGetReportsDone);
+	
+}
+
+function onGetReportsDone()
+{
+	alert('get reports success');
+}
+
+
+
+
+
+
+
 
 
 

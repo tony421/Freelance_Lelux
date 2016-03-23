@@ -11,7 +11,7 @@
 	text-align: center;
 }
 
-.title-text
+.title-text, .title-text-sub
 {
 	margin: 10px;
 	padding-top: 15px;
@@ -20,6 +20,11 @@
     color: #a70101;
     font-style: italic;
     text-shadow: #cc7b7b 0px 0px 3px;
+}
+
+.title-text, .title-text-sub
+{
+	font-size: 35px;
 }
 
 

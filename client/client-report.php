@@ -18,9 +18,11 @@
 	    <link rel="stylesheet" href="../css/main-id.css">
 	    <link rel="stylesheet" href="../css/main-class.css">
 	    <link rel="stylesheet" href="../css/messagebox.css">
+	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
 	    
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
 	    <script type="text/javascript" src="client-report.js"></script>
 	    <script type="text/javascript" src="client-variable.js"></script>
 	    
@@ -367,9 +369,142 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-5 col-sm-7">
+						<div class="col-sm-12 text-center">
 							<button type="button" id="btnEditClient" class="btn btn-info btn-lg">Edit Client</button>
 							<button type="button" id="btnUpdateClient" class="btn btn-warning btn-lg hidden">Update Client</button>
+							<button type="button" id="btnCancelEdit" class="btn btn-default btn-lg hidden">Cancel</button>
+						</div>
+					</div>
+				</form> <!-- /form-horizontal -->
+				
+				
+				<div class="title-container">
+					<div class="title-text">~:: Report ::~</div>
+				</div>
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Date</label>
+						<div class="col-sm-2">
+							<input type="text" id="txtReportDate" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Therapist</label>
+						<div class="col-sm-2">
+							<select id="ddlReportTherapist" class="form-control">
+								<option value="1">A</option>
+								<option value="2">B</option>
+								<option value="3">C</option>
+								<option value="4">D</option>
+								<option value="5">E</option>
+								<option value="6">F</option>
+							</select>
+						</div>
+						<label class="col-sm-1 control-label">Hours</label>
+						<div class="col-sm-2">
+							<select id="ddlReportHour" class="form-control">
+								<option value="30">30 Min</option>
+								<option value="45">45 Min</option>
+								<option value="60" selected>1 Hr</option>
+								<option value="75">1 Hr 15 Min</option>
+								<option value="90">1 Hr 30 Min</option>
+								<option value="105">1 Hr 45 Min</option>
+								<option value="120">2 Hr</option>
+								<option value="135">2 Hr 15 Min</option>
+								<option value="150">2 Hr 30 Min</option>
+								<option value="165">2 Hr 45 Min</option>
+								<option value="180">3 Hr</option>
+								<option value="195">3 Hr 15 Min</option>
+								<option value="210">3 Hr 30 Min</option>
+								<option value="225">3 Hr 45 Min</option>
+								<option value="240">4 Hr</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Massage Details</label>
+						<div class="col-sm-6">
+							<textarea id="txtReportDetail" rows="3" class="form-control"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Recommendation</label>
+						<div class="col-sm-6">
+							<textarea id="txtReportRecom" rows="3" class="form-control"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 text-center">
+							<button type="button" id="btnAddReport" class="btn btn-info btn-lg">Add Report</button>
+							<button type="button" id="btn421ton" class="btn btn-info btn-lg" name="ton421">btn421ton</button>
+						</div>
+					</div>
+					<br>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-8">
+							<div class="panel panel-warning">
+								<div class="panel-heading">
+									<h3 class="panel-title">Panel title</h3>
+								</div>
+								<div class="panel-body">
+									Panel content
+								</div>
+								<div class="panel-footer">
+									<small>Panel footer</small>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group form-group-sm">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Date</label>
+						<div class="col-sm-2">
+							<input type="text" id="txtReportDate" class="form-control">
+						</div>
+					</div>
+					<div class="form-group form-group-sm">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Therapist</label>
+						<div class="col-sm-2">
+							<select id="ddlReportTherapist" class="form-control">
+								<option value="1">A</option>
+								<option value="2">B</option>
+								<option value="3">C</option>
+								<option value="4">D</option>
+								<option value="5">E</option>
+								<option value="6">F</option>
+							</select>
+						</div>
+						<label class="col-sm-1 control-label">Hours</label>
+						<div class="col-sm-2">
+							<select id="ddlReportHour" class="form-control">
+								<option value="30">30 Min</option>
+								<option value="45">45 Min</option>
+								<option value="60" selected>1 Hr</option>
+								<option value="75">1 Hr 15 Min</option>
+								<option value="90">1 Hr 30 Min</option>
+								<option value="105">1 Hr 45 Min</option>
+								<option value="120">2 Hr</option>
+								<option value="135">2 Hr 15 Min</option>
+								<option value="150">2 Hr 30 Min</option>
+								<option value="165">2 Hr 45 Min</option>
+								<option value="180">3 Hr</option>
+								<option value="195">3 Hr 15 Min</option>
+								<option value="210">3 Hr 30 Min</option>
+								<option value="225">3 Hr 45 Min</option>
+								<option value="240">4 Hr</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group form-group-sm">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Massage Details</label>
+						<div class="col-sm-6">
+							<textarea id="txtReportDetail" rows="3" class="form-control"></textarea>
+						</div>
+					</div>
+					<div class="form-group form-group-sm">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Recommendation</label>
+						<div class="col-sm-6">
+							<textarea id="txtReportRecom" rows="3" class="form-control"></textarea>
 						</div>
 					</div>
 				</form> <!-- /form-horizontal -->

@@ -36,6 +36,18 @@
 				
 				$result = $clientFunction->updateClient($editedClientInfo);
 			}
+			else if ($mode == 'ADD_CLIENT_REPORT') {
+				$reportInfo = $_POST['data'];
+				Utilities::logInfo('Client-Boundary | data[reportInfo]: '.var_export($reportInfo, true));
+				
+				$result = $clientFunction->addReport($reportInfo);
+			}
+			else if ($mode == 'GET_REPORTS') {
+				$clientID = $_POST['data'];
+				Utilities::logInfo('Client-Boundary | data[clientID]: '.var_export($clientID, true));
+				
+				$result = $clientFunction->getReports($clientID);
+			}	
 			else {
 				throw new Exception('Mode not found');
 			}

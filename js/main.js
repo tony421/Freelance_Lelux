@@ -38,18 +38,18 @@ function main_get_parameter(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function main_input_date_picker(jquerySelector)
+function main_convert_date_format(date)
 {
-	$(jquerySelector).datepicker({
-        showOn: 'button',
-        buttonImage: '../image/calendar.png',
-        buttonImageOnly: true,
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        dateFormat: 'dd/mm/yy',
-        showAnim: '',
-        buttonText: ''
-	});
+	// Bug with Datebox's formatter
+	// set it like this : data-options="formatter: main_date_box_format"
+	var day = date.getDate();
+	var month = date.getMonth()+1;
+	var year = date.getFullYear();
+	
+	day = day < 10 ? ('0' + day) : day;
+	month = month < 10 ? ('0' + month) : month;
+	
+	return day + '/' + month + '/' + year;
 }
 
 function main_alert_message(msg, fnOnOK)

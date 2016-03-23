@@ -266,10 +266,66 @@ where client_first_name like '%%%s%%'
 			
 			$sql = join("; ", $sqlFindings);
 			
-			//return $sql;
+			//Utilities::logDebug($sql);
+			return $this->_dataAccess->update($sql);
+		} // updateClientFindings
+		
+		public function updateClientConditions($clientConditions)
+		{
+			$sql_format = "update client_condition
+					set client_condition_checked = %s,
+						client_condition_remark = '%s'
+					where client_id = '%s' and condition_type_id = %d";
+				
+			$sqlConditions = [];
+			$sql = "";
+			
+			foreach ($clientConditions as $item) {
+				$sql = sprintf($sql_format,
+						$item->getChecked(),
+						$item->getRemark(),
+						$item->getClientID(),
+						$item->getConditionTypeID());
+			
+				array_push($sqlConditions, $sql);
+			}
+				
+			$sql = join("; ", $sqlConditions);
+				
 			Utilities::logDebug($sql);
 			return $this->_dataAccess->update($sql);
-		}
+		} // updateClientConditions
+		
+		public function insertReport($reportInfo)
+		{
+			$sql_format = "insert into report (report_id,
+						client_id, report_date, report_detail,
+						report_recommendation, report_hour, therapist_id,
+						report_create_user, report_create_datetime
+					) 
+					values ('%s',
+						'%s', '%s', '%s',
+						'%s', %2f, %d,
+						'%s', '%s'
+					)";
+			
+			$sql = sprintf($sql_format, $reportInfo['report_id'],
+					$reportInfo['client_id'], $reportInfo['report_date'], $reportInfo['report_detail'],
+					$reportInfo['report_recommendation'], $reportInfo['report_hour'], $reportInfo['therapist_id'],
+					$reportInfo['report_create_user'], $reportInfo['report_create_datetime']);
+			
+			Utilities::logDebug($sql);
+			return $this->_dataAccess->insert($sql);
+		} // insertReport
+		
+		public function getReports($clientID)
+		{
+			$sql_format = "select * from report where client_id = '%s' order by report_date desc";
+			$sql = sprintf($sql_format, $clientID);
+			
+			Utilities::logDebug($sql);
+			return $this->_dataAccess->select($sql);
+		} // getReports
 	}
 ?>
 

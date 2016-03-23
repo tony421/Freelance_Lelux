@@ -71,7 +71,7 @@
 			<div class="container">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Health Fund</label>
+						<label class="col-sm-2 control-label text-danger">*Health Fund</label>
 						<div class="col-sm-4">
 							<select id="ddlHealthFund" class="form-control">
 								<option value="1">ACA Health</option>
@@ -111,21 +111,21 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Membership No.</label>
+						<label class="col-sm-2 control-label text-danger">*Membership No.</label>
 						<div class="col-sm-3">
 							<input type="text" id="txtMemNo" class="form-control">
 						</div>
-						<label class="col-sm-2 control-label">Patient ID</label>
+						<label class="col-sm-2 control-label text-danger">*Patient ID</label>
 						<div class="col-sm-3">
 							<input type="text" id="txtPatientID" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">First Name</label>
+						<label class="col-sm-2 control-label text-danger">*First Name</label>
 						<div class="col-sm-2">
 							<input type="text" id="txtFirstName" class="form-control">
 						</div>
-						<label class="col-sm-2 control-label">Last Name</label>
+						<label class="col-sm-2 control-label text-danger">*Last Name</label>
 						<div class="col-sm-2">
 							<input type="text" id="txtLastName" class="form-control">
 						</div>
