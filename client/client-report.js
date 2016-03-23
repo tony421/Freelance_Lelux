@@ -1,15 +1,33 @@
 var _clientID;
 var _clientInfo;
 
+var $btnEditClient;
+var $btnUpdateClient;
+
 function initPage()
 {
-	_clientID = main_get_parameter('id'); 
+	_clientID = main_get_parameter('id');
 	//alert(_clientID + ' | ' + _clientID.length);
 	
 	// *** Can use just _clientID to check empty value
+	//
 	if (_clientID != null && _clientID.length > 0) {
 		initElementVariables();
 		getClientInfo(_clientID);
+		
+		$btnEditClient = $('#btnEditClient');
+		$btnUpdateClient = $('#btnUpdateClient');
+		
+		$btnEditClient.click(function(){
+			setEditMode();
+			$btnUpdateClient.removeClass('hidden');
+			$btnEditClient.addClass('hidden');
+			
+		});
+		
+		$btnUpdateClient.click(function(){
+			updateClient();
+		});
 	}
 	else {
 		//alert('id is null or empty');
@@ -19,10 +37,10 @@ function initPage()
 
 function getClientInfo(clientID)
 {
-	main_request_ajax('client-boundary.php', 'GET_CLIENT_INFO', clientID, onRequestDone);
+	main_request_ajax('client-boundary.php', 'GET_CLIENT_INFO', clientID, onGetClientInfoDone);
 }
 
-function onRequestDone(response)
+function onGetClientInfoDone(response)
 {
 	//alert(response);
 	if (response.success) {
@@ -86,9 +104,145 @@ function setClientConditions(clientConditions)
 	}
 }
 
+function setEditMode()
+{
+	//alert($txtFirstName.prop('readonly'));
+	$txtFirstName.prop('readonly', '');
+	$txtLastName.prop('readonly', '');
+	$radMale.prop('disabled', '');
+	$radFemale.prop('disabled', '');
+	$txtAddress.prop('readonly', '');
+	$txtPostcode.prop('readonly', '');
+	$txtEmail.prop('readonly', '');
+	$txtContactNo.prop('readonly', '');
+	$txtBirthday.prop('readonly', '');
+	$txtOccupation.prop('readonly', '');
+	$txtSports.prop('readonly', '');
+	$txtOtherCon.prop('readonly', '');
+	$txtEmerConName.prop('readonly', '');
+	$txtEmerConNo.prop('readonly', '');
+	
+	for (var i = 0; i < findingElements.length; i++) {
+		$('#cb' + findingElements[i].suffix).prop('disabled', '');
+		if ($('#txt' + findingElements[i].suffix).length)
+			$('#txt' + findingElements[i].suffix).prop('readonly', '');
+	}
+	
+	for (var i = 0; i < conditionElements.length; i++) {
+		$('#cb' + conditionElements[i].suffix).prop('disabled', '');
+		if ($('#txt' + conditionElements[i].suffix).length)
+			$('#txt' + conditionElements[i].suffix).prop('readonly', '');
+	}
+}
 
+function setViewMode()
+{
+	$txtFirstName.prop('readonly', 'true');
+	$txtLastName.prop('readonly', 'true');
+	$radMale.prop('disabled', 'true');
+	$radFemale.prop('disabled', 'true');
+	$txtAddress.prop('readonly', 'true');
+	$txtPostcode.prop('readonly', 'true');
+	$txtEmail.prop('readonly', 'true');
+	$txtContactNo.prop('readonly', 'true');
+	$txtBirthday.prop('readonly', 'true');
+	$txtOccupation.prop('readonly', 'true');
+	$txtSports.prop('readonly', 'true');
+	$txtOtherCon.prop('readonly', 'true');
+	$txtEmerConName.prop('readonly', 'true');
+	$txtEmerConNo.prop('readonly', 'true');
+	
+	for (var i = 0; i < findingElements.length; i++) {
+		$('#cb' + findingElements[i].suffix).prop('disabled', 'true');
+		if ($('#txt' + findingElements[i].suffix).length)
+			$('#txt' + findingElements[i].suffix).prop('readonly', 'true');
+	}
+	
+	for (var i = 0; i < conditionElements.length; i++) {
+		$('#cb' + conditionElements[i].suffix).prop('disabled', 'true');
+		if ($('#txt' + conditionElements[i].suffix).length)
+			$('#txt' + conditionElements[i].suffix).prop('readonly', 'true');
+	}
+}
 
+function updateClient()
+{
+	editedClientInfo = getEditedClientInfo();
+	main_request_ajax('client-boundary.php', 'UPDATE_CLIENT', editedClientInfo, onUpdateClientDone);
+}
 
+function onUpdateClientDone(response)
+{
+	//alert(response);
+	if (response.success) {
+		main_info_message(response.msg);
+		
+		setViewMode();
+		$btnEditClient.removeClass('hidden');
+		$btnUpdateClient.addClass('hidden');
+	}
+	else
+		main_alert_message(response.msg);
+}
+
+function getEditedClientInfo()
+{
+	var clientInfo = {
+			client_id: _clientID,
+			client_membership_no: $txtMemNo.val(),
+			client_patient_id: $txtPatientID.val(),
+			health_fund_id: $ddlHealthFund.val(),
+			client_first_name: $txtFirstName.val(),
+			client_last_name: $txtLastName.val(),
+			client_gender: ($radMale.is(':checked')) ? $radMale.val() : $radFemale.val(),
+			client_address: $txtAddress.val(),
+			client_postcode: $txtPostcode.val(), 
+			client_email: $txtEmail.val(),
+			client_contact_no: $txtContactNo.val(),
+			client_birthday: $txtBirthday.val(),
+			client_occupation: $txtOccupation.val(),
+			client_sports: $txtSports.val(),
+			client_other_conditions: $txtOtherCon.val(),
+			client_emergency_contact_name: $txtEmerConName.val(),
+			client_emergency_contact_no: $txtEmerConNo.val(),
+			client_findings: getClientFindings(),
+			client_conditions: getClientConditions()
+	};
+	
+	return clientInfo;
+}
+
+function getClientFindings()
+{
+	var findings = [];
+	
+	// ***json does not work with for..in
+	//
+	for (var i = 0; i < findingElements.length; i++) {
+		findings.push({
+			finding_type_id: findingElements[i].id,
+			client_finding_checked: $('#cb' + findingElements[i].suffix).is(':checked'),
+			client_finding_remark: ($('#txt' + findingElements[i].suffix).length) ? $('#txt' + findingElements[i].suffix).val() : ''
+		});
+	}
+	
+	return findings;
+}
+
+function getClientConditions()
+{
+	var conditions = [];
+	
+	for (var i = 0; i < conditionElements.length; i++) {
+		conditions.push({
+			condition_type_id: conditionElements[i].id,
+			client_condition_checked: $('#cb' + conditionElements[i].suffix).is(':checked'),
+			client_condition_remark: $('#txt' + conditionElements[i].suffix).val()
+		});
+	}
+	
+	return conditions;
+}
 
 
 

@@ -50,7 +50,7 @@
 						<a class="navbar-brand" href="#">Lulex</a>
     				</div>
     				
-    				<div class="collapse navbar-collapse">
+    				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       					<ul class="nav navbar-nav">
       						<li class="active">
       							<a href="../client/client-add.php">Add Client</a>

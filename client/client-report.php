@@ -49,7 +49,7 @@
 						<a class="navbar-brand" href="#">Lulex</a>
     				</div>
     				
-    				<div class="collapse navbar-collapse">
+    				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       					<ul class="nav navbar-nav">
       						<li>
       							<a href="../client/client-add.php">Add Client</a>
@@ -366,9 +366,15 @@
 							</div>
 						</div>
 					</div>
-				</form>
-			</div>
-		</div>
+					<div class="form-group">
+						<div class="col-sm-offset-5 col-sm-7">
+							<button type="button" id="btnEditClient" class="btn btn-info btn-lg">Edit Client</button>
+							<button type="button" id="btnUpdateClient" class="btn btn-warning btn-lg hidden">Update Client</button>
+						</div>
+					</div>
+				</form> <!-- /form-horizontal -->
+			</div> <!-- div/container -->
+		</div> <!-- /content -->
 		
 		<div id="footer">
 		</div> <!-- footer -->

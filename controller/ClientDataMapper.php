@@ -114,7 +114,7 @@ values %s";
 							, $item->getChecked()));
 				}
 				
-				$sql = sprintf($sql_format, join(",", $conditionValues));
+				$sql = sprintf($sql_format, join(", ", $conditionValues));
 				
 				//return $sql;
 				return $this->_dataAccess->insert($sql);
@@ -200,6 +200,76 @@ where client_first_name like '%%%s%%'
 				throw $e;
 			}
 		} // getConditionsInfo
+		
+		public function updateClient($client)
+		{
+			$sql_format = "
+					update client 
+					set client_first_name = '%s',
+						client_last_name = '%s',
+						client_gender = %d,
+						client_address = '%s',
+						client_postcode = '%s',
+						client_email = '%s',
+						client_contact_no = '%s',
+						client_birthday = '%s',
+						client_occupation = '%s',
+						client_sports = '%s',
+						client_other_conditions = '%s',
+						client_emergency_contact_name = '%s',
+						client_emergency_contact_no = '%s',
+						client_update_user = '%s',
+						client_update_datetime = '%s'
+					where client_id = '%s'";
+			
+			$sql = sprintf($sql_format, 
+					$client->getFirstName(),
+					$client->getLastName(),
+					$client->getGender(),
+					$client->getAddress(),
+					$client->getPostcode(),
+					$client->getEmail(),
+					$client->getContactNo(),
+					$client->getBirthday(),
+					$client->getOccupation(),
+					$client->getSports(),
+					$client->getOtherConditions(),
+					$client->getEmergencyContactName(),
+					$client->getEmergencyContactNo(),
+					$client->getUpdateUser(),
+					$client->getUpdateDateTime(),
+					$client->getID());
+			
+			//return $sql;
+			return $this->_dataAccess->update($sql);
+		} // updateClient
+		
+		public function updateClientFindings($clientFindings)
+		{
+			$sql_format = "update client_finding 
+					set client_finding_checked = %s,
+						client_finding_remark = '%s'
+					where client_id = '%s' and finding_type_id = %d";
+			
+			$sqlFindings = [];
+			$sql = "";
+			
+			foreach ($clientFindings as $item) {
+				$sql = sprintf($sql_format, 
+						$item->getChecked(),
+						$item->getRemark(),
+						$item->getClientID(),
+						$item->getFindingTypeID());
+				
+				array_push($sqlFindings, $sql);
+			}
+			
+			$sql = join("; ", $sqlFindings);
+			
+			//return $sql;
+			Utilities::logDebug($sql);
+			return $this->_dataAccess->update($sql);
+		}
 	}
 ?>
 

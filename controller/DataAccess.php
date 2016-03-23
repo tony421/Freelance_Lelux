@@ -72,7 +72,7 @@ class DataAccess
 		try {
 			$this->openConnection();
 			
-			$result = mysqli_query($this->_conn, $sql);
+			$result = mysqli_multi_query($this->_conn, $sql);
 			//mysql_query($sql, $this->_conn) or die('Unable to manipulate data in database');
 			$affectedRows = mysqli_affected_rows($this->_conn);
 			

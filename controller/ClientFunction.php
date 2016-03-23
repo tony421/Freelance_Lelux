@@ -5,6 +5,10 @@
 	
 	class ClientFunction
 	{
+		const MODE_ADD = 1;
+		const MODE_UPDATE = 2;
+		const MODE_VOID = 3;
+		
 		private $_dataMapper;
 		
 		public function ClientFunction()
@@ -14,7 +18,7 @@
 		
 		public function addClient($clientInfo)
 		{
-			$client = $this->generateClientModel($clientInfo);
+			$client = $this->generateClientModel($clientInfo, self::MODE_ADD);
 			
 			// test
 			//return print_r($client->getFindings());
@@ -73,6 +77,7 @@
 				//return print_r($client);
 				
 				$clientInfo = $result[0];
+				$clientInfo['client_birthday'] = $clientInfo['client_birthday'] != '0000-00-00' ? Utilities::convertDateForDisplay($clientInfo['client_birthday']) : "";
 				$clientInfo['client_findings'] = $this->_dataMapper->getFindingsInfo($clientID);
 				$clientInfo['client_conditions'] = $this->_dataMapper->getConditionsInfo($clientID);
 				
@@ -84,31 +89,44 @@
 			}
 		} // getClientInfo
 		
-		private function generateClientModel($clientInfo, $clone = false)
+		public function updateClient($editedClientInfo)
+		{
+			$client = $this->generateClientModel($editedClientInfo, self::MODE_UPDATE);
+			
+			$affectedRow = $this->_dataMapper->updateClient($client);
+			$affectedRow = $this->_dataMapper->updateClientFindings($client->getFindings());
+			
+			return Utilities::getResponseResult(true, 'test return | updated row: '.$affectedRow);
+		} // updateClient
+		
+		private function generateClientModel($clientInfo, $mode = self::MODE_ADD)
 		{
 			$client;
 			
-			if ($clone)
-			{
-				$client = new Client($clientInfo['client_id']);
-				$client->setCreateUser($clientInfo['client_create_user']);
-				$client->setCreateDateTime($clientInfo['client_create_datetime']);
-				$client->setUpdateUser($clientInfo['client_update_user']);
-				$client->setUpdateDateTime($clientInfo['client_update_datetime']);
-				$client->setVoidUser($clientInfo['client_void_user']);
-				$client->setVoidDateTime($clientInfo['client_void_datetime']);
-			}
-			else
-			{
-				$client = new Client(Utilities::getUniqueID());
-				$client->setFindings($this->generateClientFindingModels($client->getID(), $clientInfo['client_findings']));
-				$client->setConditions($this->generateClientConditionModels($client->getID(), $clientInfo['client_conditions']));
-				$client->setCreateUser('default');
-				$client->setCreateDateTime(Utilities::getDateTimeNowForDB());
+			switch ($mode) {
+				case self::MODE_ADD :
+					$client = new Client(Utilities::getUniqueID());
+					$client->setCreateUser('default');
+					$client->setCreateDateTime(Utilities::getDateTimeNowForDB());
+					break;
+				case self::MODE_UPDATE:
+					$client = new Client($clientInfo['client_id']);
+					$client->setUpdateUser('default');
+					$client->setUpdateDateTime(Utilities::getDateTimeNowForDB());
+					break;
+				case self::MODE_VOID:
+					$client = new Client($clientInfo['client_id']);
+					$client->setVoidUser('default');
+					$client->setVoidDateTime(Utilities::getDateTimeNowForDB());
+					break;
 			}
 			
+			$client->setFindings($this->generateClientFindingModels($client->getID(), $clientInfo['client_findings']));
+			$client->setConditions($this->generateClientConditionModels($client->getID(), $clientInfo['client_conditions']));
+			$client->setPatientID(empty($clientInfo['client_patient_id']) ? 1 : $clientInfo['client_patient_id']);
+			$client->setBirthday(empty($clientInfo['client_birthday']) ? "" : Utilities::convertDateForDB($clientInfo['client_birthday']));
+			
 			$client->setMembershipNo($clientInfo['client_membership_no']);
-			$client->setPatientID(empty($clientInfo['client_patient_id']) ? 0 : $clientInfo['client_patient_id']);
 			$client->setHealthFundID($clientInfo['health_fund_id']);
 			$client->setFirstName($clientInfo['client_first_name']);
 			$client->setLastName($clientInfo['client_last_name']);
@@ -117,9 +135,6 @@
 			$client->setPostCode($clientInfo['client_postcode']);
 			$client->setEmail($clientInfo['client_email']);
 			$client->setContactNo($clientInfo['client_contact_no']);
-			
-			$client->setBirthday(Utilities::convertDateForDB($clientInfo['client_birthday']));
-			
 			$client->setOccupation($clientInfo['client_occupation']);
 			$client->setSports($clientInfo['client_sports']);
 			$client->setOtherConditions($clientInfo['client_other_conditions']);
