@@ -63,15 +63,20 @@
 			return date_format(date_create($date), 'd/m/Y');
 		}
 		
-		public static function convertDateForDB($date)
+		public static function convertDateForDB($date, $format = 'd/m/Y')
 		{
 			//return date_format(date_create($date), 'Y-m-d'); // Can not convert from 'd/m/Y' format
-			return date_create_from_format('d/m/Y', $date)->format('Y-m-d');
+			return date_create_from_format($format, $date)->format('Y-m-d');
 		}
 		
 		public static function convertDateForDisplay($date)
 		{
-			return date_format(date_create($date), 'm/d/Y');
+			return date_format(date_create($date), 'd/m/Y');
+		}
+		
+		public static function convertDatetimeForDisplay($date)
+		{
+			return date_format(date_create($date), 'd/m/Y H:i:s');
 		}
 		
 		public static function redirect($page)

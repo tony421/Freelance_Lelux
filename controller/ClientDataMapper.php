@@ -301,18 +301,21 @@ where client_first_name like '%%%s%%'
 			$sql_format = "insert into report (report_id,
 						client_id, report_date, report_detail,
 						report_recommendation, report_hour, therapist_id,
-						report_create_user, report_create_datetime
+						report_create_user, report_create_datetime,
+						report_update_user, report_update_datetime
 					) 
 					values ('%s',
 						'%s', '%s', '%s',
 						'%s', %2f, %d,
+						'%s', '%s',
 						'%s', '%s'
 					)";
 			
 			$sql = sprintf($sql_format, $reportInfo['report_id'],
 					$reportInfo['client_id'], $reportInfo['report_date'], $reportInfo['report_detail'],
 					$reportInfo['report_recommendation'], $reportInfo['report_hour'], $reportInfo['therapist_id'],
-					$reportInfo['report_create_user'], $reportInfo['report_create_datetime']);
+					$reportInfo['report_create_user'], $reportInfo['report_create_datetime'],
+					$reportInfo['report_update_user'], $reportInfo['report_update_datetime']);
 			
 			Utilities::logDebug($sql);
 			return $this->_dataAccess->insert($sql);
@@ -320,12 +323,44 @@ where client_first_name like '%%%s%%'
 		
 		public function getReports($clientID)
 		{
-			$sql_format = "select * from report where client_id = '%s' order by report_date, report_create_datetime desc";
+			$sql_format = "
+					select report_id, DATE_FORMAT(report_date, '%%e %%M %%Y') as report_date
+						, report_detail, report_recommendation
+						, CAST(report_hour * 60 as integer) report_hour, therapist_id
+						, report_create_user, DATE_FORMAT(report_create_datetime, '%%e/%%m/%%Y %%T') as report_create_datetime
+						, report_update_user, DATE_FORMAT(report_update_datetime, '%%e/%%m/%%Y %%T') as report_update_datetime
+					from report 
+					where client_id = '%s' order by report_date desc, report_create_datetime desc";
 			$sql = sprintf($sql_format, $clientID);
 			
 			Utilities::logDebug($sql);
 			return $this->_dataAccess->select($sql);
 		} // getReports
+		
+		public function updateReportItem($reportItemInfo)
+		{
+			$sql_format = "update report
+					set therapist_id = %d,
+						report_hour = %2f,
+						report_detail = '%s',
+						report_recommendation = '%s',
+						report_update_user = '%s',
+						report_update_datetime = '%s'
+					where report_id = '%s'";
+			
+			$sql = sprintf($sql_format, 
+					$reportItemInfo['therapist_id'],
+					$reportItemInfo['report_hour'],
+					$reportItemInfo['report_detail'],
+					$reportItemInfo['report_recommendation'],
+					$reportItemInfo['report_update_user'],
+					$reportItemInfo['report_update_datetime'],
+					$reportItemInfo['report_id']
+				);
+			
+			Utilities::logDebug($sql);
+			return $this->_dataAccess->insert($sql);
+		} // updateReportItem
 	}
 ?>
 

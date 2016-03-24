@@ -93,7 +93,7 @@
 			$affectedRow = $this->_dataMapper->updateClientFindings($client->getFindings());
 			$affectedRow = $this->_dataMapper->updateClientConditions($client->getConditions());
 			
-			return Utilities::getResponseResult(true, 'Client information has been updated successfully.');
+			return Utilities::getResponseResult(true, 'Client information has been updated successfully.', $editedClientInfo);
 		} // updateClient
 		
 		private function generateClientModel($clientInfo, $mode = self::MODE_ADD)
@@ -211,7 +211,25 @@
 				return Utilities::getResponseResult(true, '', $reports);
 			else
 				return Utilities::getResponseResult(false, 'Client reports are not found!');
-		}
+		} // getReports
+		
+		public function updateReportItem($reportItemInfo)
+		{
+			$reportItemInfo['report_hour'] = $reportItemInfo['report_hour'] / 60.0;
+			$reportItemInfo['report_update_user'] = 'default';
+			$reportItemInfo['report_update_datetime'] = Utilities::getDateTimeNowForDB();
+			
+			$affectedRow = $this->_dataMapper->updateReportItem($reportItemInfo);
+			
+			if ($affectedRow > 0) {
+				$reportItemInfo['report_hour'] = (int)$reportItemInfo['report_hour'] * 60;
+				$reportItemInfo['report_update_datetime'] = Utilities::convertDatetimeForDisplay($reportItemInfo['report_update_datetime']);
+				return Utilities::getResponseResult(true, 'Report information has been updated successfully.', $reportItemInfo);
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Updating report has been failed!', $reportItemInfo);
+			}
+		} // updateReportItem
 	}
 ?>
 

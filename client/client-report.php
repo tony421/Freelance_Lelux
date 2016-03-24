@@ -23,6 +23,7 @@
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/main.js"></script>
 	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
+	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="client-report.js"></script>
 	    <script type="text/javascript" src="client-variable.js"></script>
 	    
@@ -117,7 +118,7 @@
 							<input type="text" id="txtMemNo" class="form-control" disabled>
 						</div>
 						<label class="col-sm-2 control-label">Patient ID</label>
-						<div class="col-sm-3">
+						<div class="col-sm-2">
 							<input type="text" id="txtPatientID" class="form-control" disabled>
 						</div>
 					</div>
@@ -363,7 +364,7 @@
 						</div>
 						<div class="col-sm-3">
 							<div class="input-group">
-								<span class="input-group-addon">Phone</span>
+								<span class="input-group-addon">Phone No.</span>
 								<input type="text" id="txtEmerConNo" class="form-control" readonly="readonly">
 							</div>
 						</div>
@@ -436,7 +437,6 @@
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
 							<button type="button" id="btnAddReport" class="btn btn-info btn-lg">Add Report</button>
-							<button type="button" id="btn421ton" class="btn btn-info btn-lg" name="ton421">btn421ton</button>
 						</div>
 					</div>
 					<br>

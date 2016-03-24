@@ -47,7 +47,13 @@
 				Utilities::logInfo('Client-Boundary | data[clientID]: '.var_export($clientID, true));
 				
 				$result = $clientFunction->getReports($clientID);
-			}	
+			}
+			else if ($mode == 'UPDATE_REPORT') {
+				$reportItemInfo = $_POST['data'];
+				Utilities::logInfo('Client-Boundary | data[reportItemInfo]: '.var_export($reportItemInfo, true));
+				
+				$result = $clientFunction->updateReportItem($reportItemInfo);
+			}
 			else {
 				throw new Exception('Mode not found');
 			}

@@ -17,13 +17,15 @@
 	    
 	    <link rel="stylesheet" href="../css/main-id.css">
 	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">	    
-<!-- 	    <link rel="stylesheet" href="../css/jquery-ui-1.8.10.custom.css"> -->
+	    <link rel="stylesheet" href="../css/messagebox.css">
+	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
 	    
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
-<!-- 	    <script type="text/javascript" src="../js/jquery-ui-1.8.10.offset.datepicker.min.js"></script> -->
 	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
+	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="client-add.js"></script>
+	    <script type="text/javascript" src="client-variable.js"></script>
 	    
 	    <script type="text/javascript">
 	    	$(document).ready(function(){
@@ -74,6 +76,7 @@
 						<label class="col-sm-2 control-label text-danger">*Health Fund</label>
 						<div class="col-sm-4">
 							<select id="ddlHealthFund" class="form-control">
+								<option value="0">----- Non-Health Fund -----</option>
 								<option value="1">ACA Health</option>
 								<option value="2">AHM Health Insurance</option>
 								<option value="3">Australian Unity Health Ltd</option>
@@ -116,8 +119,8 @@
 							<input type="text" id="txtMemNo" class="form-control">
 						</div>
 						<label class="col-sm-2 control-label text-danger">*Patient ID</label>
-						<div class="col-sm-3">
-							<input type="text" id="txtPatientID" class="form-control">
+						<div class="col-sm-2">
+							<input type="text" id="txtPatientID" class="form-control" value="0">
 						</div>
 					</div>
 					<div class="form-group">
@@ -362,7 +365,7 @@
 						</div>
 						<div class="col-sm-3">
 							<div class="input-group">
-								<span class="input-group-addon">Phone</span>
+								<span class="input-group-addon">Phone No.</span>
 								<input type="text" id="txtEmerConNo" class="form-control">
 							</div>
 						</div>
