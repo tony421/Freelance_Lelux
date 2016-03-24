@@ -320,7 +320,7 @@ where client_first_name like '%%%s%%'
 		
 		public function getReports($clientID)
 		{
-			$sql_format = "select * from report where client_id = '%s' order by report_date desc";
+			$sql_format = "select * from report where client_id = '%s' order by report_date, report_create_datetime desc";
 			$sql = sprintf($sql_format, $clientID);
 			
 			Utilities::logDebug($sql);

@@ -3,6 +3,11 @@ body
 	background-color: #F0ECE4;
 }
 
+textarea
+{
+	resize: none;
+}
+
 #header
 {
 	margin: 0;

@@ -441,72 +441,92 @@
 					</div>
 					<br>
 					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-8">
-							<div class="panel panel-warning">
+					
+						<!-- Panel Report Container -->
+						<div id="panelReportContainer" class="col-sm-offset-2 col-sm-8">
+							<!-- Panel Item Template -->
+							<!--
+							<div id="panelItem" class="panel panel-warning">
 								<div class="panel-heading">
-									<h3 class="panel-title">Panel title</h3>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="panel-title">
+												<b>Report on</b>
+												<span id="lblItemDate">23/3/2016</span>
+											</div>
+										</div>
+										<div class="col-sm-6 text-right">
+											<button type="button" id="btnEditItem" class="btn btn-info btn-xs" name="">Edit</button>
+											<button type="button" id="btnDeleteItem" class="btn btn-danger btn-xs" name="">Delete</button>
+											<button type="button" id="btnUpdateItem" class="btn btn-warning btn-xs" name="">Update</button>
+											<button type="button" id="btnCancelItem" class="btn btn-default btn-xs" name="index">Cancel</button>
+										</div>
+									</div>
 								</div>
 								<div class="panel-body">
-									Panel content
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Therapist</label>
+										<div class="col-sm-3">
+											<select id="ddlItemTherapist" class="form-control" disabled>
+												<option value="1">A</option>
+												<option value="2">B</option>
+												<option value="3">C</option>
+												<option value="4">D</option>
+												<option value="5">E</option>
+												<option value="6">F</option>
+											</select>
+										</div>
+										<label class="col-sm-1 control-label">Hours</label>
+										<div class="col-sm-3">
+											<select id="ddlItemHour" class="form-control" disabled>
+												<option value="30">30 Min</option>
+												<option value="45">45 Min</option>
+												<option value="60" selected>1 Hr</option>
+												<option value="75">1 Hr 15 Min</option>
+												<option value="90">1 Hr 30 Min</option>
+												<option value="105">1 Hr 45 Min</option>
+												<option value="120">2 Hr</option>
+												<option value="135">2 Hr 15 Min</option>
+												<option value="150">2 Hr 30 Min</option>
+												<option value="165">2 Hr 45 Min</option>
+												<option value="180">3 Hr</option>
+												<option value="195">3 Hr 15 Min</option>
+												<option value="210">3 Hr 30 Min</option>
+												<option value="225">3 Hr 45 Min</option>
+												<option value="240">4 Hr</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Massage Details</label>
+										<div class="col-sm-9">
+											<textarea id="txtItemDetail" rows="2" class="form-control" readonly></textarea>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Recommendation</label>
+										<div class="col-sm-9">
+											<textarea id="txtItemRecom" rows="2" class="form-control" readonly></textarea>
+										</div>
+									</div>
 								</div>
 								<div class="panel-footer">
-									<small>Panel footer</small>
+									<small>
+										<b>Created by:</b>
+										<span id="lblItemCreateUser">Default</span>
+										<b>Created on:</b>
+										<span id="lblItemCreateDateTime">23/3/2016 13:33</span>
+										<b>Updated by:</b>
+										<span id="lblItemUpdateUser">Default</span>
+										<b>Updated on:</b>
+										<span id="lblItemUpdateDateTime">23/3/2016 15:33</span>
+									</small>
 								</div>
 							</div>
-						</div>
-					</div>
-					
-					<div class="form-group form-group-sm">
-						<label class="col-sm-offset-2 col-sm-2 control-label">Date</label>
-						<div class="col-sm-2">
-							<input type="text" id="txtReportDate" class="form-control">
-						</div>
-					</div>
-					<div class="form-group form-group-sm">
-						<label class="col-sm-offset-2 col-sm-2 control-label">Therapist</label>
-						<div class="col-sm-2">
-							<select id="ddlReportTherapist" class="form-control">
-								<option value="1">A</option>
-								<option value="2">B</option>
-								<option value="3">C</option>
-								<option value="4">D</option>
-								<option value="5">E</option>
-								<option value="6">F</option>
-							</select>
-						</div>
-						<label class="col-sm-1 control-label">Hours</label>
-						<div class="col-sm-2">
-							<select id="ddlReportHour" class="form-control">
-								<option value="30">30 Min</option>
-								<option value="45">45 Min</option>
-								<option value="60" selected>1 Hr</option>
-								<option value="75">1 Hr 15 Min</option>
-								<option value="90">1 Hr 30 Min</option>
-								<option value="105">1 Hr 45 Min</option>
-								<option value="120">2 Hr</option>
-								<option value="135">2 Hr 15 Min</option>
-								<option value="150">2 Hr 30 Min</option>
-								<option value="165">2 Hr 45 Min</option>
-								<option value="180">3 Hr</option>
-								<option value="195">3 Hr 15 Min</option>
-								<option value="210">3 Hr 30 Min</option>
-								<option value="225">3 Hr 45 Min</option>
-								<option value="240">4 Hr</option>
-							</select>
-						</div>
-					</div>
-					<div class="form-group form-group-sm">
-						<label class="col-sm-offset-2 col-sm-2 control-label">Massage Details</label>
-						<div class="col-sm-6">
-							<textarea id="txtReportDetail" rows="3" class="form-control"></textarea>
-						</div>
-					</div>
-					<div class="form-group form-group-sm">
-						<label class="col-sm-offset-2 col-sm-2 control-label">Recommendation</label>
-						<div class="col-sm-6">
-							<textarea id="txtReportRecom" rows="3" class="form-control"></textarea>
-						</div>
-					</div>
+							-->
+							<!-- /Panel Item Template -->
+						</div> <!-- /#panelReportContainer -->
+					</div> <!-- /form-group > .panel -->
 				</form> <!-- /form-horizontal -->
 			</div> <!-- div/container -->
 		</div> <!-- /content -->
