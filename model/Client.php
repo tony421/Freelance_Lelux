@@ -35,6 +35,14 @@
 			$this->setID($id);
 		}
 		
+		public function isHealthFund()
+		{
+			if ($this->getHealthFundID() == 0 || $this->getHealthFundID() == '0')
+				return false;
+			else
+				return true;
+		}
+		
 		public function setID($id)
 		{
 			$this->_id = $id;

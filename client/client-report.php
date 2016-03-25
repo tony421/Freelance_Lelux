@@ -76,6 +76,7 @@
 						<label class="col-sm-2 control-label">Health Fund</label>
 						<div class="col-sm-4">
 							<select id="ddlHealthFund" class="form-control" disabled>
+								<option value="0">----- Non Health Fund -----</option>
 								<option value="1">ACA Health</option>
 								<option value="2">AHM Health Insurance</option>
 								<option value="3">Australian Unity Health Ltd</option>
@@ -112,7 +113,7 @@
 							</select>
 						</div>
 					</div>
-					<div class="form-group">
+					<div id="rowHealthFundInput" class="form-group">
 						<label class="col-sm-2 control-label">Membership No.</label>
 						<div class="col-sm-3">
 							<input type="text" id="txtMemNo" class="form-control" disabled>
@@ -123,11 +124,11 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">First Name</label>
+						<label class="col-sm-2 control-label text-danger">*First Name</label>
 						<div class="col-sm-2">
 							<input type="text" id="txtFirstName" class="form-control" readonly="readonly">
 						</div>
-						<label class="col-sm-2 control-label">Last Name</label>
+						<label class="col-sm-2 control-label text-danger">*Last Name</label>
 						<div class="col-sm-2">
 							<input type="text" id="txtLastName" class="form-control" readonly="readonly">
 						</div>

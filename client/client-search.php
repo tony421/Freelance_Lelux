@@ -74,12 +74,12 @@
 						<label class="col-sm-3 control-label">Search By</label>
 						<div class="col-sm-2">
 							<label class="radio-inline">
-								<input type="radio" id="radSearchMem" name="gender" value="1" checked="checked"> Membership Number
+								<input type="radio" id="radSearchMem" name="searchby" value="1" checked="checked"> Membership Number
 							</label>
 						</div>
 						<div class="col-sm-2">
 							<label class="radio-inline">
-								<input type="radio" id="radSearchName" name="gender" value="2"> Client Name
+								<input type="radio" id="radSearchName" name="searchby" value="2"> Client Name
 							</label>
 						</div>
 						<div class="col-sm-3">

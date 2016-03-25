@@ -30,7 +30,8 @@ function initPage()
 	
 	if (_clientID != null && _clientID.length > 0) {
 		initElementVariables();
-		$txtBirthday.inputmask('dd/mm/yyyy');
+		$txtEmail.inputmask('email');
+		$txtBirthday.inputmask('date');
 		$txtContactNo.inputmask('9999-999-999');
 		$txtEmerConNo.inputmask('9999-999-999');
 		
@@ -48,6 +49,7 @@ function initPage()
 		$txtReportDetail = $('#txtReportDetail');
 		$txtReportRecom = $('#txtReportRecom');
 		
+		$txtReportDate.inputmask('date');
 		$txtReportDate.val(main_convert_date_format(new Date())); // default ReportDate = today
 		
 		$btnEditClient.click(function(){
@@ -55,21 +57,8 @@ function initPage()
 		});
 		
 		$btnUpdateClient.click(function(){
-			if ($txtContactNo.inputmask("isComplete") || $txtContactNo.val() == "") {
-				if ($txtBirthday.inputmask("isComplete") || $txtBirthday.val() == "") {
-					if ($txtEmerConNo.inputmask("isComplete") || $txtEmerConNo.val() == "") {
-						main_confirm_message('Do you want to update client information?', updateClient);
-					}
-					else {
-						main_alert_message('Please enter a invalid phone number in "Emergency Contact[Phone No.]"', function(){ $txtEmerConNo.focus();});
-					}
-				}
-				else {
-					main_alert_message('Please enter a invalid date in "Date of Birth"', function(){ $txtBirthday.focus();});
-				}
-			}
-			else {
-				main_alert_message('Please enter a invalid phone number in "Contact No."', function(){ $txtContactNo.focus();});
+			if (validateInputs()) {
+				main_confirm_message('Do you want to update client information?', updateClient);
 			}
 		});
 		
@@ -78,7 +67,8 @@ function initPage()
 		});
 		
 		$btnAddReport.click(function(){
-			main_confirm_message('Do you want to add a report?', addReport);
+			if (validateReportInputs())
+				main_confirm_message('Do you want to add a report?', addReport);
 		});
 	}
 	else {
@@ -98,6 +88,8 @@ function onGetClientInfoDone(response)
 		_clientInfo = response.result;
 		
 		setClientInfo(_clientInfo);
+		toggleHealthFundClinetInputs();
+		
 		getReports();
 	}
 	else {
@@ -313,6 +305,41 @@ function getClientConditions()
 	return conditions;
 }
 
+function validateReportInputs()
+{
+	if ($txtReportDate.val().length) {
+		if ($txtReportDate.inputmask("isComplete")) {
+			if ($txtReportDetail.val().length) {
+				if ($txtReportRecom.val().length) {
+					return true;
+				}
+				else {
+					main_alert_message('Please enter "Report Recommendation"', function(){ $txtReportRecom.focus();});
+				}
+			}
+			else {
+				main_alert_message('Please enter "Report Massage Details"', function(){ $txtReportDetail.focus();});
+			}
+		}
+		else {
+			main_alert_message('Please enter a valid "Report Date"', function(){ $txtReportDate.focus();});
+		}
+	}
+	else {
+		main_alert_message('Please enter "Report Date"', function(){ $txtReportDate.focus();});
+	}
+	
+	return false;
+}
+
+function clearReportInputs()
+{
+	$txtReportDate.val('');
+	$ddlReportHour.val('60');
+	$txtReportDetail.val('');
+	$txtReportRecom.val('');
+}
+
 function addReport()
 {
 	reportInfo = getReportInfo();
@@ -323,6 +350,7 @@ function onAddReportDone(response)
 {
 	if (response.success) {
 		main_info_message(response.msg, getReports);
+		clearReportInputs();
 	}
 	else
 		main_alert_message(response.msg);

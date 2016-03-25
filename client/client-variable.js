@@ -72,6 +72,7 @@ var $txtSoreBack;
 var $txtOtherCon;
 var $txtEmerConName;
 var $txtEmerConNo;
+var $rowHealthFundInput;
 
 var findingElements = [
                        { 'id': '1', 'name': 'True Local', 'suffix': 'TrueLocal' },
@@ -151,11 +152,93 @@ function initElementVariables()
 	$txtOtherCon = $('#txtOtherCon');
 	$txtEmerConName = $('#txtEmerConName');
 	$txtEmerConNo = $('#txtEmerConNo');
+	$rowHealthFundInput = $('#rowHealthFundInput');
+	
+	$ddlHealthFund.change(function(){
+		toggleHealthFundClinetInputs();
+	});
 }
 
+function validateInputs()
+{
+	isHealthFund = isHealthFundClient();
+	
+	if ((isHealthFund && $txtMemNo.val().length) || !isHealthFund) {
+		if (isHealthFund && $txtPatientID.val().length || !isHealthFund) {
+			if ($txtFirstName.val().length) {
+				if ($txtLastName.val().length) {
+					if ($txtEmail.inputmask("isComplete") || $txtEmail.val() == "") {
+						if ($txtContactNo.inputmask("isComplete") || $txtContactNo.val() == "") {
+							if ($txtBirthday.inputmask("isComplete") || $txtBirthday.val() == "") {
+								if ($txtEmerConNo.inputmask("isComplete") || $txtEmerConNo.val() == "") {
+									return true;
+								}
+								else {
+									main_alert_message('Please enter a valid "Emergency Contact : Phone No."', function(){ $txtEmerConNo.focus();});
+								}
+							}
+							else {
+								main_alert_message('Please enter a valid date "Date of Birth"', function(){ $txtBirthday.focus();});
+							}
+						}
+						else {
+							main_alert_message('Please enter a valid "Contact No."', function(){ $txtContactNo.focus();});
+						}
+					}
+					else {
+						main_alert_message('Please enter a valid "Email"', function(){ $txtEmail.focus();});
+					}
+				}
+				else {
+					main_alert_message('Please enter "Last Name"', function(){ $txtLastName.focus();});
+				}
+			}
+			else {
+				main_alert_message('Please enter "First Name"', function(){ $txtFirstName.focus();});
+			}
+		}
+		else {
+			main_alert_message('Please enter "PatientID"', function(){ $txtPatientID.focus();});
+		}
+	}
+	else {
+		main_alert_message('Please enter "Membership No."', function(){ $txtMemNo.focus();});
+	}
+	
+	return false;
+}
 
+function isHealthFundClient()
+{
+	if ($ddlHealthFund.val() == 0)
+		return false;
+	else
+		return true;
+}
 
+function showHealthFundClinetInputs()
+{
+	if ($rowHealthFundInput.hasClass('hidden'))
+		$rowHealthFundInput.removeClass('hidden');
+}
 
+function hideHealthFundClinetInputs()
+{
+	if (!($rowHealthFundInput.hasClass('hidden')))
+		$rowHealthFundInput.addClass('hidden');
+}
+
+function toggleHealthFundClinetInputs()
+{
+	if (isHealthFundClient()) {
+		// If client use Health Fund, show "Membership No." and "PatientID"
+		showHealthFundClinetInputs();
+	}
+	else {
+		// If not, hide "Membership No." and "PatientID"
+		hideHealthFundClinetInputs();
+	}
+}
 
 
 

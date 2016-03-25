@@ -20,32 +20,28 @@
 		{
 			$client = $this->generateClientModel($clientInfo, self::MODE_ADD);
 			
-			// test
-			//return print_r($client->getFindings());
-			
-			if ($this->_dataMapper->isClientExist($client))
-			{
-				return Utilities::getResponseResult(false, 'Membership Number ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.');
-			}
-			else
-			{
-				// test
-				//return $this->_dataMapper->insertFindings($client);
-				//return $this->_dataMapper->insertCondition($client);
-				
-				$affectedRow = $this->_dataMapper->insertClient($client);
-				
-				if ($affectedRow > 0) {
-					$this->_dataMapper->insertFindings($client);
-					$this->_dataMapper->insertConditions($client);
-					return Utilities::getResponseResult(true, 'New client has been inserted successfully.', $client->getID());
+			// Check existed memberships only in a case that clients use health fund 
+			if ($client->isHealthFund()) {
+				if ($this->_dataMapper->isExistedClientMember($client)) {
+					return Utilities::getResponseResult(false, 'Membership No. ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.');
 				}
-				else
-					return Utilities::getResponseResult(false, 'Inserting new client has failed!');
 			}
 			
-			//return print_r($client->getConditions());
-			//return 'Example Return';
+			// Check existed names in every cases
+			if ($this->_dataMapper->isExistedClientName($client)) {
+				return Utilities::getResponseResult(false, 'Client Name ['.$client->getFirstName().' '.$client->getLastName().'] already existed, please check the infotmation.');
+			}
+			
+			$affectedRow = $this->_dataMapper->insertClient($client);
+			
+			if ($affectedRow > 0) {
+				$this->_dataMapper->insertFindings($client);
+				$this->_dataMapper->insertConditions($client);
+				return Utilities::getResponseResult(true, 'New client has been inserted successfully.', $client->getID());
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Inserting new client has failed!');
+			}
 		} // addClient
 		
 		public function searchClients($search)
@@ -89,11 +85,22 @@
 		{
 			$client = $this->generateClientModel($editedClientInfo, self::MODE_UPDATE);
 			
-			$affectedRow = $this->_dataMapper->updateClient($client);
-			$affectedRow = $this->_dataMapper->updateClientFindings($client->getFindings());
-			$affectedRow = $this->_dataMapper->updateClientConditions($client->getConditions());
+			// Check existed names in every cases
+			if ($this->_dataMapper->isExistedClientName($client)) {
+				return Utilities::getResponseResult(false, 'Client Name ['.$client->getFirstName().' '.$client->getLastName().'] already existed, please check the infotmation.');
+			}
 			
-			return Utilities::getResponseResult(true, 'Client information has been updated successfully.', $editedClientInfo);
+			$affectedRow = $this->_dataMapper->updateClient($client);
+			
+			if ($affectedRow > 0) {
+				$this->_dataMapper->updateClientFindings($client->getFindings());
+				$this->_dataMapper->updateClientConditions($client->getConditions());
+				
+				return Utilities::getResponseResult(true, 'Client information has been updated successfully.', $editedClientInfo);
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Updating client information has failed!');
+			}
 		} // updateClient
 		
 		private function generateClientModel($clientInfo, $mode = self::MODE_ADD)
@@ -118,7 +125,8 @@
 					break;
 			}
 			
-			$client->setPatientID(empty($clientInfo['client_patient_id']) ? 1 : $clientInfo['client_patient_id']);
+			$client->setPatientID($clientInfo['client_patient_id']);
+			//$client->setPatientID(empty($clientInfo['client_patient_id']) ? 1 : $clientInfo['client_patient_id']);
 			$client->setBirthday(empty($clientInfo['client_birthday']) ? "" : Utilities::convertDateForDB($clientInfo['client_birthday']));
 			
 			$client->setFindings($this->generateClientFindingModels($client->getID(), $clientInfo['client_findings']));

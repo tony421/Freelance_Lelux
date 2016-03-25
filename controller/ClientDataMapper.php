@@ -11,19 +11,24 @@
 			$this->_dataAccess = new DataAccess();
 		}
 		
-		public function isClientExist($client)
+		public function isExistedClientMember($client)
 		{
 			try {
 				$sql_format = "
 						select client_id
 						from client
-						where client_membership_no = '%s'
-							and client_patient_id = %d";
+						where (
+							client_membership_no = '%s'
+							and client_patient_id = %d
+							and client_id != '%s'
+						)";
 					
 				$sql = sprintf($sql_format,
 						$client->getMembershipNo(),
-						$client->getPatientID());
+						$client->getPatientID(),
+						$client->getID());
 					
+				Utilities::logDebug($sql);
 				$result = $this->_dataAccess->select($sql);
 					
 				if (count($result) > 0)
@@ -34,7 +39,32 @@
 			} catch (Exception $e) {
 				throw $e;
 			}
-		} // isClientExist
+		} // isExistedClientMember
+		
+		public function isExistedClientName($client)
+		{
+			$sql_format = "
+						select client_id
+						from client
+						where (
+							client_first_name = '%s'
+							and client_last_name = '%s'
+							and client_id != '%s'
+						)";
+			
+			$sql = sprintf($sql_format,
+					$client->getFirstName(),
+					$client->getLastName(),
+					$client->getID());
+				
+			Utilities::logDebug($sql);
+			$result = $this->_dataAccess->select($sql);
+				
+			if (count($result) > 0)
+				return true;
+				else
+					return false;
+		} // isExistedClientName
 		
 		public function insertClient($client)
 		{
@@ -330,7 +360,7 @@ where client_first_name like '%%%s%%'
 						, report_create_user, DATE_FORMAT(report_create_datetime, '%%e/%%m/%%Y %%T') as report_create_datetime
 						, report_update_user, DATE_FORMAT(report_update_datetime, '%%e/%%m/%%Y %%T') as report_update_datetime
 					from report 
-					where client_id = '%s' order by report_date desc, report_create_datetime desc";
+					where client_id = '%s' order by report.report_date desc, report.report_create_datetime desc";
 			$sql = sprintf($sql_format, $clientID);
 			
 			Utilities::logDebug($sql);

@@ -5,7 +5,8 @@ function initPage()
 	initElementVariables();
 	
 	$btnAddClient = $('#btnAddClient');
-	$txtBirthday.inputmask({'alias': 'date'});
+	$txtEmail.inputmask('email');
+	$txtBirthday.inputmask('date');
 	$txtContactNo.inputmask('9999-999-999');
 	$txtEmerConNo.inputmask('9999-999-999');
 	
@@ -16,35 +17,12 @@ function initPage()
 	});
 	
 	$btnAddClient.click(function(){
-		if ($txtContactNo.inputmask("isComplete") || $txtContactNo.val() == "") {
-			if ($txtBirthday.inputmask("isComplete") || $txtBirthday.val() == "") {
-				if ($txtEmerConNo.inputmask("isComplete") || $txtEmerConNo.val() == "") {
-					main_confirm_message('Do you want to add a client?', addClient);
-				}
-				else {
-					main_alert_message('Please enter a invalid phone number in "Emergency Contact[Phone No.]"', function(){ $txtEmerConNo.focus();});
-				}
-			}
-			else {
-				main_alert_message('Please enter a invalid date in "Date of Birth"', function(){ $txtBirthday.focus();});
-			}
+		if (validateInputs()) {
+			main_confirm_message('Do you want to add a client?', addClient);
 		}
-		else {
-			main_alert_message('Please enter a invalid phone number in "Contact No."', function(){ $txtContactNo.focus();});
-		}
-		
-		/*
-		var x = getClientInfo();
-		alert(x.client_gender + ' | ' + x.client_membership_no);
-		
-		var y = '';
-		var find = getClientConditions();
-		for (var i = 0; i < find.length; i++) {
-			y += '[id: ' + find[i].id + ', checked: ' + find[i].checked + ', remark: ' + find[i].remark + '] \n ';	
-		}
-		alert(y);
-		*/
 	}); // btnAddClient.click
+	
+	toggleHealthFundClinetInputs();
 }
 
 function addClient()

@@ -13,7 +13,7 @@ function initPage()
 	$radSearchMem = $('#radSearchMem');
 	$radSearchName = $('#radSearchName');
 	$txtText = $('#txtText');
-	
+	$txtText.focus();
 	
 	$tableClient = $('#tableClient');
 	// keep instance of DataTable so that it will be used for row.add(), rows().remove() and others
@@ -25,10 +25,10 @@ function initPage()
 		rowId: 'client_id',
 		columns: [
 		    { data: "client_id", title: "Client ID", visible: false },
+		    { data: "client_name", title: "Client Name" },
             { data: "health_fund_name", title: "Health Fund" },
             { data: "client_membership_no", title: "Membership Number" },
-            { data: "client_patient_id", title: "Patient ID" },
-            { data: "client_name", title: "Client Name" }
+            { data: "client_patient_id", title: "Patient ID" }
         ]
 	});
 	$tableClientBody = $('#tableClient tbody');
