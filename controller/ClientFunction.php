@@ -230,7 +230,7 @@
 			$affectedRow = $this->_dataMapper->updateReportItem($reportItemInfo);
 			
 			if ($affectedRow > 0) {
-				$reportItemInfo['report_hour'] = (int)$reportItemInfo['report_hour'] * 60;
+				$reportItemInfo['report_hour'] = $reportItemInfo['report_hour'] * 60.0;
 				$reportItemInfo['report_update_datetime'] = Utilities::convertDatetimeForDisplay($reportItemInfo['report_update_datetime']);
 				return Utilities::getResponseResult(true, 'Report information has been updated successfully.', $reportItemInfo);
 			}
@@ -238,6 +238,19 @@
 				return Utilities::getResponseResult(false, 'Updating report has been failed!', $reportItemInfo);
 			}
 		} // updateReportItem
+		
+		public function getTherapists()
+		{
+			$result = $this->_dataMapper->getTherapists();
+			
+			if (count($result) > 0) {
+				return Utilities::getResponseResult(true, '', $result);	
+			}
+			else {
+				Utilities::logInfo("There is no therapist data in the system.");
+				return Utilities::getResponseResult(false, 'There is no therapist data in the system!');
+			}
+		} // getTherapists
 	}
 ?>
 

@@ -12,7 +12,10 @@
 			
 			$clientFunction = new ClientFunction();
 			
-			if ($mode == 'ADD_CLIENT') {
+			if ($mode == "GET_THERAPIST") {
+				$result = $clientFunction->getTherapists();
+			}
+			else if ($mode == 'ADD_CLIENT') {
 				$clientInfo = $_POST['data'];
 				Utilities::logInfo('Client-Boundary | data[clientInfo]: '.var_export($clientInfo, true));
 				

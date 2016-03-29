@@ -1,6 +1,7 @@
 var _clientID;
 var _clientInfo;
 var _reports;
+var _therapistOptions;
 
 var $btnEditClient;
 var $btnUpdateClient;
@@ -21,7 +22,7 @@ var prefixItemRecom = '#txtItemRecom';
 var prefixItemUpdateUser = '#lblItemUpdateUser';
 var prefixItemUpdateDatetime = '#lblItemUpdateDatetime';
 
-var panelItemTemplate = "<div id=\"panelItem{0}\" class=\"panel panel-warning\"> <div class=\"panel-heading\"> <div class=\"row\"> <div class=\"col-sm-6\"> <div class=\"panel-title\"> <b>Report on</b> <span id=\"lblItemDate{0}\">{2}</span> </div> </div> <div class=\"col-sm-6 text-right\"> <button type=\"button\" id=\"btnEditItem{0}\" class=\"btn btn-info btn-xs\" name=\"{0}\">Edit</button> <button type=\"button\" id=\"btnDeleteItem{0}\" class=\"btn btn-danger btn-xs\" name=\"{0}\">Delete</button> <button type=\"button\" id=\"btnUpdateItem{0}\" class=\"btn btn-warning btn-xs\" name=\"{1}\">Update</button> <button type=\"button\" id=\"btnCancelItem{0}\" class=\"btn btn-default btn-xs\" name=\"{1}\">Cancel</button> </div> </div> </div> <div class=\"panel-body\"> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Therapist</label> <div class=\"col-sm-3\"> <select id=\"ddlItemTherapist{0}\" class=\"form-control\" disabled> <option value=\"1\">A</option> <option value=\"2\">B</option> <option value=\"3\">C</option> <option value=\"4\">D</option> <option value=\"5\">E</option> <option value=\"6\">F</option> </select> </div> <label class=\"col-sm-1 control-label\">Hours</label> <div class=\"col-sm-3\"> <select id=\"ddlItemHour{0}\" class=\"form-control\" disabled> <option value=\"30\">30 Min</option> <option value=\"45\">45 Min</option> <option value=\"60\" selected>1 Hr</option> <option value=\"75\">1 Hr 15 Min</option> <option value=\"90\">1 Hr 30 Min</option> <option value=\"105\">1 Hr 45 Min</option> <option value=\"120\">2 Hr</option> <option value=\"135\">2 Hr 15 Min</option> <option value=\"150\">2 Hr 30 Min</option> <option value=\"165\">2 Hr 45 Min</option> <option value=\"180\">3 Hr</option> <option value=\"195\">3 Hr 15 Min</option> <option value=\"210\">3 Hr 30 Min</option> <option value=\"225\">3 Hr 45 Min</option> <option value=\"240\">4 Hr</option> </select> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Massage Details</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemDetail{0}\" rows=\"2\" class=\"form-control\" readonly>{3}</textarea> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Recommendation</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemRecom{0}\" rows=\"2\" class=\"form-control\" readonly>{4}</textarea> </div> </div> </div> <div class=\"panel-footer\"> <small> <b>Created by:</b> <span id=\"lblItemCreateUser{0}\">{5}</span> <b>Created on:</b> <span id=\"lblItemCreateDatetime{0}\">{6}</span> <b>Updated by:</b> <span id=\"lblItemUpdateUser{0}\">{7}</span> <b>Updated on:</b> <span id=\"lblItemUpdateDatetime{0}\">{8}</span> </small> </div> </div>";
+var panelItemTemplate = "<div id=\"panelItem{0}\" class=\"panel panel-warning\"> <div class=\"panel-heading\"> <div class=\"row\"> <div class=\"col-sm-6\"> <div class=\"panel-title\"> <b>Report on</b> <span id=\"lblItemDate{0}\">{2}</span> </div> </div> <div class=\"col-sm-6 text-right\"> <button type=\"button\" id=\"btnEditItem{0}\" class=\"btn btn-info btn-xs\" name=\"{0}\">Edit</button> <button type=\"button\" id=\"btnDeleteItem{0}\" class=\"btn btn-danger btn-xs\" name=\"{0}\">Delete</button> <button type=\"button\" id=\"btnUpdateItem{0}\" class=\"btn btn-warning btn-xs\" name=\"{1}\">Update</button> <button type=\"button\" id=\"btnCancelItem{0}\" class=\"btn btn-default btn-xs\" name=\"{1}\">Cancel</button> </div> </div> </div> <div class=\"panel-body\"> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Therapist</label> <div class=\"col-sm-3\"> <select id=\"ddlItemTherapist{0}\" class=\"form-control\" disabled> {9} </select> </div> <label class=\"col-sm-1 control-label\">Hours</label> <div class=\"col-sm-3\"> <select id=\"ddlItemHour{0}\" class=\"form-control\" disabled> <option value=\"30\">30 Min</option> <option value=\"45\">45 Min</option> <option value=\"60\" selected>1 Hr</option> <option value=\"75\">1 Hr 15 Min</option> <option value=\"90\">1 Hr 30 Min</option> <option value=\"105\">1 Hr 45 Min</option> <option value=\"120\">2 Hr</option> <option value=\"135\">2 Hr 15 Min</option> <option value=\"150\">2 Hr 30 Min</option> <option value=\"165\">2 Hr 45 Min</option> <option value=\"180\">3 Hr</option> <option value=\"195\">3 Hr 15 Min</option> <option value=\"210\">3 Hr 30 Min</option> <option value=\"225\">3 Hr 45 Min</option> <option value=\"240\">4 Hr</option> </select> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Massage Details</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemDetail{0}\" rows=\"2\" class=\"form-control\" readonly>{3}</textarea> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Recommendation</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemRecom{0}\" rows=\"2\" class=\"form-control\" readonly>{4}</textarea> </div> </div> </div> <div class=\"panel-footer\"> <small> <b>Created by:</b> <span id=\"lblItemCreateUser{0}\">{5}</span> <b>Created on:</b> <span id=\"lblItemCreateDatetime{0}\">{6}</span> <b>Updated by:</b> <span id=\"lblItemUpdateUser{0}\">{7}</span> <b>Updated on:</b> <span id=\"lblItemUpdateDatetime{0}\">{8}</span> </small> </div> </div>";
 
 function initPage()
 {
@@ -77,6 +78,28 @@ function initPage()
 	}
 }
 
+function initTherapists()
+{
+	main_request_ajax('client-boundary.php', 'GET_THERAPIST', {}, onGetTherapistsDone);
+}
+
+function onGetTherapistsDone(response)
+{
+	if (response.success) {
+		_therapistOptions = [];
+		therapists = response.result;
+
+		$.each(therapists, function (i, therapist){
+			option = "<option value='" + therapist['therapist_id'] + "'>" + therapist['therapist_name'] + "</option>";
+			
+			_therapistOptions.push(option);
+			$ddlReportTherapist.append(option);
+		});
+		
+		getReports();
+	}
+}
+
 function getClientInfo(clientID)
 {
 	main_request_ajax('client-boundary.php', 'GET_CLIENT_INFO', clientID, onGetClientInfoDone);
@@ -90,7 +113,8 @@ function onGetClientInfoDone(response)
 		setClientInfo(_clientInfo);
 		toggleHealthFundClinetInputs();
 		
-		getReports();
+		initTherapists();
+		//getReports();
 	}
 	else {
 		main_alert_message(response.msg);
@@ -394,7 +418,8 @@ function onGetReportsDone(response)
 					_reports[i]['report_create_user'],
 					_reports[i]['report_create_datetime'],
 					_reports[i]['report_update_user'],
-					_reports[i]['report_update_datetime']
+					_reports[i]['report_update_datetime'],
+					_therapistOptions
 				));
 			
 			setReportItemBtnEdit(reportID);

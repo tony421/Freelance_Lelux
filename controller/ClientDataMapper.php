@@ -391,6 +391,14 @@ where client_first_name like '%%%s%%'
 			Utilities::logDebug($sql);
 			return $this->_dataAccess->insert($sql);
 		} // updateReportItem
+		
+		public function getTherapists()
+		{
+			$sql = "select * from therapist order by therapist_name";
+			
+			Utilities::logDebug($sql);
+			return $this->_dataAccess->select($sql);
+		}
 	}
 ?>
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2016 at 03:26 PM
+-- Generation Time: Mar 29, 2016 at 04:34 PM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.6.14
 
@@ -52,19 +52,6 @@ CREATE TABLE `client` (
   `client_void_user` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `client`
---
-
-INSERT INTO `client` (`client_id`, `health_fund_id`, `client_membership_no`, `client_patient_id`, `client_first_name`, `client_last_name`, `client_gender`, `client_address`, `client_postcode`, `client_email`, `client_contact_no`, `client_birthday`, `client_occupation`, `client_sports`, `client_other_conditions`, `client_emergency_contact_name`, `client_emergency_contact_no`, `client_create_datetime`, `client_create_user`, `client_update_datetime`, `client_update_user`, `client_void_datetime`, `client_void_user`) VALUES
-('56f17a5231e5c', 32, '9001', 0, 'Mark', 'Macro', b'0', '19 Moo st.', '3078', 'mark@gmail.com', '0984128921', '1970-01-01', 'Lawer', 'Soccer', '', 'Miky', '0891112222', '2016-03-23 04:01:06', 'default', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', ''),
-('56f17c3331c74', 9, '70091', 1, 'Frank', 'Scoot', b'0', '203 King st.', '3000', 'frankscoot@hotmail.com', '0454449999', '1989-05-20', 'Student', 'Footy', '', '', '', '2016-03-23 04:09:07', 'default', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', ''),
-('56f17d4063ec9', 18, '345678', 0, 'Maggie', 'Gyllenhaal', b'1', '54 Church street', '3045', 'maggy@gmail.com', '0897776666', '1984-09-04', 'Accoutant', 'Yoga', '', 'Mom', '0459990000', '2016-03-23 04:13:36', 'default', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', ''),
-('56f1d4493e2f3', 18, 'HF90001', 0, 'Thawatchai', 'Jidsodsai', b'1', '509/565 Flinders street, Melbourne, VIC', '3000', 'thawat@gmail.com', '0982229999', '1980-02-02', 'S.PG', 'Soccer, swimming', 'nothing1', 'Mala', '0936669999', '2016-03-23 10:24:57', 'default', '2016-03-23 20:21:09', 'default', '0000-00-00 00:00:00', ''),
-('56f1f456ec772', 1, '', 0, '', '', b'0', '', '', '', '', '0000-00-00', '', '', '', '', '', '2016-03-23 12:41:42', 'default', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', ''),
-('56f1fae137be4', 1, '', 1, '', '', b'0', '', '', '', '', '0000-00-00', '', '', '', '', '', '2016-03-23 13:09:37', 'default', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', ''),
-('56f2164068469', 1, '9999999999', 1, '', '', b'0', '', '', '', '', '0000-00-00', '', '', '', '', '', '2016-03-23 15:06:24', 'default', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '');
-
 -- --------------------------------------------------------
 
 --
@@ -78,96 +65,6 @@ CREATE TABLE `client_condition` (
   `client_condition_checked` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `client_condition`
---
-
-INSERT INTO `client_condition` (`client_id`, `condition_type_id`, `client_condition_remark`, `client_condition_checked`) VALUES
-('56f17a5231e5c', 1, '', 0),
-('56f17c3331c74', 1, '', 0),
-('56f17d4063ec9', 1, '', 0),
-('56f1d4493e2f3', 1, 'xxx', 1),
-('56f1f456ec772', 1, '', 0),
-('56f1fae137be4', 1, '', 0),
-('56f2164068469', 1, '', 0),
-('56f17a5231e5c', 2, '', 0),
-('56f17c3331c74', 2, '', 0),
-('56f17d4063ec9', 2, '', 0),
-('56f1d4493e2f3', 2, '', 0),
-('56f1f456ec772', 2, '', 0),
-('56f1fae137be4', 2, '', 0),
-('56f2164068469', 2, '', 0),
-('56f17a5231e5c', 3, '', 0),
-('56f17c3331c74', 3, '', 0),
-('56f17d4063ec9', 3, '', 0),
-('56f1d4493e2f3', 3, 'f', 1),
-('56f1f456ec772', 3, '', 0),
-('56f1fae137be4', 3, '', 0),
-('56f2164068469', 3, '', 0),
-('56f17a5231e5c', 4, '', 0),
-('56f17c3331c74', 4, '', 0),
-('56f17d4063ec9', 4, '', 0),
-('56f1d4493e2f3', 4, '', 1),
-('56f1f456ec772', 4, '', 0),
-('56f1fae137be4', 4, '', 0),
-('56f2164068469', 4, '', 0),
-('56f17a5231e5c', 5, '', 0),
-('56f17c3331c74', 5, '', 0),
-('56f17d4063ec9', 5, '', 0),
-('56f1d4493e2f3', 5, '', 0),
-('56f1f456ec772', 5, '', 0),
-('56f1fae137be4', 5, '', 0),
-('56f2164068469', 5, '', 0),
-('56f17a5231e5c', 6, '', 1),
-('56f17c3331c74', 6, '', 1),
-('56f17d4063ec9', 6, '', 0),
-('56f1d4493e2f3', 6, '', 0),
-('56f1f456ec772', 6, '', 0),
-('56f1fae137be4', 6, '', 0),
-('56f2164068469', 6, '', 0),
-('56f17a5231e5c', 7, '', 0),
-('56f17c3331c74', 7, '', 0),
-('56f17d4063ec9', 7, '', 0),
-('56f1d4493e2f3', 7, '', 0),
-('56f1f456ec772', 7, '', 0),
-('56f1fae137be4', 7, '', 0),
-('56f2164068469', 7, '', 0),
-('56f17a5231e5c', 8, '', 0),
-('56f17c3331c74', 8, '', 0),
-('56f17d4063ec9', 8, '', 0),
-('56f1d4493e2f3', 8, '', 0),
-('56f1f456ec772', 8, '', 0),
-('56f1fae137be4', 8, '', 0),
-('56f2164068469', 8, '', 0),
-('56f17a5231e5c', 9, '', 0),
-('56f17c3331c74', 9, '', 0),
-('56f17d4063ec9', 9, '', 0),
-('56f1d4493e2f3', 9, '', 0),
-('56f1f456ec772', 9, '', 0),
-('56f1fae137be4', 9, '', 0),
-('56f2164068469', 9, '', 0),
-('56f17a5231e5c', 10, '', 0),
-('56f17c3331c74', 10, '', 0),
-('56f17d4063ec9', 10, '', 0),
-('56f1d4493e2f3', 10, '', 0),
-('56f1f456ec772', 10, '', 0),
-('56f1fae137be4', 10, '', 0),
-('56f2164068469', 10, '', 0),
-('56f17a5231e5c', 11, '', 0),
-('56f17c3331c74', 11, '', 0),
-('56f17d4063ec9', 11, '', 0),
-('56f1d4493e2f3', 11, '', 0),
-('56f1f456ec772', 11, '', 0),
-('56f1fae137be4', 11, '', 0),
-('56f2164068469', 11, '', 0),
-('56f17a5231e5c', 12, 'lower back', 1),
-('56f17c3331c74', 12, '', 0),
-('56f17d4063ec9', 12, '', 0),
-('56f1d4493e2f3', 12, '', 0),
-('56f1f456ec772', 12, '', 0),
-('56f1fae137be4', 12, '', 0),
-('56f2164068469', 12, '', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -180,68 +77,6 @@ CREATE TABLE `client_finding` (
   `client_finding_remark` varchar(50) NOT NULL,
   `client_finding_checked` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `client_finding`
---
-
-INSERT INTO `client_finding` (`client_id`, `finding_type_id`, `client_finding_remark`, `client_finding_checked`) VALUES
-('56f17a5231e5c', 1, '', 1),
-('56f17c3331c74', 1, '', 0),
-('56f17d4063ec9', 1, '', 0),
-('56f1d4493e2f3', 1, '', 1),
-('56f1f456ec772', 1, '', 0),
-('56f1fae137be4', 1, '', 0),
-('56f2164068469', 1, '', 0),
-('56f17a5231e5c', 2, '', 0),
-('56f17c3331c74', 2, '', 0),
-('56f17d4063ec9', 2, '', 0),
-('56f1d4493e2f3', 2, '', 0),
-('56f1f456ec772', 2, '', 0),
-('56f1fae137be4', 2, '', 0),
-('56f2164068469', 2, '', 0),
-('56f17a5231e5c', 3, '', 0),
-('56f17c3331c74', 3, '', 0),
-('56f17d4063ec9', 3, '', 0),
-('56f1d4493e2f3', 3, '', 0),
-('56f1f456ec772', 3, '', 0),
-('56f1fae137be4', 3, '', 0),
-('56f2164068469', 3, '', 0),
-('56f17a5231e5c', 4, '', 0),
-('56f17c3331c74', 4, '', 0),
-('56f17d4063ec9', 4, '', 1),
-('56f1d4493e2f3', 4, '', 0),
-('56f1f456ec772', 4, '', 0),
-('56f1fae137be4', 4, '', 0),
-('56f2164068469', 4, '', 0),
-('56f17a5231e5c', 5, '', 0),
-('56f17c3331c74', 5, '', 0),
-('56f17d4063ec9', 5, '', 0),
-('56f1d4493e2f3', 5, '', 0),
-('56f1f456ec772', 5, '', 0),
-('56f1fae137be4', 5, '', 0),
-('56f2164068469', 5, '', 0),
-('56f17a5231e5c', 6, '', 0),
-('56f17c3331c74', 6, '', 0),
-('56f17d4063ec9', 6, '', 0),
-('56f1d4493e2f3', 6, '', 0),
-('56f1f456ec772', 6, '', 0),
-('56f1fae137be4', 6, '', 0),
-('56f2164068469', 6, '', 0),
-('56f17a5231e5c', 7, '', 0),
-('56f17c3331c74', 7, '', 1),
-('56f17d4063ec9', 7, '', 0),
-('56f1d4493e2f3', 7, '', 0),
-('56f1f456ec772', 7, '', 0),
-('56f1fae137be4', 7, '', 0),
-('56f2164068469', 7, '', 0),
-('56f17a5231e5c', 8, '', 0),
-('56f17c3331c74', 8, '', 0),
-('56f17d4063ec9', 8, 'Mom', 1),
-('56f1d4493e2f3', 8, 'x', 1),
-('56f1f456ec772', 8, '', 0),
-('56f1fae137be4', 8, '', 0),
-('56f2164068469', 8, '', 0);
 
 -- --------------------------------------------------------
 
@@ -315,6 +150,7 @@ CREATE TABLE `health_fund` (
 --
 
 INSERT INTO `health_fund` (`health_fund_id`, `health_fund_name`) VALUES
+(0, '----- Non Health Fund -----'),
 (1, 'ACA Health'),
 (2, 'AHM Health Insurance'),
 (3, 'Australian Unity Health Ltd'),
@@ -386,13 +222,6 @@ CREATE TABLE `report` (
   `client_id` varchar(23) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `report`
---
-
-INSERT INTO `report` (`report_id`, `report_date`, `report_detail`, `report_recommendation`, `report_hour`, `therapist_id`, `membership_no`, `pateint_id`, `report_create_datetime`, `report_create_user`, `report_update_datetime`, `report_update_user`, `report_void_datetime`, `report_void_user`, `client_id`) VALUES
-('56f2a73b8f8cb', '2016-03-24', 'a', 'b', '1.75', 2, 0, 0, '2016-03-24 01:24:59', 'default', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '', '56f1d4493e2f3');
-
 -- --------------------------------------------------------
 
 --
@@ -405,6 +234,25 @@ CREATE TABLE `therapist` (
   `therapist_username` varchar(10) NOT NULL,
   `therapist_password` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `therapist`
+--
+
+INSERT INTO `therapist` (`therapist_id`, `therapist_name`, `therapist_username`, `therapist_password`) VALUES
+(1, 'Natalie', '', ''),
+(2, 'Sandy', '', ''),
+(3, 'Nicha', '', ''),
+(4, 'Kate', '', ''),
+(5, 'Patty', '', ''),
+(6, 'Eve', '', ''),
+(7, 'Pranee', '', ''),
+(8, 'Sue', '', ''),
+(9, 'Ice', '', ''),
+(10, 'Barbie', '', ''),
+(11, 'Noo', '', ''),
+(12, 'Ri', '', ''),
+(13, 'Donna', '', '');
 
 --
 -- Indexes for dumped tables
@@ -477,7 +325,7 @@ ALTER TABLE `health_fund`
 -- AUTO_INCREMENT for table `therapist`
 --
 ALTER TABLE `therapist`
-  MODIFY `therapist_id` smallint(6) NOT NULL AUTO_INCREMENT;
+  MODIFY `therapist_id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

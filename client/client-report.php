@@ -394,12 +394,6 @@
 						<label class="col-sm-offset-2 col-sm-2 control-label">Therapist</label>
 						<div class="col-sm-2">
 							<select id="ddlReportTherapist" class="form-control">
-								<option value="1">A</option>
-								<option value="2">B</option>
-								<option value="3">C</option>
-								<option value="4">D</option>
-								<option value="5">E</option>
-								<option value="6">F</option>
 							</select>
 						</div>
 						<label class="col-sm-1 control-label">Hours</label>
