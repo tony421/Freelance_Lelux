@@ -356,7 +356,7 @@ where client_first_name like '%%%s%%'
 			$sql_format = "
 					select report_id, DATE_FORMAT(report_date, '%%e %%M %%Y') as report_date
 						, report_detail, report_recommendation
-						, CAST(report_hour * 60 as integer) report_hour, therapist_id
+						, CAST(report_hour * 60 as decimal(0)) report_hour, therapist_id
 						, report_create_user, DATE_FORMAT(report_create_datetime, '%%e/%%m/%%Y %%T') as report_create_datetime
 						, report_update_user, DATE_FORMAT(report_update_datetime, '%%e/%%m/%%Y %%T') as report_update_datetime
 					from report 
