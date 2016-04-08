@@ -48,6 +48,8 @@ class DataAccess
 	public function select($sql)
 	{
 		try {
+			Utilities::logDebug($sql);
+			
 			$this->openConnection();
 			
 			$result = mysqli_query($this->_conn, $sql);
@@ -70,6 +72,8 @@ class DataAccess
 	private function manipulate($sql)
 	{
 		try {
+			Utilities::logDebug($sql);
+			
 			$this->openConnection();
 			
 			$result = mysqli_multi_query($this->_conn, $sql);

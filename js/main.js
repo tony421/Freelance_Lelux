@@ -40,6 +40,11 @@ function main_redirect(url)
 	window.location.replace(url);
 }
 
+function main_open_new_tab(url)
+{
+	window.open(url, '_blank');
+}
+
 function main_get_parameter(name, url) {
     if (!url) url = window.location.href;
     url = url.toLowerCase(); // This is just to avoid case sensitiveness  

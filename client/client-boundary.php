@@ -1,5 +1,6 @@
 <?php
 	require_once '../controller/ClientFunction.php';
+	require_once '../controller/TherapistFunction.php';
 	require_once '../controller/Utilities.php';
 	
 	if (!empty($_POST['mode']))
@@ -13,7 +14,8 @@
 			$clientFunction = new ClientFunction();
 			
 			if ($mode == "GET_THERAPIST") {
-				$result = $clientFunction->getTherapists();
+				$therapistFunction = new TherapistFunction();
+				$result = $therapistFunction->getTherapists();
 			}
 			else if ($mode == 'ADD_CLIENT') {
 				$clientInfo = $_POST['data'];

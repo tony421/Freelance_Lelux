@@ -77,6 +77,7 @@ function getSearchCondition()
 function clearTableClient()
 {
 	dtTableClient.rows().remove().draw();
+	$tableClientBody.unbind(); // unbind events to prevent duplicate events
 }
 
 function hideTableClient()
@@ -116,7 +117,7 @@ function setClientRowSelection()
     });
 	
 	$tableClientBody.on('dblclick', 'tr', function () {
-		main_redirect('../client/client-report.php?id=' + dtTableClient.row('.selected').id());
+		main_open_new_tab('../client/client-report.php?id=' + dtTableClient.row('.selected').id());
 		//main_alert_message(dtTableClient.row('.selected').id());
 	});
 }

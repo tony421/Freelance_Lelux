@@ -28,7 +28,6 @@
 						$client->getPatientID(),
 						$client->getID());
 					
-				Utilities::logDebug($sql);
 				$result = $this->_dataAccess->select($sql);
 					
 				if (count($result) > 0)
@@ -57,7 +56,6 @@
 					$client->getLastName(),
 					$client->getID());
 				
-			Utilities::logDebug($sql);
 			$result = $this->_dataAccess->select($sql);
 				
 			if (count($result) > 0)
@@ -296,7 +294,6 @@ where client_first_name like '%%%s%%'
 			
 			$sql = join("; ", $sqlFindings);
 			
-			//Utilities::logDebug($sql);
 			return $this->_dataAccess->update($sql);
 		} // updateClientFindings
 		
@@ -322,7 +319,6 @@ where client_first_name like '%%%s%%'
 				
 			$sql = join("; ", $sqlConditions);
 				
-			Utilities::logDebug($sql);
 			return $this->_dataAccess->update($sql);
 		} // updateClientConditions
 		
@@ -347,7 +343,6 @@ where client_first_name like '%%%s%%'
 					$reportInfo['report_create_user'], $reportInfo['report_create_datetime'],
 					$reportInfo['report_update_user'], $reportInfo['report_update_datetime']);
 			
-			Utilities::logDebug($sql);
 			return $this->_dataAccess->insert($sql);
 		} // insertReport
 		
@@ -363,7 +358,6 @@ where client_first_name like '%%%s%%'
 					where client_id = '%s' order by report.report_date desc, report.report_create_datetime desc";
 			$sql = sprintf($sql_format, $clientID);
 			
-			Utilities::logDebug($sql);
 			return $this->_dataAccess->select($sql);
 		} // getReports
 		
@@ -388,7 +382,6 @@ where client_first_name like '%%%s%%'
 					$reportItemInfo['report_id']
 				);
 			
-			Utilities::logDebug($sql);
 			return $this->_dataAccess->insert($sql);
 		} // updateReportItem
 		
@@ -396,7 +389,6 @@ where client_first_name like '%%%s%%'
 		{
 			$sql = "select * from therapist order by therapist_name";
 			
-			Utilities::logDebug($sql);
 			return $this->_dataAccess->select($sql);
 		}
 	}

@@ -239,7 +239,7 @@
 			}
 		} // updateReportItem
 		
-		public function getTherapists()
+		public function getTherapists() // *** Use getTherapists() in TherapistFunction instead
 		{
 			$result = $this->_dataMapper->getTherapists();
 			

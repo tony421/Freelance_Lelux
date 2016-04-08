@@ -163,10 +163,10 @@ function validateInputs()
 {
 	isHealthFund = isHealthFundClient();
 	
-	if ((isHealthFund && $txtMemNo.val().length) || !isHealthFund) {
-		if (isHealthFund && $txtPatientID.val().length || !isHealthFund) {
-			if ($txtFirstName.val().length) {
-				if ($txtLastName.val().length) {
+	if ((isHealthFund && $txtMemNo.val().trim().length) || !isHealthFund) {
+		if (isHealthFund && $txtPatientID.val().trim().length || !isHealthFund) {
+			if ($txtFirstName.val().trim().length) {
+				if ($txtLastName.val().trim().length) {
 					if ($txtEmail.inputmask("isComplete") || $txtEmail.val() == "") {
 						if ($txtContactNo.inputmask("isComplete") || $txtContactNo.val() == "") {
 							if ($txtBirthday.inputmask("isComplete") || $txtBirthday.val() == "") {

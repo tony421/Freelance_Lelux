@@ -333,13 +333,16 @@ function validateReportInputs()
 {
 	if ($txtReportDate.val().length) {
 		if ($txtReportDate.inputmask("isComplete")) {
-			if ($txtReportDetail.val().length) {
-				if ($txtReportRecom.val().length) {
+			if ($txtReportDetail.val().trim().length) {
+				return true;
+				/*
+				if ($txtReportRecom.val().trim().length) {
 					return true;
 				}
 				else {
 					main_alert_message('Please enter "Report Recommendation"', function(){ $txtReportRecom.focus();});
 				}
+				*/
 			}
 			else {
 				main_alert_message('Please enter "Report Massage Details"', function(){ $txtReportDetail.focus();});
