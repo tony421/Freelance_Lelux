@@ -14,6 +14,10 @@ if (!String.prototype.format) {
 function main_request_ajax(url, mode, data, onSuccess)
 {
 	//main_loading_show();
+
+	// ***Note
+	//		- a single quate copied from any document can cause an error [Unexpected end of input]
+	//			, so check carefully or type by yourself.
 	
 	$.ajax({
 		url: url,
@@ -43,6 +47,21 @@ function main_redirect(url)
 function main_open_new_tab(url)
 {
 	window.open(url, '_blank');
+}
+
+function main_log_off()
+{
+	main_request_ajax('../authentication/authentication-boundary.php', 'LOG_OFF', {}, main_on_log_off_success);
+}
+
+function main_on_log_off_success(response)
+{
+	if (response.success) {
+		main_redirect('../login/login.php');
+	}
+	else {
+		main_alert_message(response.msg);
+	}
 }
 
 function main_get_parameter(name, url) {

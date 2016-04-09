@@ -1,3 +1,13 @@
+<?php
+	//ob_start();
+	
+	require_once '../controller/authentication.php';
+
+	Authentication::authenticateAdminUser();
+	
+	//ob_end_flush();
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -32,9 +42,9 @@
 	    </script>
     </head>
     <body>
-    	<div id="header">
-			<div id="header-logo"></div>
-		</div><!-- header -->
+    	<?php require_once '../master-page/header.php';?>
+    	
+    	<?php $_GET['page'] = 'therapist-manage'; require_once '../master-page/menu.php';?>
 		
 		<div id="content">
 			<div class="title-container">
@@ -74,6 +84,9 @@
 				</form> <!-- .form-horizontal -->
 			</div> <!-- .container -->
 		</div> <!-- #content -->
+		
+		<div id="footer">
+		</div> <!-- footer -->
 	</body>
 </html>
 

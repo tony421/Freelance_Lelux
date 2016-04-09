@@ -1,4 +1,5 @@
 <?php
+	require_once '../controller/Session.php';
 	require_once '../model/Therapist.php';
 	require_once '../controller/TherapistDataMapper.php';
 	require_once '../controller/Utilities.php';

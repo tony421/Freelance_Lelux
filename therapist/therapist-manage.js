@@ -57,7 +57,7 @@ function initPage()
 
 function getTherapists()
 {
-	main_request_ajax('therapist-boundary.php', 'GET_THERAPIST', {}, onGetTherapistsDone);
+	main_request_ajax('therapist-boundary.php', 'GET_THERAPIST_FOR_MANAGE', {}, onGetTherapistsDone);
 }
 
 function onGetTherapistsDone(response)

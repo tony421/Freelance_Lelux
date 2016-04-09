@@ -154,10 +154,30 @@ function initElementVariables()
 	$txtEmerConNo = $('#txtEmerConNo');
 	$rowHealthFundInput = $('#rowHealthFundInput');
 	
+	initHealthFunds();
+	
 	$ddlHealthFund.change(function(){
 		toggleHealthFundClinetInputs();
 	});
 }
+
+function initHealthFunds()
+{
+	main_request_ajax('../healthfund/healthfund-boundary.php', 'GET_HEALTH_FUND', {}, onInitHealthFunds);
+}
+
+function onInitHealthFunds(response)
+{
+	if (response.success) {
+		healthfunds = response.result;
+
+		$.each(healthfunds, function (i, healthfund){
+			option = "<option value='" + healthfund['health_fund_id'] + "'>" + healthfund['health_fund_name'] + "</option>";
+			
+			$ddlHealthFund.append(option);
+		});
+	}
+} // onInitHealthFunds
 
 function validateInputs()
 {

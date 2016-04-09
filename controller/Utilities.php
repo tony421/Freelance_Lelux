@@ -20,6 +20,22 @@
 			return array('success' => $success, 'msg' => $msg, 'result' => $result);
 		}
 		
+		public static function handleError()
+		{
+			// *** "set_error_handler" cannot catch a fatal error
+			set_error_handler(function($code, $message, $file, $line){
+				Utilities::logError("Error code: ".$code."\nMessage: ".$message."\nFile: ".$file."\nLine: ".$line);
+			});
+		}
+		
+		public static function getVal($array, $index)
+		{
+			if (isset($array[$index]))
+				return $array[$index];
+			else
+				throw new Exception('Undefinded index: "'.$index.'"', 9001);
+		}
+		
 		private static function setUpLogger()
 		{
 			//$this->logger = new KLogger(LOG_PATH, KLogger::DEBUG);

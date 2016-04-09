@@ -1,3 +1,13 @@
+<?php
+	//ob_start();
+	
+	require_once '../controller/authentication.php';
+
+	Authentication::authenticateUser();
+	
+	//ob_end_flush();
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -6,7 +16,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 	    
-	    <title>Client - Add new client</title>
+	    <title>Client - Client reports</title>
 	    
 	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
@@ -34,37 +44,9 @@
 	    </script>
     </head>
     <body>
-    	<div id="header">
-			<div id="header-logo"></div>
-		</div><!-- header -->
-		
-		<div id="menu">
-			<nav class="navbar navbar-default">
-  				<div class="container">
-  					<!-- Brand and toggle get grouped for better mobile display -->
-  					<div class="navbar-header">
-      					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-					        <span class="sr-only">Toggle navigation</span>
-					        <span class="icon-bar"></span>
-					        <span class="icon-bar"></span>
-					        <span class="icon-bar"></span>
-      					</button>
-						<a class="navbar-brand" href="#">Lulex</a>
-    				</div>
-    				
-    				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      					<ul class="nav navbar-nav">
-      						<li>
-      							<a href="../client/client-add.php">Add Client</a>
-      						</li>
-        					<li>
-        						<a href="../client/client-search.php">Search Client</a>
-        					</li>
-      					</ul>
-      				</div> <!-- /.navbar-collapse -->
-  				</div> <!-- /.container-fluid -->
-  			</nav> <!-- /nav.navbar -->
-		</div> <!-- /menu -->
+    	<?php require_once '../master-page/header.php';?>
+    	
+    	<?php $_GET['page'] = 'client-report'; require_once '../master-page/menu.php';?>
 		
 		<div id="content">
 			<div class="title-container">
@@ -76,6 +58,7 @@
 						<label class="col-sm-2 control-label">Health Fund</label>
 						<div class="col-sm-4">
 							<select id="ddlHealthFund" class="form-control" disabled>
+								<!--
 								<option value="0">----- Non Health Fund -----</option>
 								<option value="1">ACA Health</option>
 								<option value="2">AHM Health Insurance</option>
@@ -110,6 +93,7 @@
 								<option value="31">TUH</option>
 								<option value="32">Uni Health</option>
 								<option value="33">Westfund Ltd</option>
+								-->
 							</select>
 						</div>
 					</div>

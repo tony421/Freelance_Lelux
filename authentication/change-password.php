@@ -16,7 +16,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 	    
-	    <title>Client - Search client</title>
+	    <title>Change Password</title>
 	    
 	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
@@ -28,60 +28,64 @@
 	    <link rel="stylesheet" href="../css/main-id.css">
 	    <link rel="stylesheet" href="../css/main-class.css">
 	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
 	    
-	    <script type="text/javascript" src="../js/main.js"></script>
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-	    <script type="text/javascript" src="client-search.js"></script>
+	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="change-password.js"></script>
 	    
 	    <script type="text/javascript">
 	    	$(document).ready(function(){
 	    		initPage();
 		    });
 	    </script>
-	</head>
+    </head>
 	<body>
-		<?php require_once '../master-page/header.php';?>
+    	<?php require_once '../master-page/header.php';?>
     	
-    	<?php $_GET['page'] = 'client-search'; require_once '../master-page/menu.php';?>
+    	<?php $_GET['page'] = 'change-password'; require_once '../master-page/menu.php';?>
 		
 		<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Search Client ::~</div>
+				<div class="title-text">~:: Change Password ::~</div>
 			</div>
 			<div class="container">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Search By</label>
-						<div class="col-sm-2">
-							<label class="radio-inline">
-								<input type="radio" id="radSearchMem" name="searchby" value="1" checked="checked"> Membership Number
-							</label>
-						</div>
-						<div class="col-sm-2">
-							<label class="radio-inline">
-								<input type="radio" id="radSearchName" name="searchby" value="2"> Client Name
-							</label>
-						</div>
+						<label class="col-sm-offset-3 col-sm-2 control-label">Old Password</label>
 						<div class="col-sm-3">
-							<input type="text" id="txtText" class="form-control">
-						</div>
-						<div class="col-sm-2">
-							<button type="button" id="btnSearchClient" class="btn btn-primary">Search</button>
+							<input type="password" id="txtOldPassword" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-12">
-							<table id="tableClient" class="display" cellspacing="0" width="100%">
-				            </table>
+						<label class="col-sm-offset-3 col-sm-2 control-label">New Password</label>
+						<div class="col-sm-3">
+							<input type="password" id="txtNewPassword" class="form-control">
 						</div>
 					</div>
-				</form> <!-- /form-horizontal -->
-			</div> <!-- /container -->
-		</div> <!-- /content -->
-		
-		<div id="footer">
-		</div> <!-- footer -->
+					<div class="form-group">
+						<label class="col-sm-offset-2 col-sm-3 control-label">New Password (Confirm)</label>
+						<div class="col-sm-3">
+							<input type="password" id="txtNewPasswordConfirm" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 text-center">
+							<button type="button" id="btnChangePassword" class="btn btn-info btn-lg">Change Password</button>
+						</div>
+					</div>
+				</form> <!-- .form-horizontal -->
+			</div> <!-- .container -->
+		</div> <!-- .content -->
 	</body>
 </html>
+
+
+
+
+
+
+
+
+
+
+

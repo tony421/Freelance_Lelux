@@ -80,7 +80,7 @@ function initPage()
 
 function initTherapists()
 {
-	main_request_ajax('client-boundary.php', 'GET_THERAPIST', {}, onGetTherapistsDone);
+	main_request_ajax('../therapist/therapist-boundary.php', 'GET_THERAPIST', {}, onGetTherapistsDone);
 }
 
 function onGetTherapistsDone(response)

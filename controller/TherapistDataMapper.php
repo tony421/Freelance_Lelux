@@ -1,5 +1,4 @@
 <?php
-	require_once '../model/Therapist.php';
 	require_once '../controller/DataAccess.php';
 	
 	class TherapistDataMapper
