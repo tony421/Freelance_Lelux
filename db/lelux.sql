@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 29, 2016 at 04:34 PM
+-- Generation Time: Apr 09, 2016 at 01:29 PM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.6.14
 
@@ -178,12 +178,13 @@ INSERT INTO `health_fund` (`health_fund_id`, `health_fund_name`) VALUES
 (25, 'Railway and Transport Health Fund Ltd'),
 (26, 'Reserve Bank Health Society'),
 (27, 'St Lukes'),
-(28, 'The Doctors’ Health Fund'),
+(28, 'The Doctors'' Health Fund'),
 (29, 'Teachers Health Fund'),
 (30, 'Transport Health Pty Ltd'),
 (31, 'TUH'),
 (32, 'Uni Health'),
-(33, 'Westfund Ltd');
+(33, 'Westfund Ltd'),
+(34, 'HCF');
 
 -- --------------------------------------------------------
 
@@ -232,27 +233,32 @@ CREATE TABLE `therapist` (
   `therapist_id` smallint(6) NOT NULL,
   `therapist_name` varchar(50) NOT NULL,
   `therapist_username` varchar(10) NOT NULL,
-  `therapist_password` varchar(50) NOT NULL
+  `therapist_password` varchar(50) NOT NULL,
+  `therapist_permission` tinyint(4) NOT NULL COMMENT '9 = admin, 1 = staff',
+  `therapist_update_datetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `therapist`
 --
 
-INSERT INTO `therapist` (`therapist_id`, `therapist_name`, `therapist_username`, `therapist_password`) VALUES
-(1, 'Natalie', '', ''),
-(2, 'Sandy', '', ''),
-(3, 'Nicha', '', ''),
-(4, 'Kate', '', ''),
-(5, 'Patty', '', ''),
-(6, 'Eve', '', ''),
-(7, 'Pranee', '', ''),
-(8, 'Sue', '', ''),
-(9, 'Ice', '', ''),
-(10, 'Barbie', '', ''),
-(11, 'Noo', '', ''),
-(12, 'Ri', '', ''),
-(13, 'Donna', '', '');
+INSERT INTO `therapist` (`therapist_id`, `therapist_name`, `therapist_username`, `therapist_password`, `therapist_permission`, `therapist_update_datetime`) VALUES
+(1, 'Natalie', 'natalie', 'natalie', 9, '0000-00-00 00:00:00'),
+(2, 'Sandy', 'sandy', 'sandy', 1, '0000-00-00 00:00:00'),
+(3, 'Nicha', 'nicha', 'nicha', 1, '0000-00-00 00:00:00'),
+(4, 'Kate', 'kate', 'kate', 1, '0000-00-00 00:00:00'),
+(5, 'Patty', 'patty', 'patty', 1, '0000-00-00 00:00:00'),
+(6, 'Eve', 'eve', 'eve', 1, '0000-00-00 00:00:00'),
+(7, 'Pranee', 'pranee', 'pranee', 1, '0000-00-00 00:00:00'),
+(8, 'Sue', 'sue', 'sue', 1, '0000-00-00 00:00:00'),
+(9, 'Ice', 'ice', 'ice', 1, '0000-00-00 00:00:00'),
+(10, 'Barbie', 'barbie', 'barbie', 1, '0000-00-00 00:00:00'),
+(11, 'Noo', 'noona', 'noo1', 1, '0000-00-00 00:00:00'),
+(12, 'Ri', 'ri', 'ri', 1, '0000-00-00 00:00:00'),
+(13, 'Donna', 'donna', 'donna', 1, '0000-00-00 00:00:00'),
+(23, '1', '11', '11', 1, '2016-04-09 16:10:50'),
+(24, '2', '22', '22', 1, '2016-04-09 20:29:43'),
+(25, '3', '3', '3', 1, '0000-00-00 00:00:00');
 
 --
 -- Indexes for dumped tables
@@ -320,12 +326,12 @@ ALTER TABLE `therapist`
 -- AUTO_INCREMENT for table `health_fund`
 --
 ALTER TABLE `health_fund`
-  MODIFY `health_fund_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `health_fund_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 --
 -- AUTO_INCREMENT for table `therapist`
 --
 ALTER TABLE `therapist`
-  MODIFY `therapist_id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `therapist_id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
