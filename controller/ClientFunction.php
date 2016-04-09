@@ -1,7 +1,8 @@
 <?php
-	require_once '../model/Client.php';
+	require_once '../controller/Authentication.php';
 	require_once '../controller/ClientDataMapper.php';
 	require_once '../controller/Utilities.php';
+	require_once '../model/Client.php';
 	
 	class ClientFunction
 	{
@@ -110,17 +111,17 @@
 			switch ($mode) {
 				case self::MODE_ADD :
 					$client = new Client(Utilities::getUniqueID());
-					$client->setCreateUser('default');
+					$client->setCreateUser(Authentication::getUser()->getID());
 					$client->setCreateDateTime(Utilities::getDateTimeNowForDB());
 					break;
 				case self::MODE_UPDATE:
 					$client = new Client($clientInfo['client_id']);
-					$client->setUpdateUser('default');
+					$client->setUpdateUser(Authentication::getUser()->getID());
 					$client->setUpdateDateTime(Utilities::getDateTimeNowForDB());
 					break;
 				case self::MODE_VOID:
 					$client = new Client($clientInfo['client_id']);
-					$client->setVoidUser('default');
+					$client->setVoidUser(Authentication::getUser()->getID());
 					$client->setVoidDateTime(Utilities::getDateTimeNowForDB());
 					break;
 			}
@@ -198,9 +199,11 @@
 			$reportInfo['report_hour'] = $reportInfo['report_hour'] / 60.0;
 			$reportInfo['report_date'] = Utilities::convertDateForDB($reportInfo['report_date']);
 			
-			$reportInfo['report_create_user'] = 'default';
+			$therapist = Authentication::getUser();
+			
+			$reportInfo['report_create_user'] = $therapist->getID();
 			$reportInfo['report_create_datetime'] = Utilities::getDateTimeNowForDB();
-			$reportInfo['report_update_user'] = 'default';
+			$reportInfo['report_update_user'] = $therapist->getID();
 			$reportInfo['report_update_datetime'] = Utilities::getDateTimeNowForDB();
 			
 			$afffectedRow = $this->_dataMapper->insertReport($reportInfo);
@@ -223,14 +226,17 @@
 		
 		public function updateReportItem($reportItemInfo)
 		{
+			$therapist = Authentication::getUser();
+			
 			$reportItemInfo['report_hour'] = $reportItemInfo['report_hour'] / 60.0;
-			$reportItemInfo['report_update_user'] = 'default';
+			$reportItemInfo['report_update_user'] = $therapist->getID();
 			$reportItemInfo['report_update_datetime'] = Utilities::getDateTimeNowForDB();
 			
 			$affectedRow = $this->_dataMapper->updateReportItem($reportItemInfo);
 			
 			if ($affectedRow > 0) {
 				$reportItemInfo['report_hour'] = $reportItemInfo['report_hour'] * 60.0;
+				$reportItemInfo['report_update_user'] = $therapist->getName();
 				$reportItemInfo['report_update_datetime'] = Utilities::convertDatetimeForDisplay($reportItemInfo['report_update_datetime']);
 				return Utilities::getResponseResult(true, 'Report information has been updated successfully.', $reportItemInfo);
 			}

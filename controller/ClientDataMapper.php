@@ -351,10 +351,15 @@ where client_first_name like '%%%s%%'
 			$sql_format = "
 					select report_id, DATE_FORMAT(report_date, '%%e %%M %%Y') as report_date
 						, report_detail, report_recommendation
-						, CAST(report_hour * 60 as decimal(0)) report_hour, therapist_id
-						, report_create_user, DATE_FORMAT(report_create_datetime, '%%e/%%m/%%Y %%T') as report_create_datetime
-						, report_update_user, DATE_FORMAT(report_update_datetime, '%%e/%%m/%%Y %%T') as report_update_datetime
+						, CAST(report_hour * 60 as decimal(0)) report_hour
+						, report.therapist_id
+						, t_create.therapist_name as report_create_user
+						, DATE_FORMAT(report_create_datetime, '%%e/%%m/%%Y %%T') as report_create_datetime
+						, t_update.therapist_name as report_update_user
+						, DATE_FORMAT(report_update_datetime, '%%e/%%m/%%Y %%T') as report_update_datetime
 					from report 
+					join therapist t_create on report.report_create_user = t_create.therapist_id
+					join therapist t_update on report.report_update_user = t_update.therapist_id
 					where client_id = '%s' order by report.report_date desc, report.report_create_datetime desc";
 			$sql = sprintf($sql_format, $clientID);
 			

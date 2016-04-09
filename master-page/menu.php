@@ -39,7 +39,7 @@
       					<a href="../authentication/change-password.php">Change Password</a>
       				</li>
       				<li>
-      					<a id="btnLogoff" href="#" class="navbar-link">[ Log Off ]</a>
+      					<a id="btnLogoff" href="#" class="logoff">[ Log Off ]</a>
       				</li>
       			</ul>
       		</div> <!-- /.navbar-collapse -->
