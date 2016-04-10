@@ -6,7 +6,8 @@ Deployment: 30 March 2016
 	
 Instruction for Next Update:
 	- MySQL: health_fund: Add new health fund "HCF"
-	- MySQL: health_fund: edit single quate of "The Doctors’ Health Fund"
+	- MySQL: health_fund: edit single quote of "The Doctors’ Health Fund"
 	- MySQL: update - therapist table structure
 	- MySQL: change data type of create_user, update_user, void_user to tinyint in client and report table
 		*** beware of existed data: change it before update the struture
+	- Task Schedule: create backup task with .bat

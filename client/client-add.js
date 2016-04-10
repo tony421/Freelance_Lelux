@@ -21,8 +21,6 @@ function initPage()
 			main_confirm_message('Do you want to add a new client?', addClient);
 		}
 	}); // btnAddClient.click
-	
-	toggleHealthFundClinetInputs();
 }
 
 function addClient()

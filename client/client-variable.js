@@ -176,6 +176,8 @@ function onInitHealthFunds(response)
 			
 			$ddlHealthFund.append(option);
 		});
+		
+		toggleHealthFundClinetInputs();
 	}
 } // onInitHealthFunds
 

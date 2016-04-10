@@ -111,7 +111,6 @@ function onGetClientInfoDone(response)
 		_clientInfo = response.result;
 		
 		setClientInfo(_clientInfo);
-		toggleHealthFundClinetInputs();
 		
 		initTherapists();
 		//getReports();

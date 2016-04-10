@@ -18,7 +18,13 @@ function initPage()
 	$tableClient = $('#tableClient');
 	// keep instance of DataTable so that it will be used for row.add(), rows().remove() and others
 	dtTableClient = $tableClient.DataTable({
+		language: {
+		    info: "Showing _START_ to _END_ of _TOTAL_ clients",
+		    lengthMenu: "Show _MENU_ clients"
+		},
+		lengthMenu: [ [20, -1], [20, "All"] ], // [[pageLength], [lengthMenu]]
 		paging: false,
+		//pageLength: 50,
 		info: false,
 		searching: false,
 		ordering: false,

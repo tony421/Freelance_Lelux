@@ -176,6 +176,9 @@ where client_first_name like '%%%s%%'
 					$sql = sprintf($sql_format, $search['search_text'], $search['search_text'], $search['search_text']);
 				}
 				
+				$sql .= "
+order by client_name";
+				
 				//return $sql;
 				return $this->_dataAccess->select($sql);
 			}
