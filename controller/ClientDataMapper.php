@@ -190,7 +190,13 @@ order by client_name";
 		public function getClientInfo($clientID)
 		{
 			try {
-				$sql_format = "select * from client where client_id = '%s'";
+				$sql_format = "
+						select client.client_id, client.health_fund_id, client.client_membership_no, client.client_patient_id, client.client_first_name, client.client_last_name, client.client_gender, client.client_address, client.client_postcode, client.client_email, client.client_contact_no, client.client_birthday, client.client_occupation, client.client_sports, client.client_other_conditions, client.client_emergency_contact_name, client.client_emergency_contact_no, client.client_create_datetime, client.client_create_user, client.client_update_datetime, client.client_update_user, client.client_void_datetime, client.client_void_user
+						, health_fund.health_fund_name
+						, case client.client_gender when 0 then \"Male\" when 1 then \"Female\" end as client_gender_desc
+						from client
+						join health_fund on client.health_fund_id = health_fund.health_fund_id
+						where client_id = '%s'";
 				$sql = sprintf($sql_format, $clientID);
 				
 				return $this->_dataAccess->select($sql);
@@ -356,11 +362,13 @@ order by client_name";
 						, report_detail, report_recommendation
 						, CAST(report_hour * 60 as decimal(0)) report_hour
 						, report.therapist_id
+						, t.therapist_name
 						, t_create.therapist_name as report_create_user
 						, DATE_FORMAT(report_create_datetime, '%%e/%%m/%%Y %%T') as report_create_datetime
 						, t_update.therapist_name as report_update_user
 						, DATE_FORMAT(report_update_datetime, '%%e/%%m/%%Y %%T') as report_update_datetime
 					from report 
+					join therapist t on report.therapist_id = t.therapist_id
 					join therapist t_create on report.report_create_user = t_create.therapist_id
 					join therapist t_update on report.report_update_user = t_update.therapist_id
 					where client_id = '%s' order by report.report_date desc, report.report_create_datetime desc";
