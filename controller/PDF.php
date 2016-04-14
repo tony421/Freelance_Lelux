@@ -1,27 +1,27 @@
 <?php
 	require_once '../tcpdf/config/tcpdf_config.php';
 	//require_once '../tcpdf/examples/config/tcpdf_config_alt.php';
-	require_once '../tcpdf/tcpdf.php';
+	//require_once '../tcpdf/tcpdf.php';
+	require_once '../tcpdf/my_tcpdf.php';
 	
 	class PDF
 	{
-		private $_tcpdf;
+		private $_pdf;
 		
-		public function PDF($reportName = "Name", $reportHeader = "Header")
+		public function PDF()
 		{	
-			$this->_pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+			$this->_pdf = new MY_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 			
 			// set document information
 			$this->_pdf->SetCreator(PDF_CREATOR);
-			$this->_pdf->SetAuthor('Lelux');
+			$this->_pdf->SetAuthor(PDF_AUTHOR);
 			$this->_pdf->SetTitle('Lelux');
 			$this->_pdf->SetSubject('Lelux');
 			//$this->_pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 			
 			// set default header data
-			//$this->_pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' Tonyyyy', PDF_HEADER_STRING);
-			//$this->_pdf->SetHeaderData('', '', 'Income Report', "Date : dd/mm/yyyy to dd/mm/yyyy\nShop : {shop} \t Staff : {staff}");
-			$this->_pdf->SetHeaderData('', '', $reportName, $reportHeader);
+			//$this->_pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+			$this->_pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, '', '');
 			
 			// set header and footer fonts
 			$this->_pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));

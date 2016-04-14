@@ -58,42 +58,6 @@
 						<label class="col-sm-2 control-label">Health Fund</label>
 						<div class="col-sm-4">
 							<select id="ddlHealthFund" class="form-control" disabled>
-								<!--
-								<option value="0">----- Non Health Fund -----</option>
-								<option value="1">ACA Health</option>
-								<option value="2">AHM Health Insurance</option>
-								<option value="3">Australian Unity Health Ltd</option>
-								<option value="4">Budget Direct</option>
-								<option value="5">Bupa Australia</option>
-								<option value="6">CBHS Health Fund Limited</option>
-								<option value="7">CUA Health Limited</option>
-								<option value="8">Defence Health Limited</option>
-								<option value="9">Frank Health insurance</option>
-								<option value="10">GMF Health</option>
-								<option value="11">GMHBA Limited</option>
-								<option value="12">Grand United Health</option>
-								<option value="13">HBF Health Fund</option>
-								<option value="14">Health Care Insurance Ltd</option>
-								<option value="15">Health Insurance Fund of Australia Ltd</option>
-								<option value="16">Health Partners</option>
-								<option value="17">Health.com.au</option>
-								<option value="18">Medibank Private Ltd</option>
-								<option value="19">onemedifund</option>
-								<option value="20">Navy Health</option>
-								<option value="21">NIB Health Funds Ltd</option>
-								<option value="22">Peoplecare Health Insurance</option>
-								<option value="23">Phoenix Health Fund Ltd</option>
-								<option value="24">Queensland Country Health Fund Ltd</option>
-								<option value="25">Railway and Transport Health Fund Ltd</option>
-								<option value="26">Reserve Bank Health Society</option>
-								<option value="27">St Lukes</option>
-								<option value="28">The Doctors Health Fund</option>
-								<option value="29">Teachers Health Fund</option>
-								<option value="30">Transport Health Pty Ltd</option>
-								<option value="31">TUH</option>
-								<option value="32">Uni Health</option>
-								<option value="33">Westfund Ltd</option>
-								-->
 							</select>
 						</div>
 					</div>
@@ -357,6 +321,7 @@
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
 							<button type="button" id="btnEditClient" class="btn btn-info btn-lg">Edit Client</button>
+							<button type="button" id="btnPrint" class="btn btn-default btn-lg">Print Report</button>
 							<button type="button" id="btnUpdateClient" class="btn btn-warning btn-lg hidden">Update Client</button>
 							<button type="button" id="btnCancelEdit" class="btn btn-default btn-lg hidden">Cancel</button>
 						</div>

@@ -7,6 +7,7 @@ var $btnEditClient;
 var $btnUpdateClient;
 var $btnCancelEdit;
 var $btnAddReport;
+var $btnPrint;
 
 var $ddlReportTherapist, $txtReportDate, $ddlReportHour, $txtReportDetail, $txtReportRecom;
 var $panelReportContainer;
@@ -42,6 +43,7 @@ function initPage()
 		$btnUpdateClient = $('#btnUpdateClient');
 		$btnCancelEdit = $('#btnCancelEdit');
 		$btnAddReport = $('#btnAddReport');
+		$btnPrint = $('#btnPrint');
 		
 		$panelReportContainer = $('#panelReportContainer');
 		$ddlReportTherapist = $('#ddlReportTherapist');
@@ -71,6 +73,10 @@ function initPage()
 			if (validateReportInputs())
 				main_confirm_message('Do you want to add a report?', addReport);
 		});
+		
+		$btnPrint.click(function(){
+    		main_open_new_tab('../report/report.php?report_type=CLIENT_REPORT&criteria_data=' + _clientID);
+    	});
 	}
 	else {
 		// If clientID is null or empty, go back to search page
@@ -176,6 +182,7 @@ function setEditMode()
 	$btnUpdateClient.removeClass('hidden');
 	$btnCancelEdit.removeClass('hidden');
 	$btnEditClient.addClass('hidden');
+	$btnPrint.addClass('hidden');
 	
 	$txtFirstName.prop('readonly', '');
 	$txtLastName.prop('readonly', '');
@@ -208,6 +215,7 @@ function setEditMode()
 function setViewMode()
 {
 	$btnEditClient.removeClass('hidden');
+	$btnPrint.removeClass('hidden');
 	$btnUpdateClient.addClass('hidden');
 	$btnCancelEdit.addClass('hidden');
 	

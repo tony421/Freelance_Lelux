@@ -3,7 +3,7 @@
 	
 	class ReportFunction
 	{
-		private $_SEPARATE_LINE = "<br><br><br>";
+		private $_SEPARATE_LINE = "<br><br>";
 		private $_CSS = <<<EOF
 <style>
 	.caption
@@ -16,32 +16,6 @@
 		border-bottom: 1px solid #000;
 		/*text-decoration: underline;*/
 	}
-				
-	.span-text
-	{
-		text-decoration: underline;
-	}
-				
-	.table-report
-	{
-		
-	}
-		
-	.table-report tr.header
-	{
-		text-align: center;
-		font-weight: bold;
-	}
-		
-	.table-report tr.footer
-	{
-		font-weight: bold;
-	}
-		
-	.table-report td
-	{
-		width: 120px;
-	}
 </style>
 EOF;
 		public function getClientReport($clientID)
@@ -51,6 +25,15 @@ EOF;
 						: '<img src="../image/unchecked-box.png" width="16" height="16" />';
 				//return $val ? "checked" : "";
 			};
+			
+			$clientInfoHeader = <<<header
+			<h1 style="text-align: center;">Client Confidential Information</h1>
+header;
+			$clientReportHeader = <<<header
+			<br><br><br>
+			<hr>
+			<h2 style="text-align: center;">Client Reports</h2>
+header;
 			
 			$clientFunction = new ClientFunction();
 			
@@ -181,21 +164,23 @@ client;
 		
 			$reportHtmlOutput = <<<report
 report;
-			$reportItems = array();
+			
+			if (count($reportInfo) > 0) {
+				$reportHtmlOutput .= $clientReportHeader;
 				
-			foreach ($reportInfo as $item) {
-				/*$reportItem = <<<reportItem
-				<p>
-					<span class="caption">Client Report on:</span> <div>{$item["report_date"]}</div>
-					<br>
-					<span class="caption">Massage Details:</span> <div>{$item["report_detail"]}</div>
-					<br>
-					<span class="caption">Recommendations:</span> <span>{$item["report_recommendation"]}</span>
-					<br>
-					<span class="caption">Remark:</span> <span>{$item["therapist_id"]}</span>
-				<p>
-reportItem;*/
-				$reportItem = <<<reportItem
+				foreach ($reportInfo as $item) {
+					/*$reportItem = <<<reportItem
+					 <p>
+					 <span class="caption">Client Report on:</span> <div>{$item["report_date"]}</div>
+					 <br>
+					 <span class="caption">Massage Details:</span> <div>{$item["report_detail"]}</div>
+					 <br>
+					 <span class="caption">Recommendations:</span> <span>{$item["report_recommendation"]}</span>
+					 <br>
+					 <span class="caption">Remark:</span> <span>{$item["therapist_id"]}</span>
+					 <p>
+					 reportItem;*/
+					$reportItem = <<<reportItem
 <table cellspacing="2" cellpadding="1" border="0">
 	<tbody>
 		<tr>
@@ -217,10 +202,11 @@ reportItem;*/
 	</tbody>
 </table>
 reportItem;
-				$reportHtmlOutput .= $reportItem.$this->_SEPARATE_LINE;
+					$reportHtmlOutput .= $reportItem.$this->_SEPARATE_LINE;
+				}	
 			}
 					
-			return $this->_CSS.$clientHtmlOutput.$this->_SEPARATE_LINE.$reportHtmlOutput;
+			return $this->_CSS.$clientInfoHeader.$clientHtmlOutput.$reportHtmlOutput;
 		} // getClientReport
 	}
 ?>

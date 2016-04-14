@@ -5,33 +5,19 @@
 	
 	if (!empty($_GET['report_type'])) {
 		$reportType = $_GET['report_type'];
+		Utilities::logInfo('Report | report_type: '.$reportType);
 		
 		if (!empty($_GET['criteria_data'])) {
-			$pdf = new PDF("Lelux Thai Massage", "Client Confidential Information");
+			$pdf = new PDF();
 			$reportFunction = new ReportFunction();
 			
 			if ($reportType == 'CLIENT_REPORT') {
 				$clientID = $_GET['criteria_data'];
+				Utilities::logInfo('Report | criteria_data[clientID]: '.$clientID);
 				
 				$htmlReportInfo = $reportFunction->getClientReport($clientID);
 				
-				$name = "Tony";
-				$age = "99";
-				
-				$x = <<<sad
-				<table>
-						<tr><td>Name: </td><td>{$name}</td></tr>
-						<tr><td>Age: </td><td>{$age}</td></tr>
-								<tr><td><input type="checkbox" name="product1" value="Electrician" checked></td></tr>
-								<tr><td><input type="checkbox" name="product1" value="Electrician" checked="true"></td></tr>
-								<tr><td><input type="checkbox" name="product1" value="Electrician" checked="false"></td></tr>
-								<tr><td><input type="checkbox" name="product1" value="Electrician" checked="1"></td></tr>
-								<tr><td><input type="checkbox" name="product1" value="Electrician" checked="0"></td></tr>
-						</table>
-sad;
-				
 				$pdf->show('client-report', $htmlReportInfo);
-				//$pdf->show('client-report', $x);
 				
 				//echo $htmlReportInfo;
 			}

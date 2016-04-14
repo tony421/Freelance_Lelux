@@ -24,7 +24,7 @@
 				Authentication::setUser($therapist);
 				Utilities::logInfo('Therapist: '.$therapist->getName().'(ID:'.$therapist->getID().') logged in the system.');
 				
-				return Utilities::getResponseResult(true, 'The login has been successful.');
+				return Utilities::getResponseResult(true, 'The login has succeeded.');
 			}
 			else {
 				return Utilities::getResponseResult(false, 'Username or password is not correct, please try again!');
@@ -66,7 +66,7 @@
 			$affectedRow = $this->_dataMapper->changePassword($passwordInfo);
 			
 			if ($affectedRow > 0) {
-				return Utilities::getResponseResult(true, 'Changing password has been successful.');
+				return Utilities::getResponseResult(true, 'The password has been changed, please try to login again.');
 			}
 			else {
 				return Utilities::getResponseResult(false, 'Changing password has failed!, please re-enter the old password.');

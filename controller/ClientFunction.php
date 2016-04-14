@@ -38,10 +38,10 @@
 			if ($affectedRow > 0) {
 				$this->_dataMapper->insertFindings($client);
 				$this->_dataMapper->insertConditions($client);
-				return Utilities::getResponseResult(true, 'New client has been inserted successfully.', $client->getID());
+				return Utilities::getResponseResult(true, 'New client has been added successfully.', $client->getID());
 			}
 			else {
-				return Utilities::getResponseResult(false, 'Inserting new client has failed!');
+				return Utilities::getResponseResult(false, 'Adding new client has failed!');
 			}
 		} // addClient
 		
@@ -57,7 +57,7 @@
 			}
 			else 
 			{
-				return Utilities::getResponseResult(false, 'The search has not found!');
+				return Utilities::getResponseResult(false, 'No clients have been found!');
 			}
 		} // searchClient
 		
@@ -209,9 +209,9 @@
 			$afffectedRow = $this->_dataMapper->insertReport($reportInfo);
 			
 			if ($afffectedRow > 0)
-				return Utilities::getResponseResult(true, 'The report has been inserted successfully.', $reportInfo);
+				return Utilities::getResponseResult(true, 'The report has been added successfully.', $reportInfo);
 			else
-				return Utilities::getResponseResult(false, 'Inserting new report has been failed!');
+				return Utilities::getResponseResult(false, 'Adding new report has been failed!');
 		} // addClientReport
 		
 		public function getReports($clientID)
@@ -241,7 +241,7 @@
 				return Utilities::getResponseResult(true, 'Report information has been updated successfully.', $reportItemInfo);
 			}
 			else {
-				return Utilities::getResponseResult(false, 'Updating report has been failed!', $reportItemInfo);
+				return Utilities::getResponseResult(false, 'Updating report has failed!', $reportItemInfo);
 			}
 		} // updateReportItem
 		

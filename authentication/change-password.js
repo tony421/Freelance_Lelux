@@ -27,7 +27,7 @@ function changePassword()
 function onChangePasswordDone(response)
 {
 	if (response.success) {
-		main_log_off();
+		main_info_message(response.msg, main_log_off);
 	}
 	else
 		main_alert_message(response.msg, function(){ $txtOldPassword.focus();});
