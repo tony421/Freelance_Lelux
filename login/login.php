@@ -52,7 +52,10 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
-							<button type="button" id="btnLogin" class="btn btn-info btn-lg">Log In</button>
+							<button type="button" id="btnLogin" class="btn btn-primary btn-lg">
+								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+								Log In
+							</button>
 						</div>
 					</div>
 				</form> <!-- .form-horizontal -->

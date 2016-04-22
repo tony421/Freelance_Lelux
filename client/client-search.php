@@ -68,7 +68,9 @@
 							<input type="text" id="txtText" class="form-control">
 						</div>
 						<div class="col-sm-2">
-							<button type="button" id="btnSearchClient" class="btn btn-primary">Search</button>
+							<button type="button" id="btnSearchClient" class="btn btn-primary">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+							Search</button>
 						</div>
 					</div>
 					<div class="form-group">

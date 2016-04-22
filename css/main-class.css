@@ -27,17 +27,23 @@
 	font-size: 35px;
 }
 
-.logoff
+.log-out
 {
 	font-style: italic;
 }
 
-.logoff:hover
+.log-out:hover
 {
 	font-style: normal;
 }
 
-
+.option-container
+{
+	text-align: right;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	border-bottom: #d6d6d6 1px solid;
+}
 
 
 

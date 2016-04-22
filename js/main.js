@@ -49,12 +49,12 @@ function main_open_new_tab(url)
 	window.open(url, '_blank');
 }
 
-function main_log_off()
+function main_log_out()
 {
-	main_request_ajax('../authentication/authentication-boundary.php', 'LOG_OFF', {}, main_on_log_off_success);
+	main_request_ajax('../authentication/authentication-boundary.php', 'LOG_OUT', {}, main_on_log_out_success);
 }
 
-function main_on_log_off_success(response)
+function main_on_log_out_success(response)
 {
 	if (response.success) {
 		main_redirect('../login/login.php');
@@ -103,3 +103,16 @@ function main_confirm_message(msg, fnOnYes, fnOnNo)
 {
 	$.messagebox.confirm({ message : msg, icon : 'question', onYes : fnOnYes, onNo : fnOnNo });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -70,8 +70,14 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
-							<button type="button" id="btnAdd" class="btn btn-info btn-lg">Add Therapist</button>
-							<button type="button" id="btnUpdate" class="btn btn-warning btn-lg hidden">Update Therapist</button>
+							<button type="button" id="btnAdd" class="btn btn-primary btn-lg">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								Add Therapist
+							</button>
+							<button type="button" id="btnUpdate" class="btn btn-warning btn-lg hidden">
+								<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+								Update Therapist
+							</button>
 							<button type="button" id="btnCancel" class="btn btn-default btn-lg hidden">Cancel</button>
 						</div>
 					</div>

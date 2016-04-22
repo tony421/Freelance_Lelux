@@ -18,7 +18,7 @@ function initPage()
 	
 	$btnAddClient.click(function(){
 		if (validateInputs()) {
-			main_confirm_message('Do you want to add a new client?', addClient);
+			main_confirm_message('Do you want to add a new client?', addClient, function(){ $btnAddClient.focus(); });
 		}
 	}); // btnAddClient.click
 }

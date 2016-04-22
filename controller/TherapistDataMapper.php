@@ -19,8 +19,7 @@
 		
 		public function getTherapistsForManagement()
 		{
-			$sql = "select * from therapist where therapist_permission != 9 order by therapist_name";
-		
+			$sql = "select * from therapist where therapist_permission != 9 and therapist_permission != 0 order by therapist_name";		
 			return $this->_dataAccess->select($sql);
 		}
 		

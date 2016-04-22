@@ -30,8 +30,9 @@
 	    <link rel="stylesheet" href="../css/messagebox.css">
 	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
 	    
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="../js/messagebox.js"></script>
+	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
 	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
 	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="client-report.js"></script>
@@ -53,6 +54,16 @@
 				<div class="title-text">~:: Client Report ::~</div>
 			</div>
 			<div class="container">
+				<div class="option-container">
+					<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#popupPrintReceipt">
+						<span class="glyphicon glyphicon-print"></span>
+						Print Receipt
+					</button>
+					<button type="button" id="btnPrintReport" class="btn btn-success btn-lg">
+						<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+						Print Report
+					</button>
+				</div>
 				<form class="form-horizontal">
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Health Fund</label>
@@ -320,9 +331,14 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
-							<button type="button" id="btnEditClient" class="btn btn-info btn-lg">Edit Client</button>
-							<button type="button" id="btnPrint" class="btn btn-default btn-lg">Print Report</button>
-							<button type="button" id="btnUpdateClient" class="btn btn-warning btn-lg hidden">Update Client</button>
+							<button type="button" id="btnEditClient" class="btn btn-primary btn-lg">
+								<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								Edit Client
+							</button>
+							<button type="button" id="btnUpdateClient" class="btn btn-warning btn-lg hidden">
+								<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+								Update Client
+							</button>
 							<button type="button" id="btnCancelEdit" class="btn btn-default btn-lg hidden">Cancel</button>
 						</div>
 					</div>
@@ -380,7 +396,10 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
-							<button type="button" id="btnAddReport" class="btn btn-info btn-lg">Add Report</button>
+							<button type="button" id="btnAddReport" class="btn btn-primary btn-lg">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								Add Report
+							</button>
 						</div>
 					</div>
 					<br>
@@ -475,7 +494,69 @@
 			</div> <!-- div/container -->
 		</div> <!-- /content -->
 		
+<!-- 		<div id="popupPrintReceipt" class="popup-panel popup-hide-element"> -->
+<!-- 			<table class="table-print-receipt"> -->
+<!-- 				<tr> -->
+<!-- 					<th>Receipt Date </th> -->
+<!-- 					<td> -->
+<!-- 						<input type="text" id="txtReceiptDate" class="form-control"> -->
+<!-- 					</td> -->
+<!-- 				</tr> -->
+<!-- 				<tr> -->
+<!-- 					<th>Receipt Value </th> -->
+<!-- 					<td> -->
+<!-- 						<input type="text" id="txtReceiptValue" class="form-control"> -->
+<!-- 					</td> -->
+<!-- 				</tr> -->
+<!-- 			</table> -->
+<!-- 			<button type="button" id="btnPrintReceipt" class="btn btn-success btn-lg">Print Receipt</button> -->
+<!-- 			<button type="button" id="btnCancelPrintReceipt" class="btn btn-default btn-lg">Cancel</button> -->
+<!-- 		</div> -->
+		
+		<!-- Modal -->
+		<div class="modal fade" id="popupPrintReceipt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="myModalLabel">Receipt Details</h4>
+						<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label">Receipt Date</label>
+								<div class="col-md-6">
+									<input type="text" id="txtReceiptDate" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label">Receipt Value</label>
+								<div class="col-md-6">
+									<input type="text" id="txtReceiptValue" class="form-control">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="btnPrintReceipt" class="btn btn-success btn-lg">
+							<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+							Print Receipt
+						</button>
+						<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 		<div id="footer">
 		</div> <!-- footer -->
     </body>
 </html>
+
+
+
+
+
+
+
+

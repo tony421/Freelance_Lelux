@@ -7,9 +7,11 @@ var $btnEditClient;
 var $btnUpdateClient;
 var $btnCancelEdit;
 var $btnAddReport;
-var $btnPrint;
+var $btnPrintReport;
+var $btnPrintReceipt;
 
 var $ddlReportTherapist, $txtReportDate, $ddlReportHour, $txtReportDetail, $txtReportRecom;
+var $popupPrintReceipt, $txtReceiptDate, $txtReceiptValue;
 var $panelReportContainer;
 var prefixPanelItem = '#panelItem';
 var prefixBtnEditItem = '#btnEditItem';
@@ -23,7 +25,7 @@ var prefixItemRecom = '#txtItemRecom';
 var prefixItemUpdateUser = '#lblItemUpdateUser';
 var prefixItemUpdateDatetime = '#lblItemUpdateDatetime';
 
-var panelItemTemplate = "<div id=\"panelItem{0}\" class=\"panel panel-warning\"> <div class=\"panel-heading\"> <div class=\"row\"> <div class=\"col-sm-6\"> <div class=\"panel-title\"> <b>Report on</b> <span id=\"lblItemDate{0}\">{2}</span> </div> </div> <div class=\"col-sm-6 text-right\"> <button type=\"button\" id=\"btnEditItem{0}\" class=\"btn btn-info btn-xs\" name=\"{0}\">Edit</button> <button type=\"button\" id=\"btnDeleteItem{0}\" class=\"btn btn-danger btn-xs\" name=\"{0}\">Delete</button> <button type=\"button\" id=\"btnUpdateItem{0}\" class=\"btn btn-warning btn-xs\" name=\"{1}\">Update</button> <button type=\"button\" id=\"btnCancelItem{0}\" class=\"btn btn-default btn-xs\" name=\"{1}\">Cancel</button> </div> </div> </div> <div class=\"panel-body\"> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Therapist</label> <div class=\"col-sm-3\"> <select id=\"ddlItemTherapist{0}\" class=\"form-control\" disabled> {9} </select> </div> <label class=\"col-sm-1 control-label\">Hours</label> <div class=\"col-sm-3\"> <select id=\"ddlItemHour{0}\" class=\"form-control\" disabled> <option value=\"30\">30 Min</option> <option value=\"45\">45 Min</option> <option value=\"60\" selected>1 Hr</option> <option value=\"75\">1 Hr 15 Min</option> <option value=\"90\">1 Hr 30 Min</option> <option value=\"105\">1 Hr 45 Min</option> <option value=\"120\">2 Hr</option> <option value=\"135\">2 Hr 15 Min</option> <option value=\"150\">2 Hr 30 Min</option> <option value=\"165\">2 Hr 45 Min</option> <option value=\"180\">3 Hr</option> <option value=\"195\">3 Hr 15 Min</option> <option value=\"210\">3 Hr 30 Min</option> <option value=\"225\">3 Hr 45 Min</option> <option value=\"240\">4 Hr</option> </select> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Massage Details</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemDetail{0}\" rows=\"2\" class=\"form-control\" readonly>{3}</textarea> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Recommendations</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemRecom{0}\" rows=\"2\" class=\"form-control\" readonly>{4}</textarea> </div> </div> </div> <div class=\"panel-footer\"> <small> <b>Created by:</b> <span id=\"lblItemCreateUser{0}\">{5}</span> <b>Created on:</b> <span id=\"lblItemCreateDatetime{0}\">{6}</span> <b>Updated by:</b> <span id=\"lblItemUpdateUser{0}\">{7}</span> <b>Updated on:</b> <span id=\"lblItemUpdateDatetime{0}\">{8}</span> </small> </div> </div>";
+var panelItemTemplate = "<div id=\"panelItem{0}\" class=\"panel panel-warning\"> <div class=\"panel-heading\"> <div class=\"row\"> <div class=\"col-sm-6\"> <div class=\"panel-title\"> <b>Report on</b> <span id=\"lblItemDate{0}\">{2}</span> </div> </div> <div class=\"col-sm-6 text-right\"> <button type=\"button\" id=\"btnEditItem{0}\" class=\"btn btn-info btn-xs\" name=\"{0}\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span> Edit</button> <button type=\"button\" id=\"btnDeleteItem{0}\" class=\"btn btn-danger btn-xs\" name=\"{0}\">Delete</button> <button type=\"button\" id=\"btnUpdateItem{0}\" class=\"btn btn-warning btn-xs\" name=\"{1}\"><span class=\"glyphicon glyphicon-floppy-save\" aria-hidden=\"true\"></span> Update</button> <button type=\"button\" id=\"btnCancelItem{0}\" class=\"btn btn-default btn-xs\" name=\"{1}\">Cancel</button> </div> </div> </div> <div class=\"panel-body\"> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Therapist</label> <div class=\"col-sm-3\"> <select id=\"ddlItemTherapist{0}\" class=\"form-control\" disabled> {9} </select> </div> <label class=\"col-sm-1 control-label\">Hours</label> <div class=\"col-sm-3\"> <select id=\"ddlItemHour{0}\" class=\"form-control\" disabled> <option value=\"30\">30 Min</option> <option value=\"45\">45 Min</option> <option value=\"60\" selected>1 Hr</option> <option value=\"75\">1 Hr 15 Min</option> <option value=\"90\">1 Hr 30 Min</option> <option value=\"105\">1 Hr 45 Min</option> <option value=\"120\">2 Hr</option> <option value=\"135\">2 Hr 15 Min</option> <option value=\"150\">2 Hr 30 Min</option> <option value=\"165\">2 Hr 45 Min</option> <option value=\"180\">3 Hr</option> <option value=\"195\">3 Hr 15 Min</option> <option value=\"210\">3 Hr 30 Min</option> <option value=\"225\">3 Hr 45 Min</option> <option value=\"240\">4 Hr</option> </select> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Massage Details</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemDetail{0}\" rows=\"2\" class=\"form-control\" readonly>{3}</textarea> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Recommendations</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemRecom{0}\" rows=\"2\" class=\"form-control\" readonly>{4}</textarea> </div> </div> </div> <div class=\"panel-footer\"> <small> <b>Created by:</b> <span id=\"lblItemCreateUser{0}\">{5}</span> <b>Created on:</b> <span id=\"lblItemCreateDatetime{0}\">{6}</span> <b>Updated by:</b> <span id=\"lblItemUpdateUser{0}\">{7}</span> <b>Updated on:</b> <span id=\"lblItemUpdateDatetime{0}\">{8}</span> </small> </div> </div>";
 
 function initPage()
 {
@@ -43,7 +45,8 @@ function initPage()
 		$btnUpdateClient = $('#btnUpdateClient');
 		$btnCancelEdit = $('#btnCancelEdit');
 		$btnAddReport = $('#btnAddReport');
-		$btnPrint = $('#btnPrint');
+		$btnPrintReport = $('#btnPrintReport');
+		$btnPrintReceipt = $('#btnPrintReceipt');
 		
 		$panelReportContainer = $('#panelReportContainer');
 		$ddlReportTherapist = $('#ddlReportTherapist');
@@ -52,8 +55,15 @@ function initPage()
 		$txtReportDetail = $('#txtReportDetail');
 		$txtReportRecom = $('#txtReportRecom');
 		
+		$popupPrintReceipt = $('#popupPrintReceipt');
+		$txtReceiptDate = $('#txtReceiptDate');
+		$txtReceiptValue = $('#txtReceiptValue');
+		
 		$txtReportDate.inputmask('date');
-		$txtReportDate.val(main_convert_date_format(new Date())); // default ReportDate = today
+		$txtReportDate.val(main_convert_date_format(new Date())); // default Report Date = today
+		$txtReceiptDate.inputmask('date');
+		$txtReceiptDate.val(main_convert_date_format(new Date())); // default Receipt Date = today
+		$txtReceiptValue.autoNumeric('init', { vMin: 0, vMax: 999, aSign: '$' });
 		
 		$btnEditClient.click(function(){
 			setEditMode();
@@ -61,7 +71,7 @@ function initPage()
 		
 		$btnUpdateClient.click(function(){
 			if (validateInputs()) {
-				main_confirm_message('Do you want to update client information?', updateClient);
+				main_confirm_message('Do you want to update client information?', updateClient, function(){ $btnUpdateClient.focus(); });
 			}
 		});
 		
@@ -71,12 +81,57 @@ function initPage()
 		
 		$btnAddReport.click(function(){
 			if (validateReportInputs())
-				main_confirm_message('Do you want to add a report?', addReport);
+				main_confirm_message('Do you want to add a report?', addReport, function(){ $btnAddReport.focus(); });
 		});
 		
-		$btnPrint.click(function(){
-    		main_open_new_tab('../report/report.php?report_type=CLIENT_REPORT&criteria_data=' + _clientID);
+		$btnPrintReport.click(function(){
+    		main_open_new_tab('../report/report.php?report_type=CLIENT_REPORT&client_id=' + _clientID);
     	});
+		
+		$btnPrintReceipt.click(function(){
+			if (validateReceiptDetails()) {
+				// get date and value
+				var receiptDate = $txtReceiptDate.val();
+				var receiptValue = $txtReceiptValue.val();
+	    		main_open_new_tab('../report/report.php?report_type=CLIENT_RECEIPT&client_id=' + _clientID + '&receipt_date=' + receiptDate + '&receipt_value=' + receiptValue);
+	    		
+	    		$popupPrintReceipt.modal('hide');
+			}
+    	});
+		
+		$popupPrintReceipt.on('shown.bs.modal', function (e) {
+			$txtReceiptDate.val(main_convert_date_format(new Date()));
+			$txtReceiptValue.val('');
+			$txtReceiptDate.focus();
+		})
+		
+		$txtReceiptDate.keypress(function(e){
+			if (e.which == 13) {
+				$txtReceiptValue.focus();
+				return false;
+			} 
+		});
+		
+		$txtReceiptValue.keypress(function(e){
+			if (e.which == 13) {
+				$btnPrintReceipt.click();
+				return false;
+			} 
+		});
+		
+		$txtReportDetail.keypress(function(e){
+			if (e.which == 13) {
+				$txtReportRecom.focus();
+				return false;
+			} 
+		});
+		
+		$txtReportRecom.keypress(function(e){
+			if (e.which == 13) {
+				$btnAddReport.click();
+				return false;
+			}
+		});
 	}
 	else {
 		// If clientID is null or empty, go back to search page
@@ -182,7 +237,7 @@ function setEditMode()
 	$btnUpdateClient.removeClass('hidden');
 	$btnCancelEdit.removeClass('hidden');
 	$btnEditClient.addClass('hidden');
-	$btnPrint.addClass('hidden');
+	//$btnPrintReport.addClass('hidden');
 	
 	$txtFirstName.prop('readonly', '');
 	$txtLastName.prop('readonly', '');
@@ -215,7 +270,7 @@ function setEditMode()
 function setViewMode()
 {
 	$btnEditClient.removeClass('hidden');
-	$btnPrint.removeClass('hidden');
+	//$btnPrintReport.removeClass('hidden');
 	$btnUpdateClient.addClass('hidden');
 	$btnCancelEdit.addClass('hidden');
 	
@@ -604,6 +659,23 @@ function setReportItemUpdateUser(reportID, user)
 function setReportItemUpdateDatetime(reportID, datetime)
 {
 	$(prefixItemUpdateDatetime + reportID).text(datetime);
+}
+
+function validateReceiptDetails()
+{
+	if ($txtReceiptDate.inputmask("isComplete") && $txtReceiptDate.val().trim().length) {
+		if ($txtReceiptValue.val().trim().length) {
+			return true;
+		}
+		else {
+			main_alert_message('Please enter "Receipt Value"!', function(){ $txtReceiptValue.focus();});
+		}
+	}
+	else {
+		main_alert_message('Please enter "Receipt Date"!', function(){ $txtReceiptDate.focus();});
+	}
+	
+	return false;
 }
 
 

@@ -8,6 +8,20 @@ function initPage()
 	$txtUsername = $('#txtUsername');
 	$txtPassword = $('#txtPassword');
 	
+	$txtUsername.keypress(function(e){
+		if (e.which == 13) {
+			$txtPassword.focus();
+			return false;
+		} 
+	});
+	
+	$txtPassword.keypress(function(e){
+		if (e.which == 13) {
+			$btnLogin.click();
+			return false;
+		} 
+	});
+	
 	$btnLogin.click(function(){
 		if (validateInputs()) {
 			login();

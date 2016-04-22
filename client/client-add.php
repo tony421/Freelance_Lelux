@@ -356,7 +356,10 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-5 col-sm-7">
-							<button type="button" id="btnAddClient" class="btn btn-primary btn-lg">Add Client</button>
+							<button type="button" id="btnAddClient" class="btn btn-primary btn-lg">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								Add Client
+							</button>
 						</div>
 					</div>
 				</form> <!-- /form-horizontal -->

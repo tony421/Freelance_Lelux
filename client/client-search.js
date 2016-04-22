@@ -20,12 +20,15 @@ function initPage()
 	dtTableClient = $tableClient.DataTable({
 		language: {
 		    info: "Showing _START_ to _END_ of _TOTAL_ clients",
+			//info: "Showing _TOTAL_ clients",
+			infoEmpty: "",
 		    lengthMenu: "Show _MENU_ clients"
 		},
-		lengthMenu: [ [20, -1], [20, "All"] ], // [[pageLength], [lengthMenu]]
-		paging: false,
+		lengthMenu: [ [10, 25, 50], [10, 25, 50] ], // [[pageLength, -1], [lengthMenu, "All"]]
+		paging: true,
+		pagingType: "numbers",
 		//pageLength: 50,
-		info: false,
+		info: true,
 		searching: false,
 		ordering: false,
 		rowId: 'client_id',
@@ -38,6 +41,13 @@ function initPage()
         ]
 	});
 	$tableClientBody = $('#tableClient tbody');
+	
+	$txtText.keypress(function(e){
+		if (e.which == 13) {
+			$btnSearchClient.click();
+			return false;
+		}
+	});
 	
 	$btnSearchClient.click(function(){
 		searchClient();
@@ -65,7 +75,7 @@ function onRequestDone(response)
 		//showTableClient();
 	}
 	else {
-		main_alert_message(response.msg);
+		main_alert_message(response.msg, function(){$txtText.focus();});
 	}
 }
 

@@ -10,6 +10,27 @@ function initPage()
 	$txtNewPassword = $('#txtNewPassword');
 	$txtNewPasswordConfirm = $('#txtNewPasswordConfirm');
 	
+	$txtOldPassword.keypress(function(e){
+		if (e.which == 13) {
+			$txtNewPassword.focus();
+			return false;
+		} 
+	});
+	
+	$txtNewPassword.keypress(function(e){
+		if (e.which == 13) {
+			$txtNewPasswordConfirm.focus();
+			return false;
+		} 
+	});
+	
+	$txtNewPasswordConfirm.keypress(function(e){
+		if (e.which == 13) {
+			$btnChangePassword.click();
+			return false;
+		} 
+	});
+	
 	$btnChangePassword.click(function(){
 		if (validateInputs()) {
 			changePassword();

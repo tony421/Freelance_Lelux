@@ -1,7 +1,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('#btnLogoff').click(function(){
-			main_log_off();
+		$('#btnLogOut').click(function(){
+			main_log_out();
 		});
 	});
 </script>
@@ -39,7 +39,7 @@
       					<a href="../authentication/change-password.php">Change Password</a>
       				</li>
       				<li>
-      					<a id="btnLogoff" href="#" class="logoff">[ Log Off ]</a>
+      					<a id="btnLogOut" href="#" class="log-out">[Log Out]</a>
       				</li>
       			</ul>
       		</div> <!-- /.navbar-collapse -->

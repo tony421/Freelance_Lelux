@@ -17,8 +17,8 @@
 				$loginInfo = $_POST['data'];
 				$result = $authentication->login($loginInfo);
 			}
-			else if ($mode == "LOG_OFF") {
-				$result = $authentication->logoff();
+			else if ($mode == "LOG_OUT") {
+				$result = $authentication->logout();
 			}
 			else if ($mode == "CHANGE_PASSWORD") {
 				$passwordInfo = $_POST['data'];

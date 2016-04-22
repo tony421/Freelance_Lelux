@@ -1,4 +1,6 @@
 <?php
+	require_once '../config/shop_config.php';
+	require_once '../config/client_config.php';
 	require_once '../controller/ClientFunction.php';
 	
 	class ReportFunction
@@ -18,6 +20,7 @@
 	}
 </style>
 EOF;
+		
 		public function getClientReport($clientID)
 		{
 			$getCheckboxSymbol = function($val){
@@ -169,17 +172,6 @@ report;
 				$reportHtmlOutput .= $clientReportHeader;
 				
 				foreach ($reportInfo as $item) {
-					/*$reportItem = <<<reportItem
-					 <p>
-					 <span class="caption">Client Report on:</span> <div>{$item["report_date"]}</div>
-					 <br>
-					 <span class="caption">Massage Details:</span> <div>{$item["report_detail"]}</div>
-					 <br>
-					 <span class="caption">Recommendations:</span> <span>{$item["report_recommendation"]}</span>
-					 <br>
-					 <span class="caption">Remark:</span> <span>{$item["therapist_id"]}</span>
-					 <p>
-					 reportItem;*/
 					$reportItem = <<<reportItem
 <table cellspacing="2" cellpadding="1" border="0">
 	<tbody>
@@ -208,6 +200,96 @@ reportItem;
 					
 			return $this->_CSS.$clientInfoHeader.$clientHtmlOutput.$reportHtmlOutput;
 		} // getClientReport
+	
+		public function getClientReceipt($clientID, $receiptDate, $receiptValue)
+		{
+			$shopDetails = SHOP_PROVIDER_DETAILS;
+			$shopConNo = SHOP_CONTACT_NO;
+			$shopAddr = SHOP_ADDRESS;
+			$shopService = SHOP_SERVICE;
+			
+			$clientFunction = new ClientFunction();
+			$clientInfo = $clientFunction->getClientInfo($clientID)['result'];
+			
+			$receiptSeparator = "<br><br>------------------------------------------------------------------------------------------------------------------------------<br><br>";
+			
+			$receiptHeader = <<<header
+			<tr>
+				<th colspan="2">
+					<h1 style="text-align: center;">Remedial Massage Receipt Lelux Thai Massage</h1>
+				</th>
+			</tr>
+header;
+			$receiptHeaderCopy = <<<header
+			<tr>
+				<th colspan="2">
+					<h1 style="text-align: center;">Remedial Massage Receipt Lelux Thai Massage (Copy)</h1>
+				</th>
+			</tr>
+header;
+			
+			$receiptBody = <<<body
+			<tr>
+				<td class="caption" width="30%">Provided by</td>
+				<td width="70%">{$shopDetails}</td>
+			</tr>
+			<tr>
+				<td class="caption">Date</td>
+				<td>{$receiptDate}</td>
+			</tr>
+			<tr>
+				<td class="caption">Phone</td>
+				<td>{$shopConNo}</td>
+			</tr>
+			<tr>
+				<td class="caption">Address</td>
+				<td>{$shopAddr}</td>
+			</tr>
+			<tr>
+				<td class="caption">Customer Name</td>
+				<td>{$clientInfo[CLIENT_FNAME]} {$clientInfo[CLIENT_LNAME]}</td>
+			</tr>
+			<tr>
+				<td class="caption">Customer Membership No</td>
+				<td>{$clientInfo[CLIENT_MEM_NO]}</td>
+			</tr>
+			<tr>
+				<td class="caption">Health Fund</td>
+				<td>{$clientInfo[HF_NAME]}</td>
+			</tr>
+			<tr>
+				<td class="caption">Provider No</td>
+				<td>{$clientInfo[HF_PROVIDER_NO]}</td>
+			</tr>
+			<tr>
+				<td class="caption">Service Provided</td>
+				<td>{$shopService}</td>
+			</tr>
+			<tr>
+				<td class="caption">Value</td>
+				<td>{$receiptValue} Inc Gst.</td>
+			</tr>
+			<tr>
+				<td class="caption">Signed:</td>
+				<td><br><br></td>
+			</tr>
+body;
+				
+			$receiptTable = <<<table
+			<table cellspacing="0" cellpadding="5" border="1">
+				{$receiptHeader}
+				{$receiptBody}
+			</table>
+table;
+				$receiptTableCopy = <<<table
+			<table cellspacing="0" cellpadding="5" border="1">
+				{$receiptHeaderCopy}
+				{$receiptBody}
+			</table>
+table;
+			
+			return $this->_CSS.$receiptTable.$receiptSeparator.$receiptTableCopy;
+		} // getClientReceipt
 	}
 ?>
 

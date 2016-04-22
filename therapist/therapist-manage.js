@@ -1,3 +1,5 @@
+var _is_add_mode;
+
 var $btnAdd;
 var $btnUpdate;
 var $btnCancel;
@@ -12,6 +14,8 @@ var _editingTherapist;
 
 function initPage()
 {
+	_is_add_mode = true;
+	
 	$btnAdd = $('#btnAdd');
 	$btnUpdate = $('#btnUpdate');
 	$btnCancel = $('#btnCancel');
@@ -38,7 +42,7 @@ function initPage()
 	
 	$btnAdd.click(function(){
 		if (validateInputs()) {
-			main_confirm_message('Do you want to add a new therapist?', addTherapist);
+			main_confirm_message('Do you want to add a new therapist?', addTherapist, function(){ $btnAdd.focus(); });
 		}
 	});
 	
@@ -52,7 +56,31 @@ function initPage()
 		turnOffEditMode();
 	});
 	
-	getTherapists()
+	$txtName.keypress(function(e){
+		if (e.which == 13) {
+			$txtUsername.focus();
+			return false;
+		}
+	});
+	
+	$txtUsername.keypress(function(e){
+		if (e.which == 13) {
+			$txtPassword.focus();
+			return false;
+		}
+	});
+	
+	$txtPassword.keypress(function(e){
+		if (e.which == 13) {
+			if (_is_add_mode)
+				$btnAdd.click();
+			else
+				$btnUpdate.click();
+			return false;
+		}
+	});
+	
+	getTherapists();
 }
 
 function getTherapists()
@@ -196,6 +224,8 @@ function clearInputs()
 
 function turnOnEditMode(therapistIndex)
 {
+	_is_add_mode = false;
+	
 	_editingTherapist = _therapists[therapistIndex];
 	
 	$btnAdd.addClass('hidden');
@@ -212,6 +242,8 @@ function turnOnEditMode(therapistIndex)
 
 function turnOffEditMode()
 {
+	_is_add_mode = true;
+	
 	$btnAdd.removeClass('hidden');
 	$btnUpdate.addClass('hidden');
 	$btnCancel.addClass('hidden');

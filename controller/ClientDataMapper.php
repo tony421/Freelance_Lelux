@@ -192,7 +192,7 @@ order by client_name";
 			try {
 				$sql_format = "
 						select client.client_id, client.health_fund_id, client.client_membership_no, client.client_patient_id, client.client_first_name, client.client_last_name, client.client_gender, client.client_address, client.client_postcode, client.client_email, client.client_contact_no, client.client_birthday, client.client_occupation, client.client_sports, client.client_other_conditions, client.client_emergency_contact_name, client.client_emergency_contact_no, client.client_create_datetime, client.client_create_user, client.client_update_datetime, client.client_update_user, client.client_void_datetime, client.client_void_user
-						, health_fund.health_fund_name
+						, health_fund.health_fund_name, health_fund.health_fund_provider_no
 						, case client.client_gender when 0 then \"Male\" when 1 then \"Female\" end as client_gender_desc
 						from client
 						join health_fund on client.health_fund_id = health_fund.health_fund_id

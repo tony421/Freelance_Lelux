@@ -70,7 +70,10 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
-							<button type="button" id="btnChangePassword" class="btn btn-info btn-lg">Change Password</button>
+							<button type="button" id="btnChangePassword" class="btn btn-primary btn-lg">
+								<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+								Change Password
+							</button>
 						</div>
 					</div>
 				</form> <!-- .form-horizontal -->

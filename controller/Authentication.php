@@ -46,14 +46,14 @@
 			return $therapist;
 		} // generateTherapistModel
 		
-		public function logoff()
+		public function logout()
 		{
 			$therapist = Authentication::getUser();
-			Utilities::logInfo('Therapist: '.$therapist->getName().'(ID:'.$therapist->getID().') logged off the system.');
+			Utilities::logInfo('Therapist: '.$therapist->getName().'(ID:'.$therapist->getID().') logged out the system.');
 			
 			Session::destroy();
 		
-			return Utilities::getResponseResult(true, 'Loging off succeeded.');
+			return Utilities::getResponseResult(true, 'Loging out succeeded.');
 		} // logoff
 		
 		public function changePassword($passwordInfo)
