@@ -43,6 +43,8 @@ header;
 			$clientInfo = $clientFunction->getClientInfo($clientID)['result'];
 			$reportInfo = $clientFunction->getReports($clientID)['result'];
 			
+			if (!empty($clientInfo[CLIENT_EMER_CON_NAME]))
+				$clientInfo[CLIENT_EMER_CON_NAME] = $clientInfo[CLIENT_EMER_CON_NAME].' - ';
 			//echo var_dump($clientInfo['client_conditions'][0], true);
 			
 			$clientHtmlOutput = <<<client
@@ -159,7 +161,7 @@ header;
 		</tr>
 		<tr>
 			<td width="22%" class="caption">Emergency Contact:</td>
-			<td width="48%" class="text">{$clientInfo["client_emergency_contact_name"]} - {$clientInfo["client_emergency_contact_no"]}</td>
+			<td width="48%" class="text">{$clientInfo["client_emergency_contact_name"]}{$clientInfo["client_emergency_contact_no"]}</td>
 		</tr>
 	</tbody>
 </table>
