@@ -22,8 +22,9 @@ function initPage()
 		    info: "Showing _START_ to _END_ of _TOTAL_ clients",
 			//info: "Showing _TOTAL_ clients",
 			infoEmpty: "",
-		    lengthMenu: "Show _MENU_ clients"
+		    lengthMenu: "Show _MENU_ clients / page"
 		},
+		dom: '<"top"lifp<"clear">>rt<"bottom"ip<"clear">>',
 		lengthMenu: [ [10, 25, 50], [10, 25, 50] ], // [[pageLength, -1], [lengthMenu, "All"]]
 		paging: true,
 		pagingType: "numbers",
