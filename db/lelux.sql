@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2016 at 01:29 PM
+-- Generation Time: May 03, 2016 at 03:51 PM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.6.14
 
@@ -45,11 +45,11 @@ CREATE TABLE `client` (
   `client_emergency_contact_name` varchar(50) NOT NULL,
   `client_emergency_contact_no` varchar(12) NOT NULL,
   `client_create_datetime` datetime NOT NULL,
-  `client_create_user` varchar(50) NOT NULL,
+  `client_create_user` tinyint(4) NOT NULL,
   `client_update_datetime` datetime NOT NULL,
-  `client_update_user` varchar(50) NOT NULL,
+  `client_update_user` tinyint(4) NOT NULL,
   `client_void_datetime` datetime NOT NULL,
-  `client_void_user` varchar(50) NOT NULL
+  `client_void_user` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -142,49 +142,53 @@ INSERT INTO `finding_type` (`finding_type_id`, `finding_type_name`, `finding_typ
 
 CREATE TABLE `health_fund` (
   `health_fund_id` int(11) NOT NULL,
-  `health_fund_name` varchar(50) NOT NULL
+  `health_fund_name` varchar(50) NOT NULL,
+  `health_fund_provider_no` varchar(14) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `health_fund`
 --
 
-INSERT INTO `health_fund` (`health_fund_id`, `health_fund_name`) VALUES
-(0, '----- Non Health Fund -----'),
-(1, 'ACA Health'),
-(2, 'AHM Health Insurance'),
-(3, 'Australian Unity Health Ltd'),
-(4, 'Budget Direct'),
-(5, 'Bupa Australia'),
-(6, 'CBHS Health Fund Limited'),
-(7, 'CUA Health Limited'),
-(8, 'Defence Health Limited'),
-(9, 'Frank Health insurance'),
-(10, 'GMF Health'),
-(11, 'GMHBA Limited'),
-(12, 'Grand United Health'),
-(13, 'HBF Health Fund'),
-(14, 'Health Care Insurance Ltd'),
-(15, 'Health Insurance Fund of Australia Ltd'),
-(16, 'Health Partners'),
-(17, 'Health.com.au'),
-(18, 'Medibank Private Ltd'),
-(19, 'onemedifund'),
-(20, 'Navy Health'),
-(21, 'NIB Health Funds Ltd'),
-(22, 'Peoplecare Health Insurance'),
-(23, 'Phoenix Health Fund Ltd'),
-(24, 'Queensland Country Health Fund Ltd'),
-(25, 'Railway and Transport Health Fund Ltd'),
-(26, 'Reserve Bank Health Society'),
-(27, 'St Lukes'),
-(28, 'The Doctors'' Health Fund'),
-(29, 'Teachers Health Fund'),
-(30, 'Transport Health Pty Ltd'),
-(31, 'TUH'),
-(32, 'Uni Health'),
-(33, 'Westfund Ltd'),
-(34, 'HCF');
+INSERT INTO `health_fund` (`health_fund_id`, `health_fund_name`, `health_fund_provider_no`) VALUES
+(0, '----- Non Health Fund -----', ''),
+(1, 'ACA Health', 'AW10487R'),
+(2, 'AHM Health Insurance', '21146594'),
+(3, 'Australian Unity Health Ltd', '21135790'),
+(4, 'Budget Direct', ''),
+(5, 'Bupa Australia', 'C065957'),
+(6, 'CBHS Health Fund Limited', 'AMT1-10'),
+(7, 'CUA Health Limited', 'AW10487R'),
+(8, 'Defence Health Limited', 'AW10487R'),
+(9, 'Frank Health insurance', 'AW10487R'),
+(10, 'GMF Health', 'AW10487R'),
+(11, 'GMHBA Limited', 'AW10487R'),
+(12, 'Grand United Health', 'H2314359'),
+(13, 'HBF Health Fund', '1283571W'),
+(14, 'Health Care Insurance Ltd', 'AW10487R'),
+(15, 'Health Insurance Fund of Australia Ltd (HIF)', 'AW10487R'),
+(16, 'Health Partners', 'AW10487R'),
+(17, 'Health.com.au', 'AW10487R'),
+(18, 'Medibank Private Ltd', '1283571W'),
+(19, 'Onemedifund', 'AW10487R'),
+(20, 'Navy Health', 'AW10487R'),
+(21, 'NIB Health Funds Ltd', 'AMT1-10487'),
+(22, 'Peoplecare Health Insurance', 'AW10487R'),
+(23, 'Phoenix Health Fund Ltd', 'AW10487R'),
+(24, 'Queensland Country Health Fund Ltd', 'AW10487R'),
+(25, 'Railway and Transport Health Fund Ltd', 'AW10487R'),
+(26, 'Reserve Bank Health Society', ''),
+(27, 'St Lukes', 'AW10487R'),
+(28, 'The Doctors'' Health Fund', 'AM10487'),
+(29, 'Teachers Health Fund', 'AW10487R'),
+(30, 'Transport Health Pty Ltd', 'AW10487R'),
+(31, 'TUH', ''),
+(32, 'Uni Health', ''),
+(33, 'Westfund Ltd', ''),
+(34, 'HCF', 'AMT1-10487'),
+(35, 'Mildura District Hospital Fund Ltd', 'AW10487R'),
+(36, 'La Trobe Health Services', 'AW10487R'),
+(37, 'Police Health', 'AW10487R');
 
 -- --------------------------------------------------------
 
@@ -215,11 +219,11 @@ CREATE TABLE `report` (
   `membership_no` int(11) NOT NULL,
   `pateint_id` int(11) NOT NULL,
   `report_create_datetime` datetime NOT NULL,
-  `report_create_user` varchar(50) NOT NULL,
+  `report_create_user` tinyint(4) NOT NULL,
   `report_update_datetime` datetime NOT NULL,
-  `report_update_user` varchar(50) NOT NULL,
+  `report_update_user` tinyint(4) NOT NULL,
   `report_void_datetime` datetime NOT NULL,
-  `report_void_user` varchar(50) NOT NULL,
+  `report_void_user` tinyint(4) NOT NULL,
   `client_id` varchar(23) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -243,7 +247,8 @@ CREATE TABLE `therapist` (
 --
 
 INSERT INTO `therapist` (`therapist_id`, `therapist_name`, `therapist_username`, `therapist_password`, `therapist_permission`, `therapist_update_datetime`) VALUES
-(1, 'Natalie', 'natalie', 'natalie', 9, '0000-00-00 00:00:00'),
+(0, '--- Unknown ---', '', '', 0, '0000-00-00 00:00:00'),
+(1, 'Natalie', 'natalie', 'natalie', 9, '2016-04-14 16:33:53'),
 (2, 'Sandy', 'sandy', 'sandy', 1, '0000-00-00 00:00:00'),
 (3, 'Nicha', 'nicha', 'nicha', 1, '0000-00-00 00:00:00'),
 (4, 'Kate', 'kate', 'kate', 1, '0000-00-00 00:00:00'),
@@ -255,7 +260,7 @@ INSERT INTO `therapist` (`therapist_id`, `therapist_name`, `therapist_username`,
 (10, 'Barbie', 'barbie', 'barbie', 1, '0000-00-00 00:00:00'),
 (11, 'Noo', 'noona', 'noo1', 1, '0000-00-00 00:00:00'),
 (12, 'Ri', 'ri', 'ri', 1, '0000-00-00 00:00:00'),
-(13, 'Donna', 'donna', 'donna', 1, '0000-00-00 00:00:00');
+(13, 'Donna', 'donna', 'donna', 1, '0000-00-00 00:00:00')
 
 --
 -- Indexes for dumped tables
@@ -323,12 +328,12 @@ ALTER TABLE `therapist`
 -- AUTO_INCREMENT for table `health_fund`
 --
 ALTER TABLE `health_fund`
-  MODIFY `health_fund_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `health_fund_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `therapist`
 --
 ALTER TABLE `therapist`
-  MODIFY `therapist_id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `therapist_id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
