@@ -237,7 +237,7 @@ function turnOnEditMode(therapistIndex)
 	$txtPassword.val(_editingTherapist['therapist_password']);
 	
 	$txtName.focus();
-	$('body').animate({ scrollTop: 0 }, 400);
+	//$('body').animate({ scrollTop: 0 }, 400);
 }
 
 function turnOffEditMode()

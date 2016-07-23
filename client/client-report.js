@@ -203,6 +203,8 @@ function setClientInfo(clientInfo)
 	
 	setClientFindings(clientInfo['client_findings']);
 	setClientConditions(clientInfo['client_conditions']);
+	
+	toggleHealthFundClinetInputs();
 }
 
 function setClientFindings(clientFindings)
@@ -265,6 +267,8 @@ function setEditMode()
 		if ($('#txt' + conditionElements[i].suffix).length)
 			$('#txt' + conditionElements[i].suffix).prop('readonly', '');
 	}
+	
+	$('body').animate({ scrollTop: 230 }, 400);
 }
 
 function setViewMode()

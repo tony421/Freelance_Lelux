@@ -28,6 +28,9 @@
         			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'client-search') { echo 'class="active"'; } }?>>
         				<a href="../client/client-search.php">Search Client</a>
         			</li>
+        			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'massage-record') { echo 'class="active"'; } }?>>
+        				<a href="../massage/massage-record.php">Massage Record</a>
+        			</li>
         			<?php if (Authentication::isAdmin()) { ?>
 	        			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'therapist-manage') { echo 'class="active"'; } }?>>
 	        				<a href="../therapist/therapist-manage.php">Manage Therapist</a>

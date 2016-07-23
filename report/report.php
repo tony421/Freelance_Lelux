@@ -42,6 +42,34 @@
 				echo 'Some of criteria data is missing.';
 			}
 		}
+		else if ($reportType == 'COMMISSION_DAILY_REPORT') {
+			if (!empty($_GET['date'])) {
+				$date = $_GET['date'];
+				Utilities::logInfo('Report | criteria_data[date]: '.$date);
+		
+				$htmlReportInfo = $reportFunction->getCommissionDailyReport($date);
+		
+				$pdf->show('commission-daily-report', $htmlReportInfo);
+				//echo $htmlReportInfo;
+			}
+			else {
+				echo 'Some of criteria data is missing.';
+			}
+		}
+		else if ($reportType == 'INCOME_DAILY_REPORT') {
+			if (!empty($_GET['date'])) {
+				$date = $_GET['date'];
+				Utilities::logInfo('Report | criteria_data[date]: '.$date);
+		
+				$htmlReportInfo = $reportFunction->getIncomeDailyReport($date);
+		
+				$pdf->show('income-daily-report', $htmlReportInfo);
+				//echo $htmlReportInfo;
+			}
+			else {
+				echo 'Some of criteria data is missing.';
+			}
+		}
 		else {
 			echo 'Report type is not found.';
 		}

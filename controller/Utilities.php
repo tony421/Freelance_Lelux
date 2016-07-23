@@ -87,7 +87,12 @@
 		
 		public static function convertDateForDisplay($date)
 		{
-			return date_format(date_create($date), 'd/m/Y');
+			return date_format(date_create($date), 'd/m/Y'); // e.g. 23/12/2016
+		}
+		
+		public static function convertDateForFullDisplay($date)
+		{
+			return date_format(date_create($date), 'l, j F Y'); // e.g. Saturday, 23 July 2016
 		}
 		
 		public static function convertDatetimeForDisplay($date)

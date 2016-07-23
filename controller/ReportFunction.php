@@ -2,6 +2,7 @@
 	require_once '../config/shop_config.php';
 	require_once '../config/client_config.php';
 	require_once '../controller/ClientFunction.php';
+	require_once '../controller/MassageFunction.php';
 	
 	class ReportFunction
 	{
@@ -292,6 +293,93 @@ table;
 			
 			return $this->_CSS.$receiptTable.$receiptSeparator.$receiptTableCopy;
 		} // getClientReceipt
+		
+		public function getCommissionDailyReport($date)
+		{
+			$massagFunction = new MassageFunction();
+			$reportInfo = $massagFunction->getCommissionDailyReport($date);
+			
+			$fullDate = Utilities::convertDateForFullDisplay($date);
+			
+			$reportHeader = <<<header
+			<h1 style="text-align: center;">Commission Report</h1>
+			<h2 style="text-align: center;">on {$fullDate}</h2>
+header;
+			
+			$columnHeaders = <<<colHeader
+			<thead>
+				<tr style="text-align: center; font-weight: bold;">
+					<th>Therapist</th>
+					<th>Standard Commission</th>
+					<th>Request Reward</th>
+					<th>Total</th>
+				</tr>
+			</thead>
+colHeader;
+			
+			$reportRows = "";
+			foreach ($reportInfo as $row) {
+				$commission = $row['massage_record_commission'] != '' ? '$'.$row['massage_record_commission'] : '';
+				$reward = $row['massage_record_request_reward'] != '' ? '$'.$row['massage_record_request_reward'] : '';
+				
+				$reportRows .= <<<row
+				<tr><td><b>{$row['therapist_name']}</b></td><td style="text-align: right;">{$commission}</td><td style="text-align: right;">$reward</td><td style="text-align: right;">\${$row['massage_record_commission_total']}</td></tr>
+row;
+			}
+				
+			$reportTable = <<<table
+			<table cellspacing="0" cellpadding="5" border="1">
+				{$columnHeaders}
+				<tbody>
+					{$reportRows}
+				</tbody>
+			</table>
+table;
+				
+			return $reportHeader.$reportTable;
+		} // getCommissionDailyReport
+		
+		public function getIncomeDailyReport($date)
+		{
+			$massagFunction = new MassageFunction();
+			$reportInfo = $massagFunction->getIncomeDailyReport($date);
+			
+			$fullDate = Utilities::convertDateForFullDisplay($date);
+			
+			$reportHeader = <<<header
+			<h1 style="text-align: center;">Income Report</h1>
+			<h2 style="text-align: center;">on {$fullDate}</h2>
+header;
+			
+			$columnHeaders = <<<colHeader
+			<thead>
+				<tr style="text-align: center; font-weight: bold;">
+					<th>Paid By</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+colHeader;
+			
+			$reportRows = "";
+			foreach ($reportInfo as $row) {
+				$amount = $row['paid_by'] != 'Stamp' ? '$'.$row['amount'] : $row['amount'];
+			
+				$reportRows .= <<<row
+				<tr><td><b>{$row['paid_by']}</b></td><td style="text-align: right;">{$amount}</td></tr>
+row;
+			}
+				
+			$reportTable = <<<table
+			<table cellspacing="0" cellpadding="5" border="1">
+				{$columnHeaders}
+				<tbody>
+					{$reportRows}
+				</tbody>
+			</table>
+table;
+			
+			return $reportHeader.$reportTable;
+		} // getIncomeDailyReport
 	}
 ?>
 

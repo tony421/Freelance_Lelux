@@ -104,6 +104,13 @@ function main_confirm_message(msg, fnOnYes, fnOnNo)
 	$.messagebox.confirm({ message : msg, icon : 'question', onYes : fnOnYes, onNo : fnOnNo });
 }
 
+function main_is_int(n){
+    return n % 1 === 0;
+}
+
+function main_is_float(n){
+    return n % 1 !== 0;
+}
 
 
 
