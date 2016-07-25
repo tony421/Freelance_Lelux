@@ -20,7 +20,7 @@
 					, massage_record_id, therapist.therapist_id, massage_record_date
 					, therapist.therapist_name, massage_record_requested, massage_record_minutes
 					, massage_record_stamp, massage_record_cash, massage_record_promotion
-					, massage_record_credit, massage_record_hicaps
+					, massage_record_credit, massage_record_hicaps, massage_record_voucher
 					, massage_record_commission, massage_record_request_reward
 					, massage_record_commission + massage_record_request_reward as massage_record_commission_total
 				from massage_record
@@ -44,7 +44,7 @@
 						, massage_record_requested, massage_record_request_reward
 						, massage_record_promotion, massage_record_commission
 						, massage_record_cash, massage_record_credit, massage_record_hicaps
-						, massage_record_stamp, massage_record_date
+						, massage_record_voucher, massage_record_stamp, massage_record_date
 						, massage_record_create_user, massage_record_create_datetime
 					)
 					values (
@@ -52,7 +52,7 @@
 						, {$recordInfo['massage_record_requested']}, {$recordInfo['massage_record_request_reward']}
 						, {$recordInfo['massage_record_promotion']}, {$recordInfo['massage_record_commission']}
 						, {$recordInfo['massage_record_cash']}, {$recordInfo['massage_record_credit']}, {$recordInfo['massage_record_hicaps']}
-						, {$recordInfo['massage_record_stamp']}, '{$recordInfo['massage_record_date']}'
+						, {$recordInfo['massage_record_voucher']}, {$recordInfo['massage_record_stamp']}, '{$recordInfo['massage_record_date']}'
 						, {$recordInfo['massage_record_create_user']}, '{$recordInfo['massage_record_create_datetime']}'
 					)";
 			
@@ -70,6 +70,7 @@
 						, massage_record_promotion = {$recordInfo['massage_record_promotion']}
 						, massage_record_credit = {$recordInfo['massage_record_credit']}
 						, massage_record_hicaps = {$recordInfo['massage_record_hicaps']}
+						, massage_record_voucher = {$recordInfo['massage_record_voucher']}
 						, massage_record_commission = {$recordInfo['massage_record_commission']}
 						, massage_record_request_reward = {$recordInfo['massage_record_request_reward']}
 						, massage_record_update_user = {$recordInfo['massage_record_update_user']}
@@ -125,7 +126,12 @@
 					where massage_record_date = '{$date}'
 						and massage_record_void_user = 0
 					union
-					select 'Stamp' as paid_by, ifnull(sum(massage_record_stamp), 0) as amount
+					select 'Voucher' as paid_by, ifnull(sum(massage_record_voucher), 0) as amount
+					from massage_record
+					where massage_record_date = '{$date}'
+						and massage_record_void_user = 0
+					union
+					select 'Free Stamp' as paid_by, ifnull(sum(massage_record_stamp), 0) as amount
 					from massage_record
 					where massage_record_date = '{$date}'
 						and massage_record_void_user = 0";

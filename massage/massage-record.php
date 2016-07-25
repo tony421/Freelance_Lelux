@@ -96,7 +96,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-offset-1 col-sm-2 control-label">Stamp Apply</label>
+						<label class="col-sm-offset-1 col-sm-2 control-label">Free Stamp (Minute)</label>
 						<div class="col-sm-2">
 							<input type="text" id="txtStamp" class="form-control">
 						</div>
@@ -126,6 +126,12 @@
 							<div class="input-group">
 							    <span class="input-group-addon">HICAPS</span>
 							    <input type="text" id="txtHICAPS" class="form-control" value="0">
+						    </div>
+						</div>
+						<div class="col-sm-2">
+							<div class="input-group">
+							    <span class="input-group-addon">Voucher</span>
+							    <input type="text" id="txtVoucher" class="form-control" value="0">
 						    </div>
 						</div>
 					</div>
@@ -176,15 +182,16 @@
 						                <th rowspan="2">Therapist</th>
 						                <th rowspan="2">Minutes</th>
 						                <th rowspan="2">Requested</th>
-						                <th rowspan="2" style="border-right: 1px solid #000;">Stamp</th>
-						                <th colspan="4" class="text-center" style="border-right: 1px solid #000;">Paid by</th>
+						                <th rowspan="2" style="border-right: 1px solid #000;">Free Stamp (minute)</th>
+						                <th colspan="5" class="text-center" style="border-right: 1px solid #000;">Paid by</th>
 						                <th colspan="3" class="text-center">Commission</th>
 						            </tr>
 						            <tr>
 						            	<th>Cash</th>
 						            	<th>Promotion Price</th>
 						            	<th>Credit</th>
-						            	<th style="border-right: 1px solid #000;">HICAPS</th>
+						            	<th>HICAPS</th>
+						            	<th style="border-right: 1px solid #000;">Voucher</th>
 						            	<th>Standard</th>
 						            	<th>Reward</th>
 						            	<th>Total</th>

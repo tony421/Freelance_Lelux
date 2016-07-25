@@ -362,7 +362,13 @@ colHeader;
 			
 			$reportRows = "";
 			foreach ($reportInfo as $row) {
-				$amount = $row['paid_by'] != 'Stamp' ? '$'.$row['amount'] : $row['amount'];
+				if ($row['paid_by'] != 'Free Stamp') {
+					$amount = '$'.$row['amount'];
+				}
+				else {
+					$amount = $row['amount'] > 1 ? (int)$row['amount'].' minutes' : (int)$row['amount'].' minute';
+				}
+				//$amount = $row['paid_by'] != 'Stamp' ? '$'.$row['amount'] : (int)$row['amount'].' min';
 			
 				$reportRows .= <<<row
 				<tr><td><b>{$row['paid_by']}</b></td><td style="text-align: right;">{$amount}</td></tr>

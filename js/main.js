@@ -99,9 +99,11 @@ function main_info_message(msg, fnOnOK)
 	$.messagebox.alert({ message : msg, icon : 'info', onOK : fnOnOK });
 }
 
-function main_confirm_message(msg, fnOnYes, fnOnNo)
+function main_confirm_message(msg, fnOnYes, fnOnNo, defaultBtn)
 {
-	$.messagebox.confirm({ message : msg, icon : 'question', onYes : fnOnYes, onNo : fnOnNo });
+	if (typeof(defaultBtn) === 'undefined') defaultBtn = 0;
+	
+	$.messagebox.confirm({ message : msg, icon : 'question', onYes : fnOnYes, onNo : fnOnNo, defaultButton: defaultBtn });
 }
 
 function main_is_int(n){

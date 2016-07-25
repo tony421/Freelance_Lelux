@@ -36,4 +36,6 @@ Next Deployment Instruction:
 	- client/client-report.js : fixing bug
 	- Database =>
 		- new tables => config & massage_record & request_condition
+	- [New] adding paid by Voucher
+	- [New] change stamp amount to stamp minute
 		

@@ -4,7 +4,7 @@ var _records, _editingRecord;
 
 var $dateInput;
 var $txtDate, $ddlTherapist, $cbRequested, $txtMinutes, $txtStamp;
-var $txtCash, $cbPromotionPrice, $txtCredit, $txtHICAPS;
+var $txtCash, $cbPromotionPrice, $txtCredit, $txtHICAPS, $txtVoucher;
 var $txtStdCommission, $txtReqReward, $txtCommissionTotal;
 var $btnAdd, $btnUpdate, $btnDelete, $btnCancelEdit;
 var $btnCommissionReport, $btnIncomeReport;
@@ -29,6 +29,7 @@ function initPage()
 	$cbPromotionPrice = $('#cbPromotionPrice');
 	$txtCredit = $('#txtCredit');
 	$txtHICAPS = $('#txtHICAPS');
+	$txtVoucher = $('#txtVoucher');
 	$txtStdCommission = $('#txtStdCommission');
 	$txtReqReward = $('#txtReqReward');
 	$txtCommissionTotal = $('#txtCommissionTotal');
@@ -94,7 +95,8 @@ function initPage()
 		verticalbuttons: true,
 		initval: 0,
 		min: 0,
-		max: 9
+		max: 600,
+		step: 15
 	});
 	$txtStamp.change(function(){
 		calReqReward();
@@ -104,6 +106,7 @@ function initPage()
 	$txtCash.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
 	$txtCredit.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
 	$txtHICAPS.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
+	$txtVoucher.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
 	$txtStdCommission.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
 	$txtReqReward.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
 	$txtCommissionTotal.autoNumeric('init', { vMin: 0.0, vMax: 1000.99, aSign: '$' });
@@ -111,6 +114,7 @@ function initPage()
 	$txtCash.focus(function(){ $(this).select(); });
 	$txtCredit.focus(function(){ $(this).select(); });
 	$txtHICAPS.focus(function(){ $(this).select(); });
+	$txtVoucher.focus(function(){ $(this).select(); });
 	
 	$cbRequested.change(function(){
 		calReqReward();
@@ -224,6 +228,8 @@ function initDataTable()
 		    	, render: function ( data, type, row ) { return '$'+ data; } },
 		    { data: "massage_record_hicaps", orderable: false, className: 'text-right'
 		    	, render: function ( data, type, row ) { return '$'+ data; } },
+	    	{ data: "massage_record_voucher", orderable: false, className: 'text-right'
+			    , render: function ( data, type, row ) { return '$'+ data; } },
 		    { data: "massage_record_commission", orderable: false, className: 'text-right'
 		    	, render: function ( data, type, row ) { return '$'+ data; } },
 		    { data: "massage_record_request_reward", orderable: false, className: 'text-right'
@@ -251,6 +257,7 @@ function addRecordRows(result)
 			massage_record_cash: result[i]['massage_record_cash'],
 			massage_record_credit: result[i]['massage_record_credit'],
 			massage_record_hicaps: result[i]['massage_record_hicaps'],
+			massage_record_voucher: result[i]['massage_record_voucher'],
 			massage_record_commission: result[i]['massage_record_commission'],
 			massage_record_request_reward: result[i]['massage_record_request_reward'],
 			massage_record_commission_total: result[i]['massage_record_commission_total']}).draw();
@@ -350,6 +357,7 @@ function setEditingRecord(recordIndex)
 	if (_editingRecord['massage_record_promotion'] == true) $cbPromotionPrice.prop('checked', true);
 	$txtCredit.autoNumeric('set', _editingRecord['massage_record_credit']);
 	$txtHICAPS.autoNumeric('set', _editingRecord['massage_record_hicaps']);
+	$txtVoucher.autoNumeric('set', _editingRecord['massage_record_voucher']);
 	$txtStdCommission.autoNumeric('set', _editingRecord['massage_record_commission']);
 	$txtReqReward.autoNumeric('set', _editingRecord['massage_record_request_reward']);
 	$txtCommissionTotal.autoNumeric('set', _editingRecord['massage_record_commission_total']);
@@ -371,6 +379,7 @@ function clearInputs()
 	$txtCash.autoNumeric('set', 0);
 	$txtCredit.autoNumeric('set', 0);
 	$txtHICAPS.autoNumeric('set', 0);
+	$txtVoucher.autoNumeric('set', 0);
 	$txtStdCommission.autoNumeric('set', 0);
 	$txtReqReward.autoNumeric('set', 0);
 	$txtCommissionTotal.autoNumeric('set', 0);
@@ -392,24 +401,28 @@ function calCommission()
 function calReqReward()
 {
 	minutes = parseInt($txtMinutes.val());
+	freeStamp = parseInt($txtStamp.val());
+	
+	minutes = minutes - freeStamp;
 	
 	if (minutes >= _minimumRequest) {
 		req = $cbRequested.is(':checked');
-		stamp = parseInt($txtStamp.val()) > 0 ? true : false;
+		//stamp = parseInt($txtStamp.val()) > 0 ? true : false; // stamp condition is changed to be minute condition
 		promo = $cbPromotionPrice.is(':checked');
 		
 		//alert(req + '|' + stamp + '|' + promo);
 		
 		$.each(_requestConditions, function (i, condition){
 			if (condition['request_condition_request'] == req 
-					&& condition['request_condition_stamp'] == stamp 
+					//&& condition['request_condition_stamp'] == stamp 
 					&& condition['request_condition_promotion'] == promo) {
 				
-				if (main_is_int(condition['request_condition_amt']) == true)
-					reward = parseInt(condition['request_condition_amt']);
-				else
-					reward = condition['request_condition_amt'];
+//				if (main_is_int(condition['request_condition_amt']) == true)
+//					reward = parseInt(condition['request_condition_amt']);
+//				else
+//					reward = condition['request_condition_amt'];
 				
+				reward = condition['request_condition_amt'];
 				//$txtReqReward.val(reward);
 				$txtReqReward.autoNumeric('set', reward);
 				
@@ -430,7 +443,12 @@ function validateRecordInfo()
 				if ($txtCash.val().length) {
 					if ($txtCredit.val().length) {
 						if ($txtHICAPS.val().length) {
-							return true;
+							if ($txtVoucher.val().length) {
+								return true;
+							}
+							else {
+								main_alert_message('Please enter "Voucher"!', function(){ $txtVoucher.focus();});
+							}
 						}
 						else {
 							main_alert_message('Please enter "HICAPS"!', function(){ $txtHICAPS.focus();});
@@ -472,6 +490,7 @@ function getRecordInfo(recordID)
 		'massage_record_promotion': $cbPromotionPrice.is(':checked'),
 		'massage_record_credit': $txtCredit.autoNumeric('get'),
 		'massage_record_hicaps': $txtHICAPS.autoNumeric('get'),
+		'massage_record_voucher': $txtVoucher.autoNumeric('get'),
 		'massage_record_commission': $txtStdCommission.autoNumeric('get'),
 		'massage_record_request_reward': $txtReqReward.autoNumeric('get')
 	}
@@ -534,7 +553,9 @@ function deleteRecord()
 		clearInputs();
 		
 		main_request_ajax('massage-boundary.php', 'DELETE_RECORD', recordID, onDeleteRecordRequestDone);
-	});
+	}, function(){
+		$btnDelete.focus();
+	}, 1);
 }
 
 function onDeleteRecordRequestDone(response)

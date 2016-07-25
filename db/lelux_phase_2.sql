@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 23, 2016 at 04:53 AM
+-- Generation Time: Jul 25, 2016 at 04:11 PM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.6.14
 
@@ -60,7 +60,8 @@ CREATE TABLE `massage_record` (
   `massage_record_cash` decimal(10,2) NOT NULL,
   `massage_record_credit` decimal(10,2) NOT NULL,
   `massage_record_hicaps` decimal(10,2) NOT NULL,
-  `massage_record_stamp` tinyint(4) NOT NULL,
+  `massage_record_stamp` smallint(6) NOT NULL,
+  `massage_record_voucher` decimal(10,2) NOT NULL,
   `massage_record_date` date NOT NULL,
   `massage_record_create_user` smallint(6) NOT NULL,
   `massage_record_create_datetime` datetime NOT NULL,
@@ -91,14 +92,18 @@ CREATE TABLE `request_condition` (
 --
 
 INSERT INTO `request_condition` (`request_condition_request`, `request_condition_promotion`, `request_condition_stamp`, `request_condition_amt`, `request_condition_active_date_start`, `request_condition_active_date_end`) VALUES
-(0, 0, 0, '0.00', '1999-01-01', '2999-12-31'),
-(0, 0, 1, '0.00', '1999-01-01', '2999-12-31'),
-(0, 1, 0, '0.00', '1999-01-01', '2999-12-31'),
-(0, 1, 1, '0.00', '1999-01-01', '2999-12-31'),
-(1, 0, 0, '5.00', '1999-01-01', '2999-12-31'),
-(1, 0, 1, '0.00', '1999-01-01', '2999-12-31'),
-(1, 1, 0, '0.00', '1999-01-01', '2999-12-31'),
-(1, 1, 1, '0.00', '1999-01-01', '2999-12-31');
+(0, 0, 0, '0.00', '1999-01-01', '2015-12-31'),
+(0, 0, 0, '0.00', '2016-01-01', '2999-12-31'),
+(0, 0, 1, '0.00', '1999-01-01', '2015-12-31'),
+(0, 1, 0, '0.00', '1999-01-01', '2015-12-31'),
+(0, 1, 0, '0.00', '2016-01-01', '2999-12-31'),
+(0, 1, 1, '0.00', '1999-01-01', '2015-12-31'),
+(1, 0, 0, '5.00', '1999-01-01', '2015-12-31'),
+(1, 0, 0, '5.00', '2016-01-01', '2999-12-31'),
+(1, 0, 1, '0.00', '1999-01-01', '2015-12-31'),
+(1, 1, 0, '0.00', '1999-01-01', '2015-12-31'),
+(1, 1, 0, '0.00', '2016-01-01', '2999-12-31'),
+(1, 1, 1, '0.00', '1999-01-01', '2015-12-31');
 
 --
 -- Indexes for dumped tables
@@ -130,7 +135,7 @@ ALTER TABLE `request_condition`
 -- AUTO_INCREMENT for table `massage_record`
 --
 ALTER TABLE `massage_record`
-  MODIFY `massage_record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `massage_record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
