@@ -1,5 +1,8 @@
 # Freelance_Lelux
 
+Manual Changes:
+	1. changing "log path"
+
 Deployment: 30 March 2016
 	*Note:	changing "log path"
 	Issue:	mysql - casting "report_hour * 60" to integer causes an error, so casting to decimal(0) instead
@@ -21,7 +24,7 @@ Deployment Instruction: May 2016
 	- Add more "Health Fund" which are "Cessnock District...", "Teachers Union Health" and "Teacher Federation Health"
 	- Correct "Provider No" of "CBHS Health..."
 	
-Next Deployment Instruction:
+Deployment Instruction: 27 July 2016 [Lastest]
 	- therapist/therapist-manage.js : no scrolling
 	- report/report.php : new reports
 	- master-page/menu.php : new menu
@@ -38,4 +41,7 @@ Next Deployment Instruction:
 		- new tables => config & massage_record & request_condition
 	- [New] adding paid by Voucher
 	- [New] change stamp amount to stamp minute
-		
+	- [on-site updating] adding [Voucher] into therapist list so that can record voucher sales
+	
+Next Deployment Instruction:
+	- allow users to edit HealthFund, Membership No and PatientID on Client-Report page

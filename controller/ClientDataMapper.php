@@ -256,7 +256,10 @@ order by client_name";
 						client_emergency_contact_name = '%s',
 						client_emergency_contact_no = '%s',
 						client_update_user = '%s',
-						client_update_datetime = '%s'
+						client_update_datetime = '%s',
+						health_fund_id = %d,
+						client_membership_no = '%s',
+						client_patient_id = %d
 					where client_id = '%s'";
 			
 			$sql = sprintf($sql_format, 
@@ -275,6 +278,9 @@ order by client_name";
 					$client->getEmergencyContactNo(),
 					$client->getUpdateUser(),
 					$client->getUpdateDateTime(),
+					$client->getHealthFundID(),
+					$client->getMembershipNo(),
+					$client->getPatientID(),
 					$client->getID());
 			
 			//return $sql;

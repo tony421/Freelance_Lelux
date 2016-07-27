@@ -73,11 +73,11 @@
 						</div>
 					</div>
 					<div id="rowHealthFundInput" class="form-group">
-						<label class="col-sm-2 control-label">Membership No.</label>
+						<label class="col-sm-2 control-label text-danger">*Membership No.</label>
 						<div class="col-sm-3">
-							<input type="text" id="txtMemNo" class="form-control" disabled>
+							<input type="text" id="txtMemNo" class="form-control" readonly="readonly">
 						</div>
-						<label class="col-sm-2 control-label">Patient ID</label>
+						<label class="col-sm-2 control-label text-danger">*Patient ID</label>
 						<div class="col-sm-2">
 							<input type="text" id="txtPatientID" class="form-control" disabled>
 						</div>

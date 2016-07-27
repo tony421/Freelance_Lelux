@@ -38,6 +38,11 @@ function initPage()
 		$txtBirthday.inputmask('date');
 		$txtContactNo.inputmask('9999-999-999');
 		$txtEmerConNo.inputmask('9999-999-999');
+		$txtPatientID.TouchSpin({
+			verticalbuttons: true,
+			min: 1,
+			max: 9
+		});
 		
 		getClientInfo(_clientID);
 		
@@ -151,10 +156,12 @@ function onGetTherapistsDone(response)
 		therapists = response.result;
 
 		$.each(therapists, function (i, therapist){
-			option = "<option value='" + therapist['therapist_id'] + "'>" + therapist['therapist_name'] + "</option>";
+			if (therapist['therapist_name'] != '[Voucher]') {
+				option = "<option value='" + therapist['therapist_id'] + "'>" + therapist['therapist_name'] + "</option>";
 			
-			_therapistOptions.push(option);
-			$ddlReportTherapist.append(option);
+				_therapistOptions.push(option);
+				$ddlReportTherapist.append(option);
+			}
 		});
 		
 		getReports();
@@ -241,6 +248,9 @@ function setEditMode()
 	$btnEditClient.addClass('hidden');
 	//$btnPrintReport.addClass('hidden');
 	
+	$ddlHealthFund.prop('disabled', '');
+	$txtMemNo.prop('readonly', '');
+	$txtPatientID.prop('disabled', '');
 	$txtFirstName.prop('readonly', '');
 	$txtLastName.prop('readonly', '');
 	$radMale.prop('disabled', '');
@@ -278,6 +288,9 @@ function setViewMode()
 	$btnUpdateClient.addClass('hidden');
 	$btnCancelEdit.addClass('hidden');
 	
+	$ddlHealthFund.prop('disabled', 'true');
+	$txtMemNo.prop('readonly', 'true');
+	$txtPatientID.prop('disabled', 'true');
 	$txtFirstName.prop('readonly', 'true');
 	$txtLastName.prop('readonly', 'true');
 	$radMale.prop('disabled', 'true');

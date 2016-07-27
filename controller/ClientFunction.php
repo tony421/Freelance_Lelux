@@ -86,6 +86,13 @@
 		{
 			$client = $this->generateClientModel($editedClientInfo, self::MODE_UPDATE);
 			
+			// Check existed memberships only in a case that clients use health fund
+			if ($client->isHealthFund()) {
+				if ($this->_dataMapper->isExistedClientMember($client)) {
+					return Utilities::getResponseResult(false, 'Membership No. ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.');
+				}
+			}
+			
 			// Check existed names in every cases
 			if ($this->_dataMapper->isExistedClientName($client)) {
 				return Utilities::getResponseResult(false, 'Client Name ['.$client->getFirstName().' '.$client->getLastName().'] already existed, please check the infotmation.');
