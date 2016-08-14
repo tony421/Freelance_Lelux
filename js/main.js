@@ -13,7 +13,7 @@ if (!String.prototype.format) {
 
 function main_request_ajax(url, mode, data, onSuccess)
 {
-	//main_loading_show();
+	main_loading_show(); // show loading
 
 	// ***Note
 	//		- a single quate copied from any document can cause an error [Unexpected end of input]
@@ -29,7 +29,7 @@ function main_request_ajax(url, mode, data, onSuccess)
 		dataType: 'json', 
 		success: onSuccess,
 		error: function(xhr, desc, err){
-			//main_loading_hide();
+			main_loading_hide(); // hide loading when error occurred
 			main_alert_message('Details: ' + desc + ' | Error:' + err);
 			
 			// N.B.
@@ -104,6 +104,26 @@ function main_confirm_message(msg, fnOnYes, fnOnNo, defaultBtn)
 	if (typeof(defaultBtn) === 'undefined') defaultBtn = 0;
 	
 	$.messagebox.confirm({ message : msg, icon : 'question', onYes : fnOnYes, onNo : fnOnNo, defaultButton: defaultBtn });
+}
+
+// show loading
+function main_loading_show()
+{
+	$.loadingpanel.show();
+}
+
+// hide loading
+function main_loading_hide()
+{
+	$.loadingpanel.hide();
+}
+
+// used for hide loading when any ajax request finished
+function main_ajax_success_hide_loading()
+{
+	$(document).ajaxSuccess(function(){
+		main_loading_hide();
+	});
 }
 
 function main_is_int(n){

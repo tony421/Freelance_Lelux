@@ -5,6 +5,8 @@ var $txtNewPasswordConfirm;
 
 function initPage()
 {
+	main_ajax_success_hide_loading();
+	
 	$btnChangePassword = $('#btnChangePassword');
 	$txtOldPassword = $('#txtOldPassword');
 	$txtNewPassword = $('#txtNewPassword');
@@ -48,7 +50,7 @@ function changePassword()
 function onChangePasswordDone(response)
 {
 	if (response.success) {
-		main_info_message(response.msg, main_log_off);
+		main_info_message(response.msg, main_log_out);
 	}
 	else
 		main_alert_message(response.msg, function(){ $txtOldPassword.focus();});

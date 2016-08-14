@@ -28,18 +28,21 @@
 		<link rel="stylesheet" href="../css/main-id.css">
 	    <link rel="stylesheet" href="../css/main-class.css">
 	    <link rel="stylesheet" href="../css/messagebox.css">
+	    <link rel="stylesheet" href="../css/loadingpanel.css">
 	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
 	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
 	    <link rel="stylesheet" href="../css/bootstrap-datepicker.css">
 	    
 	    <script type="text/javascript" src="../js/main.js"></script>
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
+	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
 	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
 	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
 	    <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
+	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="../js/moment.js"></script>
-	    <script type="text/javascript" src="massage-record.js"></script>
+	    <script type="text/javascript" src="massage-record.js"></script>	    
 	    
 	   	<script type="text/javascript">
 	    	$(document).ready(function(){
@@ -90,9 +93,19 @@
 								<input type="checkbox" id="cbRequested"> Requested
 							</label>
 						</div>
-						<label class="col-sm-1 control-label">Minutes</label>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-offset-1 col-sm-2 control-label">Minutes</label>
 						<div class="col-sm-2">
 							<input type="text" id="txtMinutes" class="form-control">
+						</div>
+						<label class="col-sm-1 control-label">Time In</label>
+						<div class="col-sm-2">
+							<input type="text" id="txtTimeIn" class="form-control">
+						</div>
+						<label class="col-sm-1 control-label">Time Out</label>
+						<div class="col-sm-2">
+							<input type="text" id="txtTimeOut" class="form-control" disabled>
 						</div>
 					</div>
 					<div class="form-group">
@@ -180,15 +193,16 @@
 						            <tr>
 						                <th rowspan="2">#</th>
 						                <th rowspan="2">Therapist</th>
-						                <th rowspan="2">Minutes</th>
-						                <th rowspan="2">Requested</th>
+						                <th rowspan="2">Req.</th>
+						                <th rowspan="2">Min.</th>
+						                <th rowspan="2">Time In/Out</th>
 						                <th rowspan="2" style="border-right: 1px solid #000;">Free Stamp (minute)</th>
 						                <th colspan="5" class="text-center" style="border-right: 1px solid #000;">Paid by</th>
 						                <th colspan="3" class="text-center">Commission</th>
 						            </tr>
 						            <tr>
 						            	<th>Cash</th>
-						            	<th>Promotion Price</th>
+						            	<th>Promo. Price</th>
 						            	<th>Credit</th>
 						            	<th>HICAPS</th>
 						            	<th style="border-right: 1px solid #000;">Voucher</th>

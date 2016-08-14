@@ -9,6 +9,8 @@ var dtTableClient;
 
 function initPage()
 {
+	main_ajax_success_hide_loading();
+	
 	$btnSearchClient = $('#btnSearchClient');
 	$radSearchMem = $('#radSearchMem');
 	$radSearchName = $('#radSearchName');

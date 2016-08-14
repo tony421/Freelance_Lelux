@@ -19,6 +19,9 @@
 				$sql = "select 0 as row_no
 					, massage_record_id, therapist.therapist_id, massage_record_date
 					, therapist.therapist_name, massage_record_requested, massage_record_minutes
+					, date_format(massage_record_time_in, '%H:%i') as massage_record_time_in
+					, date_format(massage_record_time_out, '%H:%i') as massage_record_time_out
+					, concat(date_format(massage_record_time_in, '%H:%i'), ' - ', date_format(massage_record_time_out, '%H:%i')) as massage_record_time_in_out
 					, massage_record_stamp, massage_record_cash, massage_record_promotion
 					, massage_record_credit, massage_record_hicaps, massage_record_voucher
 					, massage_record_commission, massage_record_request_reward
@@ -46,6 +49,7 @@
 						, massage_record_cash, massage_record_credit, massage_record_hicaps
 						, massage_record_voucher, massage_record_stamp, massage_record_date
 						, massage_record_create_user, massage_record_create_datetime
+						, massage_record_time_in, massage_record_time_out
 					)
 					values (
 						{$recordInfo['therapist_id']}, {$recordInfo['massage_record_minutes']}
@@ -54,6 +58,7 @@
 						, {$recordInfo['massage_record_cash']}, {$recordInfo['massage_record_credit']}, {$recordInfo['massage_record_hicaps']}
 						, {$recordInfo['massage_record_voucher']}, {$recordInfo['massage_record_stamp']}, '{$recordInfo['massage_record_date']}'
 						, {$recordInfo['massage_record_create_user']}, '{$recordInfo['massage_record_create_datetime']}'
+						, '{$recordInfo['massage_record_time_in']}', '{$recordInfo['massage_record_time_out']}'
 					)";
 			
 			return $this->_dataAccess->insert($sql);
@@ -75,6 +80,8 @@
 						, massage_record_request_reward = {$recordInfo['massage_record_request_reward']}
 						, massage_record_update_user = {$recordInfo['massage_record_update_user']}
 						, massage_record_update_datetime = '{$recordInfo['massage_record_update_datetime']}'
+						, massage_record_time_in = '{$recordInfo['massage_record_time_in']}'
+						, massage_record_time_out = '{$recordInfo['massage_record_time_out']}'
 					where massage_record_id = {$recordInfo['massage_record_id']}";
 			
 			return $this->_dataAccess->update($sql);

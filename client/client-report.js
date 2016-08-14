@@ -29,6 +29,8 @@ var panelItemTemplate = "<div id=\"panelItem{0}\" class=\"panel panel-warning\">
 
 function initPage()
 {
+	main_ajax_success_hide_loading();
+	
 	_clientID = main_get_parameter('id');
 	//alert(_clientID + ' | ' + _clientID.length);
 	

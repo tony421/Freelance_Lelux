@@ -14,6 +14,8 @@ var _editingTherapist;
 
 function initPage()
 {
+	main_ajax_success_hide_loading();
+	
 	_is_add_mode = true;
 	
 	$btnAdd = $('#btnAdd');

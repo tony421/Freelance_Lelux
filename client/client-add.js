@@ -2,6 +2,8 @@ var $btnAddClient;
 
 function initPage()
 {
+	main_ajax_success_hide_loading();
+	
 	initElementVariables();
 	
 	$btnAddClient = $('#btnAddClient');

@@ -4,6 +4,8 @@ var $txtPassword;
 
 function initPage()
 {
+	main_ajax_success_hide_loading();
+	
 	$btnLogin = $('#btnLogin');
 	$txtUsername = $('#txtUsername');
 	$txtPassword = $('#txtPassword');

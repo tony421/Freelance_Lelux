@@ -1,0 +1,56 @@
+#loadingpanel-panel
+{
+    position: fixed;
+    z-index: 9999991;
+    left: 50%;
+	top: 50%;
+	margin: 0;
+	padding: 4px;
+    /*background-color: #f5f9ff;
+    border: 4px double #c8d9ef;*/
+    overflow: hidden;
+}
+
+#loadingpanel-image
+{
+	width: 50px;
+}
+
+#loadingpanel-modalbackground
+{
+	position: fixed;
+	z-index: 9999990;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	filter: alpha(opacity=40);
+	opacity: 0.4;
+	background: #ccc;
+	font-size: 1px;
+	overflow: hidden;
+}
+
+#loadingpanel-message
+{
+    padding-left: 4px;
+    font-size: 16px;
+    /*display: table-cell;*/
+    vertical-align: middle;
+}
+
+#loadingpanel-image
+{
+    /*display: table-cell;*/
+    vertical-align: middle;
+}
+
+.loadingpanel-hide-panel
+{
+    display: none;
+}
+
+.loadingpanel-show-panel
+{
+    display: table;
+}

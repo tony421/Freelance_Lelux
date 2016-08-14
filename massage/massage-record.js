@@ -1,9 +1,10 @@
-var _is_add_mode;
 var _commissionRate, _requestConditions, _minimumRequest;
 var _records, _editingRecord;
+var _previousSelectedTherapist;
 
 var $dateInput;
 var $txtDate, $ddlTherapist, $cbRequested, $txtMinutes, $txtStamp;
+var $txtTimeIn, $txtTimeOut;
 var $txtCash, $cbPromotionPrice, $txtCredit, $txtHICAPS, $txtVoucher;
 var $txtStdCommission, $txtReqReward, $txtCommissionTotal;
 var $btnAdd, $btnUpdate, $btnDelete, $btnCancelEdit;
@@ -14,16 +15,20 @@ var dtTableRecord;
 var DATE_PICKER_FORMAT = 'DD, d MM yyyy';
 var MOMENT_DATE_PICKER_FORMAT = 'dddd, D MMMM YYYY';
 var MOMENT_DATE_FORMAT = 'YYYY-M-D';
+var MOMENT_TIME_FORMAT = 'HH:mm';
+var MOMENT_DATE_TIME_FORMAT = 'YYYY-M-D HH:mm';
 
 function initPage()
 {	
-	_is_add_mode = true;
+	main_ajax_success_hide_loading();
 	
 	$dateInput = $('#dateInput');
 	$txtDate = $('#txtDate');
 	$ddlTherapist = $('#ddlTherapist');
 	$cbRequested = $('#cbRequested');
 	$txtMinutes = $('#txtMinutes');
+	$txtTimeIn = $('#txtTimeIn');
+	$txtTimeOut = $('#txtTimeOut');
 	$txtStamp = $('#txtStamp');
 	$txtCash = $('#txtCash');
 	$cbPromotionPrice = $('#cbPromotionPrice');
@@ -89,6 +94,7 @@ function initPage()
 	$txtMinutes.change(function(){
 		calReqReward();
 		calCommission();
+		calTimeOut();
 	});
 	
 	$txtStamp.TouchSpin({
@@ -116,6 +122,14 @@ function initPage()
 	$txtHICAPS.focus(function(){ $(this).select(); });
 	$txtVoucher.focus(function(){ $(this).select(); });
 	
+	//$txtTimeIn.inputmask({alias:"Regex", regex:"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$", placeholder:"_"});
+	$txtTimeIn.inputmask("hh:mm"); // "hh:mm t" => 11:30 pm
+	$txtTimeIn.focus(function(){ $(this).select(); });
+	$txtTimeIn.change(function(){
+		calTimeOut();
+	});
+	setTimeIn();
+	
 	$cbRequested.change(function(){
 		calReqReward();
 		calCommission();
@@ -127,6 +141,20 @@ function initPage()
 	});
 
 	$ddlTherapist.change(function(){
+		selectedTherapist = $ddlTherapist.find('option:selected').text();
+		if ($ddlTherapist.find('option:selected').text() == '[Voucher]') {
+			$txtMinutes.val(0);
+			setTimeIn('00:00');
+		}
+		else {
+			if (_previousSelectedTherapist == '[Voucher]') {
+				$txtMinutes.val(60);
+				setTimeIn();
+			}
+		}
+		
+		_previousSelectedTherapist = selectedTherapist;
+		
 		calReqReward();
 		calCommission();
 	});
@@ -199,7 +227,8 @@ function initDatepicker(date)
 	    todayBtn: "linked",
 	    daysOfWeekHighlighted: "0,6",
 	    autoclose: true,
-	    showOnFocus: false
+	    showOnFocus: false,
+	    orientation: "bottom auto"
 	});
 	
 	// set current date
@@ -221,9 +250,10 @@ function initDataTable()
 		columns: [
 		    { data: "row_no"},
 		    { data: "therapist_name"},
-		    { data: "massage_record_minutes", orderable: false },
 		    { data: "massage_record_requested", orderable: false, className: 'text-center'
 		    	, render: function ( data, type, row ) { return (data == 1) ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>' } },
+		    { data: "massage_record_minutes", orderable: false },
+		    { data: "massage_record_time_in_out", orderable: false, className: 'text-center text-nowrap' },
 		    { data: "massage_record_stamp", orderable: false, className: 'text-center' },
 		    { data: "massage_record_cash", orderable: false, className: 'text-right'
 		    	, render: function ( data, type, row ) { return '$'+ data; } },
@@ -255,8 +285,9 @@ function addRecordRows(result)
 			massage_record_id: result[i]['massage_record_id'],
 			row_no: result[i]['row_no'],
 			therapist_name: result[i]['therapist_name'],
-			massage_record_minutes: result[i]['massage_record_minutes'],
 			massage_record_requested: result[i]['massage_record_requested'],
+			massage_record_minutes: result[i]['massage_record_minutes'],
+			massage_record_time_in_out: result[i]['massage_record_time_in_out'],
 			massage_record_stamp: result[i]['massage_record_stamp'],
 			massage_record_promotion: result[i]['massage_record_promotion'],
 			massage_record_cash: result[i]['massage_record_cash'],
@@ -327,8 +358,6 @@ function clearTableRecord()
 
 function turnOnEditMode()
 {
-	_is_add_mode = false;
-	
 	$btnAdd.addClass('hidden');
 	$btnUpdate.removeClass('hidden');
 	$btnDelete.removeClass('hidden');
@@ -337,8 +366,6 @@ function turnOnEditMode()
 
 function turnOffEditMode()
 {
-	_is_add_mode = true;
-	
 	$btnAdd.removeClass('hidden');
 	$btnUpdate.addClass('hidden');
 	$btnDelete.addClass('hidden');
@@ -366,6 +393,8 @@ function setEditingRecord(recordIndex)
 	$txtStdCommission.autoNumeric('set', _editingRecord['massage_record_commission']);
 	$txtReqReward.autoNumeric('set', _editingRecord['massage_record_request_reward']);
 	$txtCommissionTotal.autoNumeric('set', _editingRecord['massage_record_commission_total']);
+	$txtTimeIn.val(_editingRecord['massage_record_time_in']);
+	$txtTimeOut.val(_editingRecord['massage_record_time_out']);
 	
 	//$txtName.val(_editingTherapist['therapist_name']);
 	//$txtUsername.val(_editingTherapist['therapist_username']);
@@ -391,6 +420,7 @@ function clearInputs()
 	
 	calReqReward();
 	calCommission();
+	setTimeIn();
 }
 
 function calCommission()
@@ -460,7 +490,12 @@ function validateRecordInfo()
 					if ($txtCredit.val().length) {
 						if ($txtHICAPS.val().length) {
 							if ($txtVoucher.val().length) {
-								return true;
+								if ($txtTimeIn.inputmask('isComplete')) {
+									return true;
+								}
+								else {
+									main_alert_message('Please enter "Time In"!', function(){ $txtTimeIn.focus();});
+								}
 							}
 							else {
 								main_alert_message('Please enter "Voucher"!', function(){ $txtVoucher.focus();});
@@ -508,7 +543,9 @@ function getRecordInfo(recordID)
 		'massage_record_hicaps': $txtHICAPS.autoNumeric('get'),
 		'massage_record_voucher': $txtVoucher.autoNumeric('get'),
 		'massage_record_commission': $txtStdCommission.autoNumeric('get'),
-		'massage_record_request_reward': $txtReqReward.autoNumeric('get')
+		'massage_record_request_reward': $txtReqReward.autoNumeric('get'),
+		'massage_record_time_in': getTimeIn(),
+		'massage_record_time_out': getTimeOut()
 	}
 	
 	return recordInfo;
@@ -582,6 +619,45 @@ function onDeleteRecordRequestDone(response)
 	else {
 		main_alert_message(response.msg);
 	}
+}
+
+function setTimeIn(time)
+{
+	time = typeof(time) === "undefined" ? moment().format(MOMENT_TIME_FORMAT) : time;
+	
+	$txtTimeIn.val(time);
+	calTimeOut();
+}
+
+function calTimeOut()
+{
+	if ($txtTimeIn.inputmask("isComplete")) {
+		timeIn = $txtTimeIn.val().split(":");
+		minutes = $txtMinutes.val().trim().length ? $txtMinutes.val() : 0;
+		
+		timeOut = moment([1900, 1, 1, timeIn[0], timeIn[1], 0]).add(minutes, 'minutes').format(MOMENT_TIME_FORMAT);
+		$txtTimeOut.val(timeOut);
+	}
+	else {
+		$txtTimeOut.val('');
+	}
+}
+
+function getTimeIn()
+{
+	timeIn = $txtTimeIn.val().split(":");
+	date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
+	//alert(moment(date));
+	//alert(moment($dateInput.datepicker('getDate')).add(timeIn[0], 'hours'));
+	//alert(moment(date).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT));
+	
+	return moment(date).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+}
+
+function getTimeOut()
+{
+	minutes = $txtMinutes.val().trim().length ? $txtMinutes.val() : 0;
+	return moment(getTimeIn()).add(minutes, 'minutes').format(MOMENT_DATE_TIME_FORMAT);
 }
 
 function dummyDataSet()
