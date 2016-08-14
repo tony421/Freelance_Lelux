@@ -53,6 +53,8 @@ CREATE TABLE `massage_record` (
   `massage_record_id` int(11) NOT NULL,
   `therapist_id` smallint(6) NOT NULL,
   `massage_record_minutes` smallint(6) NOT NULL,
+  `massage_record_time_in` datetime NOT NULL DEFAULT '1900-01-01 00:00:00',
+  `massage_record_time_out` datetime NOT NULL DEFAULT '1900-01-01 00:00:00',
   `massage_record_requested` tinyint(1) NOT NULL,
   `massage_record_request_reward` decimal(10,2) NOT NULL,
   `massage_record_promotion` tinyint(1) NOT NULL,
