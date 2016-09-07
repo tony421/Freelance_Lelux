@@ -42,7 +42,7 @@ function initPage()
 		$txtEmerConNo.inputmask('9999-999-999');
 		$txtPatientID.TouchSpin({
 			verticalbuttons: true,
-			min: 1,
+			min: 0,
 			max: 9
 		});
 		

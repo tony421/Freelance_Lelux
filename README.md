@@ -48,3 +48,4 @@ Next Deployment Instruction:
 	- adding "massage_record_time_in" & "massage_record_time_out" columns to "massage_record" table with "datetime" data type and default "1900-1-1 00:00:00" 
 	- ***please!!, checking data after adding new columns in table "massage_record"
 	- adding "Loading Panel" 
+	- Patient ID "0" is allowed

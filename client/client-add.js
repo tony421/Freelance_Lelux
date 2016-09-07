@@ -14,7 +14,7 @@ function initPage()
 	
 	$txtPatientID.TouchSpin({
 		verticalbuttons: true,
-		min: 1,
+		min: 0,
 		max: 9
 	});
 	
