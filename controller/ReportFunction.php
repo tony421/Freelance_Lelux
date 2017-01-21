@@ -219,22 +219,30 @@ reportItem;
 			$receiptHeader = <<<header
 			<tr>
 				<th colspan="2">
-					<h1 style="text-align: center;">Remedial Massage Receipt Lelux Thai Massage</h1>
+					<h1 style="text-align: center;">Remedial Massage Receipt, Lelux Thai Massage</h1>
 				</th>
 			</tr>
 header;
 			$receiptHeaderCopy = <<<header
 			<tr>
 				<th colspan="2">
-					<h1 style="text-align: center;">Remedial Massage Receipt Lelux Thai Massage (Copy)</h1>
+					<h1 style="text-align: center;">Remedial Massage Receipt, Lelux Thai Massage (Copy)</h1>
 				</th>
 			</tr>
 header;
 			
-			$receiptBody = <<<body
-			<tr>
+			/*<tr>
 				<td class="caption" width="30%">Provided by</td>
 				<td width="70%">{$shopDetails}</td>
+			</tr>*/
+			$receiptBody = <<<body
+			<tr>
+				<td class="caption" width="30%">Service Provided</td>
+				<td width="70%">{$shopService}</td>
+			</tr>
+			<tr>
+				<td class="caption">Remedial Provider No</td>
+				<td>{$providerNo}</td>
 			</tr>
 			<tr>
 				<td class="caption">Date</td>
@@ -259,14 +267,6 @@ header;
 			<tr>
 				<td class="caption">Health Fund</td>
 				<td>{$clientInfo[HF_NAME]}</td>
-			</tr>
-			<tr>
-				<td class="caption">Service Provided</td>
-				<td>{$shopService}</td>
-			</tr>
-			<tr>
-				<td class="caption">Remedial Provider No</td>
-				<td>{$providerNo}</td>
 			</tr>
 			<tr>
 				<td class="caption">Value</td>

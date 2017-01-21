@@ -19,7 +19,7 @@
 		
 		public function getProvidersDisplay()
 		{
-			$sql = "select provider_id, provider_no, concat(provider_no, ' (', provider_name, ')') as provider_name from provider order by provider_id";
+			$sql = "select provider_id, provider_no, concat(provider_name, ' (', provider_no, ')') as provider_name from provider order by provider_id";
 		
 			return $this->_dataAccess->select($sql);
 		}

@@ -103,7 +103,7 @@ function initPage()
 				// get date and value
 				var receiptDate = $txtReceiptDate.val();
 				var receiptValue = $txtReceiptValue.val();
-				var providerNo = $ddlProvider.val();
+				var providerNo = $ddlProvider.find('option:selected').text();
 	    		main_open_new_tab('../report/report.php?report_type=CLIENT_RECEIPT&client_id=' + _clientID + '&receipt_date=' + receiptDate + '&receipt_value=' + receiptValue + '&provider_no=' + providerNo);
 	    		
 	    		$popupPrintReceipt.modal('hide');
