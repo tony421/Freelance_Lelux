@@ -27,6 +27,10 @@
 				$therapistInfo = $_POST['data'];
 				$result = $therapistFunction->updateTherapist($therapistInfo);
 			}
+			else if ($mode == "DELETE_THERAPIST") {
+				$therapistInfo = $_POST['data'];
+				$result = $therapistFunction->deleteTherapist($therapistInfo);
+			}
 			else {
 				throw new Exception('Mode not found');
 			}

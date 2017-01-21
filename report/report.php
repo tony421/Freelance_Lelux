@@ -25,15 +25,22 @@
 			}
 		}
 		else if ($reportType == 'CLIENT_RECEIPT') {
-			if (!empty($_GET['client_id']) && !empty($_GET['receipt_date']) && !empty($_GET['receipt_value'])) {
+			if (!empty($_GET['client_id']) 
+					&& !empty($_GET['receipt_date']) 
+					&& !empty($_GET['receipt_value'])
+					&& !empty($_GET['provider_no'])) {
+						
 				$clientID = $_GET['client_id'];
 				$receiptDate = $_GET['receipt_date'];
 				$receiptValue = $_GET['receipt_value'];
+				$providerNo = $_GET['provider_no'];
+				
 				Utilities::logInfo('Report | criteria_data[client_id]: '.$clientID);
 				Utilities::logInfo('Report | criteria_data[receipt_date]: '.$receiptDate);
 				Utilities::logInfo('Report | criteria_data[receipt_value]: '.$receiptValue);
+				Utilities::logInfo('Report | criteria_data[provider_no]: '.$providerNo);
 				
-				$htmlReportInfo = $reportFunction->getClientReceipt($clientID, $receiptDate, $receiptValue);
+				$htmlReportInfo = $reportFunction->getClientReceipt($clientID, $receiptDate, $receiptValue, $providerNo);
 				
 				$pdf->show('client-receipt', $htmlReportInfo);
 				//echo $htmlReportInfo;

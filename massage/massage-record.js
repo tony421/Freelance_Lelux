@@ -1,9 +1,11 @@
+var _is_add_mode;
 var _commissionRate, _requestConditions, _minimumRequest;
 var _records, _editingRecord;
 var _previousSelectedTherapist;
+var _therapistOptions, _massageTypeOptions, _editModeMassageTypeOptions;
 
 var $dateInput;
-var $txtDate, $ddlTherapist, $cbRequested, $txtMinutes, $txtStamp;
+var $txtDate, $ddlMassageType, $ddlTherapist, $cbRequested, $txtMinutes, $txtStamp;
 var $txtTimeIn, $txtTimeOut;
 var $txtCash, $cbPromotionPrice, $txtCredit, $txtHICAPS, $txtVoucher;
 var $txtStdCommission, $txtReqReward, $txtCommissionTotal;
@@ -22,9 +24,12 @@ function initPage()
 {	
 	main_ajax_success_hide_loading();
 	
+	_is_add_mode = true;
+	
 	$dateInput = $('#dateInput');
 	$txtDate = $('#txtDate');
 	$ddlTherapist = $('#ddlTherapist');
+	$ddlMassageType = $('#ddlMassageType');
 	$cbRequested = $('#cbRequested');
 	$txtMinutes = $('#txtMinutes');
 	$txtTimeIn = $('#txtTimeIn');
@@ -93,7 +98,6 @@ function initPage()
 	});
 	$txtMinutes.change(function(){
 		calReqReward();
-		calCommission();
 		calTimeOut();
 	});
 	
@@ -106,6 +110,9 @@ function initPage()
 	});
 	$txtStamp.change(function(){
 		calReqReward();
+	});
+	
+	$txtReqReward.change(function(){
 		calCommission();
 	});
 	
@@ -121,6 +128,7 @@ function initPage()
 	$txtCredit.focus(function(){ $(this).select(); });
 	$txtHICAPS.focus(function(){ $(this).select(); });
 	$txtVoucher.focus(function(){ $(this).select(); });
+	$txtReqReward.focus(function(){ $(this).select(); });
 	
 	//$txtTimeIn.inputmask({alias:"Regex", regex:"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$", placeholder:"_"});
 	$txtTimeIn.inputmask("hh:mm"); // "hh:mm t" => 11:30 pm
@@ -132,15 +140,14 @@ function initPage()
 	
 	$cbRequested.change(function(){
 		calReqReward();
-		calCommission();
 	});
 	
 	$cbPromotionPrice.change(function(){
 		calReqReward();
-		calCommission();
 	});
 
 	$ddlTherapist.change(function(){
+		// ***This can be deleted, if retail function is implemented!!!
 		selectedTherapist = $ddlTherapist.find('option:selected').text();
 		if ($ddlTherapist.find('option:selected').text() == '[Voucher]') {
 			$txtMinutes.val(0);
@@ -156,13 +163,23 @@ function initPage()
 		_previousSelectedTherapist = selectedTherapist;
 		
 		calReqReward();
-		calCommission();
+	});
+	
+	$ddlMassageType.change(function(){
+		if ($(this).val() === 'ADD_NEW_MASSAGE_TYPE') // "ADD NEW MASSAGE TYPE" selected 
+		{
+			main_open_child_window('../massagetype/massagetype.php', initMassageTypes);
+			main_set_dropdown_index(this);
+		}
+		
+		calReqReward();
 	});
 	
 	initDatepicker(new Date());
 	initDataTable();
 	
 	initTherapists();
+	initMassageTypes();
 	
 	turnOffEditMode();
 }
@@ -175,23 +192,59 @@ function initTherapists()
 function onInitTherapistsRequestDone(response)
 {
 	if (response.success) {
-		_therapistOptions = [];
 		therapists = response.result;
-
-		$.each(therapists, function (i, therapist){
-			if (therapist['therapist_id'] != 0) {
-				option = "<option value='" + therapist['therapist_id'] + "'>" + therapist['therapist_name'] + "</option>";
-				
-				_therapistOptions.push(option);
-				$ddlTherapist.append(option);
-			}
-		});
+		_therapistOptions = therapists;
+		
+		bindTherapistOption(therapists);
 		
 		initConfig();
 	}
 	else {
 		main_alert_message(response.msg);
 	}
+}
+
+function bindTherapistOption(therapists)
+{
+	$ddlTherapist.empty();
+	$.each(therapists, function (i, therapist){
+		option = "<option value='" + therapist['therapist_id'] + "'>" + therapist['therapist_name'] + "</option>";
+		
+		$ddlTherapist.append(option);
+	});
+}
+
+function initMassageTypes()
+{
+	main_request_ajax('../massagetype/massagetype-boundary.php', 'GET_MASSAGE_TYPE', {}, onInitMassageTypesDone);
+}
+
+function onInitMassageTypesDone(response)
+{
+	if (response.success) {
+		massageTypes = response.result;
+		_massageTypeOptions = massageTypes;
+		
+		if (_is_add_mode) {
+			bindMassageTypeOption(massageTypes);
+		}
+		else {
+			setEditModeMassageType();
+		}
+	}
+}
+
+function bindMassageTypeOption(massageTypes)
+{
+	$ddlMassageType.empty();
+	$.each(massageTypes, function (i, massageType){
+		option = "<option value='" + massageType['massage_type_id'] + "'>" + massageType['massage_type_name'] + "</option>";
+		
+		$ddlMassageType.append(option);
+	});
+	
+	$ddlMassageType.append("<optgroup label='--------------------------------------------'></optgroup>");
+	$ddlMassageType.append("<option value='ADD_NEW_MASSAGE_TYPE'>&gt;&gt; ADD/EDIT MASSAGE TYPE &lt;&lt;</option>");
 }
 
 function initConfig()
@@ -211,7 +264,6 @@ function onInitConfigRequestDone(response)
 		//alert(_commissionRate + ' | ' + _requestConditions);
 		
 		calReqReward();
-		calCommission();
 		getRecords();
 	}
 	else {
@@ -241,6 +293,7 @@ function initDataTable()
 	$tableRecord = $('#tableRecord');
 	// keep instance of DataTable so that it will be used for row.add(), rows().remove() and others
 	dtTableRecord = $tableRecord.DataTable({
+		scrollY: _main_datatable_scroll_y,
 		paging: false,
 		info: false,
 		searching: false,
@@ -249,16 +302,19 @@ function initDataTable()
 		rowId: 'massage_record_id',
 		columns: [
 		    { data: "row_no"},
-		    { data: "therapist_name"},
-		    { data: "massage_record_requested", orderable: false, className: 'text-center'
-		    	, render: function ( data, type, row ) { return (data == 1) ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>' } },
-		    { data: "massage_record_minutes", orderable: false },
+		    { data: "therapist_name"
+		    	, render: function ( data, type, row ) { return (row['massage_record_requested'] == 1) ? data + ' <img src="../image/req.png" title="Requested">' : data; } },
+		    //{ data: "massage_record_requested", orderable: false, className: 'text-center'
+		    	//, render: function ( data, type, row ) { return (data == 1) ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>' } },
+		    //{ data: "massage_record_minutes", orderable: false },
+		    { data: "massage_type_name", orderable: false, className: 'text-nowrap'
+		    	, render: function ( data, type, row ) { return data + " (" + row['massage_record_minutes'] + ")"; } },
 		    { data: "massage_record_time_in_out", orderable: false, className: 'text-center text-nowrap' },
 		    { data: "massage_record_stamp", orderable: false, className: 'text-center' },
-		    { data: "massage_record_cash", orderable: false, className: 'text-right'
-		    	, render: function ( data, type, row ) { return '$'+ data; } },
-		    { data: "massage_record_promotion", orderable: false, className: 'text-center'
-		    	, render: function ( data, type, row ) { return (data == 1) ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>' } },
+		    { data: "massage_record_cash", orderable: false, className: 'text-right text-nowrap'
+		    	, render: function ( data, type, row ) { return (row['massage_record_promotion'] == 1) ? '<img src="../image/pro.png" title="Promotion Price"> ' + '$' + data : '$' + data; } },
+		    //{ data: "massage_record_promotion", orderable: false, className: 'text-center'
+		    	//, render: function ( data, type, row ) { return (data == 1) ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>' } },
 		    { data: "massage_record_credit", orderable: false, className: 'text-right'
 		    	, render: function ( data, type, row ) { return '$'+ data; } },
 		    { data: "massage_record_hicaps", orderable: false, className: 'text-right'
@@ -286,6 +342,7 @@ function addRecordRows(result)
 			row_no: result[i]['row_no'],
 			therapist_name: result[i]['therapist_name'],
 			massage_record_requested: result[i]['massage_record_requested'],
+			massage_type_name: result[i]['massage_type_name'],
 			massage_record_minutes: result[i]['massage_record_minutes'],
 			massage_record_time_in_out: result[i]['massage_record_time_in_out'],
 			massage_record_stamp: result[i]['massage_record_stamp'],
@@ -358,6 +415,8 @@ function clearTableRecord()
 
 function turnOnEditMode()
 {
+	_is_add_mode = false;
+	
 	$btnAdd.addClass('hidden');
 	$btnUpdate.removeClass('hidden');
 	$btnDelete.removeClass('hidden');
@@ -366,10 +425,38 @@ function turnOnEditMode()
 
 function turnOffEditMode()
 {
+	_is_add_mode = true;
+	
 	$btnAdd.removeClass('hidden');
 	$btnUpdate.addClass('hidden');
 	$btnDelete.addClass('hidden');
 	$btnCancelEdit.addClass('hidden');
+}
+
+function getEditModeTherapist()
+{
+	
+}
+
+function getDeletedMassageType()
+{
+	deletedItem = { 
+		massage_type_id: _editingRecord['massage_type_id']
+		, massage_type_name: _editingRecord['massage_type_name'] + " (Deleted)"
+		, massage_type_active: _editingRecord['massage_type_active']
+		, massage_type_commission: _editingRecord['massage_type_commission']};
+		
+	return deletedItem;
+}
+
+function setEditModeMassageType()
+{
+	_editModeMassageTypeOptions = _massageTypeOptions.slice(0);
+	if (_editingRecord['massage_type_active'] == 0) {
+		_editModeMassageTypeOptions.push(getDeletedMassageType());
+				
+		bindMassageTypeOption(_editModeMassageTypeOptions);
+	}
 }
 
 function setEditingRecord(recordIndex)
@@ -381,7 +468,25 @@ function setEditingRecord(recordIndex)
 	//$dateInput.datepicker('setDate', _editingRecord['massage_record_date']);
 	$dateInput.datepicker('destroy'); // users cannot change the date during editing the item
 	
+	if (_editingRecord['therapist_active'] == 0) {
+		listWithDeletedItem = _therapistOptions.slice(0);
+		deletedItem = {
+			therapist_id: _editingRecord['therapist_id']
+			, therapist_name: _editingRecord['therapist_name'] + " (Deleted)"
+			, therapist_active: _editingRecord['therapist_active']
+		};
+		listWithDeletedItem.push(deletedItem);
+		
+		bindTherapistOption(listWithDeletedItem);
+	}
+	else {
+		
+	}
 	$ddlTherapist.val(_editingRecord['therapist_id']);
+	
+	setEditModeMassageType();
+	$ddlMassageType.val(_editingRecord['massage_type_id']);
+	
 	if (_editingRecord['massage_record_requested'] == true) $cbRequested.prop('checked', true); 
 	$txtMinutes.val(_editingRecord['massage_record_minutes']);
 	$txtStamp.val(_editingRecord['massage_record_stamp']);
@@ -401,7 +506,7 @@ function setEditingRecord(recordIndex)
 	//$txtPassword.val(_editingTherapist['therapist_password']);
 	
 	unbindRecordRowsSelection(); // users cannot select a row in datatable during editing the item
-	$('body').animate({ scrollTop: 230 }, 400);
+	main_move_to_title_text();
 }
 
 function clearInputs()
@@ -418,8 +523,10 @@ function clearInputs()
 	$txtReqReward.autoNumeric('set', 0);
 	$txtCommissionTotal.autoNumeric('set', 0);
 	
+	bindTherapistOption(_therapistOptions);
+	bindMassageTypeOption(_massageTypeOptions);
+	
 	calReqReward();
-	calCommission();
 	setTimeIn();
 }
 
@@ -448,6 +555,8 @@ function calReqReward()
 		minutes = minutes - freeStamp;
 	
 		if (minutes >= _minimumRequest) {
+			reward = 0.0;
+			
 			req = $cbRequested.is(':checked');
 			//stamp = parseInt($txtStamp.val()) > 0 ? true : false; // stamp condition is changed to be minute condition
 			promo = $cbPromotionPrice.is(':checked');
@@ -459,21 +568,26 @@ function calReqReward()
 						//&& condition['request_condition_stamp'] == stamp 
 						&& condition['request_condition_promotion'] == promo) {
 					
-	//				if (main_is_int(condition['request_condition_amt']) == true)
-	//					reward = parseInt(condition['request_condition_amt']);
-	//				else
-	//					reward = condition['request_condition_amt'];
-					
-					reward = condition['request_condition_amt'];
-					//$txtReqReward.val(reward);
-					$txtReqReward.autoNumeric('set', reward);
+					reward = parseFloat(condition['request_condition_amt']);
+					//$txtReqReward.autoNumeric('set', reward);
 					
 					return false; // use as break statement
 				}
 			});
+			
+			// calculate Extra Commission from MassageType
+			selectedIndexMassageType = $ddlMassageType.prop('selectedIndex');
+			if (_is_add_mode)
+				reward += parseFloat(_massageTypeOptions[selectedIndexMassageType]['massage_type_commission']);
+			else
+				reward += parseFloat(_editModeMassageTypeOptions[selectedIndexMassageType]['massage_type_commission']);
+			
+			$txtReqReward.autoNumeric('set', reward);
+			calCommission();
 		}
 		else {
 			$txtReqReward.autoNumeric('set', 0);
+			calCommission();
 		}
 	}
 	else {
@@ -534,6 +648,7 @@ function getRecordInfo(recordID)
 		'massage_record_id': typeof(recordID) === 'undefined' ? 0 : recordID,
 		'massage_record_date': moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT),
 		'therapist_id': $ddlTherapist.val(),
+		'massage_type_id': $ddlMassageType.val(),
 		'massage_record_requested': $cbRequested.is(':checked'),
 		'massage_record_minutes': $txtMinutes.val(),
 		'massage_record_stamp': $txtStamp.val(),
@@ -599,7 +714,7 @@ function onUpdateRecordRequestDone(response)
 
 function deleteRecord()
 {
-	main_confirm_message('Do you want to delete the massage record?', function() {
+	main_confirm_message('Do you want to DELETE the massage record?', function() {
 		initDatepicker();  
 		recordID = _editingRecord['massage_record_id'];
 		turnOffEditMode();

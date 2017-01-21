@@ -1,3 +1,5 @@
+_main_datatable_scroll_y = 350;
+
 // First, checks if it isn't implemented yet.
 if (!String.prototype.format) {
   String.prototype.format = function() {
@@ -47,6 +49,17 @@ function main_redirect(url)
 function main_open_new_tab(url)
 {
 	window.open(url, '_blank');
+}
+
+function main_open_child_window(url, callback)
+{
+	window.open(url + '?child=1', 'child_window', 'width=1200 height=650');
+	window.parentCallback = typeof(callback) === 'undefined' ? function(){} : callback;
+}
+
+function main_set_dropdown_index(dropdown, index)
+{
+	$(dropdown).prop('selectedIndex', typeof(index) === 'undefined' ? 0 : index);
 }
 
 function main_log_out()
@@ -126,6 +139,15 @@ function main_ajax_success_hide_loading()
 	});
 }
 
+function main_move_to_title_text(completeFunc) {
+	if (typeof(completeFunc) === 'undefined') completeFunc = function(){};
+	
+	$('body').animate({ scrollTop: 230 }, {
+		duration: 400,
+		complete: completeFunc
+	});
+}
+
 function main_is_int(n){
     return n % 1 === 0;
 }
@@ -133,8 +155,6 @@ function main_is_int(n){
 function main_is_float(n){
     return n % 1 !== 0;
 }
-
-
 
 
 

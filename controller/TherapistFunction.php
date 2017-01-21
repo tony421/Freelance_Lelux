@@ -43,7 +43,8 @@
 		{
 			// Check existed names in every cases
 			if ($this->_dataMapper->isExistedTherapistName($therapistInfo)) {
-				return Utilities::getResponseResult(false, 'Therapist Name ['.$therapistInfo['therapist_name'].'] or Username ['.$therapistInfo['therapist_username'].'] already existed, please check the infotmation.');
+				return Utilities::getResponseResult(false, 'Therapist Name ['.$therapistInfo['therapist_name'].'] already existed, please check the name.');
+				//return Utilities::getResponseResult(false, 'Therapist Name ['.$therapistInfo['therapist_name'].'] or Username ['.$therapistInfo['therapist_username'].'] already existed, please check the infotmation.');
 			}
 			
 			$affectedRow = $this->_dataMapper->addTherapist($therapistInfo);
@@ -60,7 +61,8 @@
 		{
 			// Check existed names in every cases
 			if ($this->_dataMapper->isExistedTherapistName($therapistInfo)) {
-				return Utilities::getResponseResult(false, 'Therapist Name ['.$therapistInfo['therapist_name'].'] or Username ['.$therapistInfo['therapist_username'].'] already existed, please check the infotmation.');
+				return Utilities::getResponseResult(false, 'Therapist Name ['.$therapistInfo['therapist_name'].'] already existed, please check the name.');
+				//return Utilities::getResponseResult(false, 'Therapist Name ['.$therapistInfo['therapist_name'].'] or Username ['.$therapistInfo['therapist_username'].'] already existed, please check the infotmation.');
 			}
 			
 			$affectedRow = $this->_dataMapper->updateTherapist($therapistInfo);
@@ -72,6 +74,18 @@
 				return Utilities::getResponseResult(false, 'Updating therapist has failed!');
 			}
 		} // updateTherapist
+		
+		public function deleteTherapist($therapistInfo)
+		{				
+			$affectedRow = $this->_dataMapper->deleteTherapist($therapistInfo);
+		
+			if ($affectedRow > 0) {
+				return Utilities::getResponseResult(true, 'Deleting therapist has been successful.');
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Deleting therapist has failed!');
+			}
+		} // deleteTherapist
 	}
 ?>
 

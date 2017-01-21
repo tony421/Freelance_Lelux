@@ -35,6 +35,7 @@
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
 	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="client-search.js"></script>
 	    
 	    <script type="text/javascript">
@@ -58,12 +59,7 @@
 						<label class="col-sm-3 control-label">Search By</label>
 						<div class="col-sm-2">
 							<label class="radio-inline">
-								<input type="radio" id="radSearchMem" name="searchby" value="1" checked="checked"> Membership Number
-							</label>
-						</div>
-						<div class="col-sm-2">
-							<label class="radio-inline">
-								<input type="radio" id="radSearchName" name="searchby" value="2"> Client Name
+								<input type="radio" id="radSearchName" name="searchby" value="1" checked="checked"> Client Name
 							</label>
 						</div>
 						<div class="col-sm-3">
@@ -76,7 +72,21 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-12">
+						<div class="col-sm-offset-3 col-sm-2">
+							<label class="radio-inline">
+								<input type="radio" id="radSearchTel" name="searchby" value="2"> Client Phone No.
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-2">
+							<label class="radio-inline">
+								<input type="radio" id="radSearchMem" name="searchby" value="3"> Membership No.
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-1 col-sm-10">
 							<table id="tableClient" class="display" cellspacing="0" width="100%">
 				            </table>
 						</div>

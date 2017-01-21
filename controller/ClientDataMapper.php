@@ -158,22 +158,28 @@ values %s";
 				$sql_format = "
 select health_fund.health_fund_name, client.client_membership_no, client_patient_id
 	, concat(client_first_name, ' ', client_last_name) as client_name, client.client_id
+	, client.client_contact_no
 from client
 join health_fund on client.health_fund_id = health_fund.health_fund_id";
 				
-				if ($search['search_membership'] == "true") {
-					$sql_format .= "
-where client_membership_no like '%%%s%%'";
-					
-					$sql = sprintf($sql_format, $search['search_text']);
-				}
-				else {
+				if ($search['search_name'] == "true") {
 					$sql_format .= "
 where client_first_name like '%%%s%%'
 	or client_last_name like '%%%s%%'
 	or concat(client_first_name, ' ', client_last_name) like '%%%s%%'";
 					
 					$sql = sprintf($sql_format, $search['search_text'], $search['search_text'], $search['search_text']);
+				} else if ($search['search_tel'] == "true") {
+					$sql_format .= "
+where client_contact_no like '%%%s%%'";
+					
+					$sql = sprintf($sql_format, $search['search_text']);
+				}
+				else { // search by Member No.
+					$sql_format .= "
+where client_membership_no like '%%%s%%'";
+						
+					$sql = sprintf($sql_format, $search['search_text']);
 				}
 				
 				$sql .= "
@@ -369,6 +375,7 @@ order by client_name";
 						, CAST(report_hour * 60 as decimal(0)) report_hour
 						, report.therapist_id
 						, t.therapist_name
+						, t.therapist_active
 						, t_create.therapist_name as report_create_user
 						, DATE_FORMAT(report_create_datetime, '%%e/%%m/%%Y %%T') as report_create_datetime
 						, t_update.therapist_name as report_update_user
@@ -377,7 +384,9 @@ order by client_name";
 					join therapist t on report.therapist_id = t.therapist_id
 					join therapist t_create on report.report_create_user = t_create.therapist_id
 					join therapist t_update on report.report_update_user = t_update.therapist_id
-					where client_id = '%s' order by report.report_date desc, report.report_create_datetime desc";
+					where client_id = '%s'
+						and report.report_void_user = 0
+					order by report.report_date desc, report.report_create_datetime desc";
 			$sql = sprintf($sql_format, $clientID);
 			
 			return $this->_dataAccess->select($sql);
@@ -404,8 +413,24 @@ order by client_name";
 					$reportItemInfo['report_id']
 				);
 			
-			return $this->_dataAccess->insert($sql);
+			return $this->_dataAccess->update($sql);
 		} // updateReportItem
+		
+		public function deleteReportItem($reportItemInfo)
+		{
+			$sql_format = "update report
+					set report_void_user = '%s',
+						report_void_datetime = '%s'
+					where report_id = '%s'";
+			
+			$sql = sprintf($sql_format,
+					$reportItemInfo['report_void_user'],
+					$reportItemInfo['report_void_datetime'],
+					$reportItemInfo['report_id']
+					);
+				
+			return $this->_dataAccess->delete($sql);
+		} // deleteReportItem
 		
 		public function getTherapists()
 		{

@@ -204,7 +204,7 @@ reportItem;
 			return $this->_CSS.$clientInfoHeader.$clientHtmlOutput.$reportHtmlOutput;
 		} // getClientReport
 	
-		public function getClientReceipt($clientID, $receiptDate, $receiptValue)
+		public function getClientReceipt($clientID, $receiptDate, $receiptValue, $providerNo)
 		{
 			$shopDetails = SHOP_PROVIDER_DETAILS;
 			$shopConNo = SHOP_CONTACT_NO;
@@ -261,12 +261,12 @@ header;
 				<td>{$clientInfo[HF_NAME]}</td>
 			</tr>
 			<tr>
-				<td class="caption">Provider No</td>
-				<td>{$clientInfo[HF_PROVIDER_NO]}</td>
-			</tr>
-			<tr>
 				<td class="caption">Service Provided</td>
 				<td>{$shopService}</td>
+			</tr>
+			<tr>
+				<td class="caption">Remedial Provider No</td>
+				<td>{$providerNo}</td>
 			</tr>
 			<tr>
 				<td class="caption">Value</td>

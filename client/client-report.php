@@ -537,6 +537,13 @@
 									<input type="text" id="txtReceiptValue" class="form-control">
 								</div>
 							</div>
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label">Provider No</label>
+								<div class="col-md-6">
+									<select id="ddlProvider" class="form-control">
+									</select>
+								</div>
+							</div>
 						</form>
 					</div>
 					<div class="modal-footer">

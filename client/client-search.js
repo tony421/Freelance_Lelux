@@ -1,6 +1,7 @@
 var $btnSearchClient;
 var $radSearchMem;
 var $radSearchName;
+var $radSearchTel;
 var $txtText;
 var $tableClient;
 var $tableClientBody;
@@ -14,6 +15,7 @@ function initPage()
 	$btnSearchClient = $('#btnSearchClient');
 	$radSearchMem = $('#radSearchMem');
 	$radSearchName = $('#radSearchName');
+	$radSearchTel = $('#radSearchTel');
 	$txtText = $('#txtText');
 	$txtText.focus();
 	
@@ -37,10 +39,11 @@ function initPage()
 		rowId: 'client_id',
 		columns: [
 		    { data: "client_id", title: "Client ID", visible: false },
-		    { data: "client_name", title: "Client Name" },
+		    { data: "client_name", title: "Client Name (Tel)" 
+		    	, render: function ( data, type, row ) { return data + " (" + row['client_contact_no'] + ")"; } },
             { data: "health_fund_name", title: "Health Fund" },
-            { data: "client_membership_no", title: "Membership Number" },
-            { data: "client_patient_id", title: "Patient ID" }
+            { data: "client_membership_no", title: "Membership No. (Patient ID)", width: '25%'
+            	, render: function ( data, type, row ) { return data + " (" + row['client_patient_id'] + ")"; } }
         ]
 	});
 	$tableClientBody = $('#tableClient tbody');
@@ -52,8 +55,22 @@ function initPage()
 		}
 	});
 	
+	$txtText.focus(function(){
+		$(this).select();
+	});
+	
 	$btnSearchClient.click(function(){
 		searchClient();
+	});
+	
+	$('input[type=radio][name=searchby]').change(function() {
+        if ($(this).val() == '2') { // search by "Phone No."
+        	$txtText.inputmask('9999-999-999');
+        } else {
+        	$txtText.inputmask('remove');
+        }
+        
+        $txtText.focus();
 	});
 }
 
@@ -87,6 +104,7 @@ function getSearchCondition()
 	var search = {
 		search_membership: $radSearchMem.is(':checked'),
 		search_name: $radSearchName.is(':checked'),
+		search_tel: $radSearchTel.is(':checked'),
 		search_text: $txtText.val()
 	};
 	
@@ -119,7 +137,8 @@ function addClientRows(result)
 		    health_fund_name: result[i]['health_fund_name'],
 		    client_membership_no: result[i]['client_membership_no'],
 		    client_patient_id: result[i]['client_patient_id'],
-		    client_name: result[i]['client_name']}).draw();
+		    client_name: result[i]['client_name'],
+		    client_contact_no: result[i]['client_contact_no']}).draw();
 	}
 }
 

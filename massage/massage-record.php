@@ -95,6 +95,13 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="col-sm-offset-1 col-sm-2 control-label">Massage Type</label>
+						<div class="col-sm-3">
+							<select id="ddlMassageType" class="form-control">
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
 						<label class="col-sm-offset-1 col-sm-2 control-label">Minutes</label>
 						<div class="col-sm-2">
 							<input type="text" id="txtMinutes" class="form-control">
@@ -141,9 +148,9 @@
 							    <input type="text" id="txtHICAPS" class="form-control" value="0">
 						    </div>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-3">
 							<div class="input-group">
-							    <span class="input-group-addon">Voucher</span>
+							    <span class="input-group-addon">Redeemed Voucher</span>
 							    <input type="text" id="txtVoucher" class="form-control" value="0">
 						    </div>
 						</div>
@@ -158,8 +165,8 @@
 						</div>
 						<div class="col-sm-3">
 							<div class="input-group">
-							    <span class="input-group-addon">Request Reward</span>
-							    <input type="text" id="txtReqReward" class="form-control" value="0" disabled>
+							    <span class="input-group-addon">Extra Reward</span>
+							    <input type="text" id="txtReqReward" class="form-control" value="0">
 						    </div>
 						</div>
 						<div class="col-sm-2">
@@ -193,16 +200,16 @@
 						            <tr>
 						                <th rowspan="2">#</th>
 						                <th rowspan="2">Therapist</th>
-						                <th rowspan="2">Req.</th>
-						                <th rowspan="2">Min.</th>
+						                <!--<th rowspan="2">Req.</th>-->
+						                <th rowspan="2">Type (Minute)</th>
 						                <th rowspan="2">Time In/Out</th>
-						                <th rowspan="2" style="border-right: 1px solid #000;">Free Stamp (minute)</th>
-						                <th colspan="5" class="text-center" style="border-right: 1px solid #000;">Paid by</th>
+						                <th rowspan="2" style="border-right: 1px solid #000;">Free Stamp (Minute)</th>
+						                <th colspan="5" class="text-center" style="border-right: 1px solid #000;">Paid By</th>
 						                <th colspan="3" class="text-center">Commission</th>
 						            </tr>
 						            <tr>
 						            	<th>Cash</th>
-						            	<th>Promo. Price</th>
+						            	<!--<th>Promo. Price</th>-->
 						            	<th>Credit</th>
 						            	<th>HICAPS</th>
 						            	<th style="border-right: 1px solid #000;">Voucher</th>

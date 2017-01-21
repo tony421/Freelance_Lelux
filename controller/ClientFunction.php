@@ -252,6 +252,21 @@
 			}
 		} // updateReportItem
 		
+		public function deleteReportItem($reportItemInfo)
+		{
+			$therapist = Authentication::getUser();
+				
+			$reportItemInfo['report_void_user'] = $therapist->getID();
+			$reportItemInfo['report_void_datetime'] = Utilities::getDateTimeNowForDB();
+			
+			$affectedRow = $this->_dataMapper->deleteReportItem($reportItemInfo);
+				
+			if ($affectedRow > 0)
+				return Utilities::getResponseResult(true, 'The report has been deleted successfully.');
+			else
+				return Utilities::getResponseResult(false, 'Deleting the report has been failed!');
+		} // deleteReportItem
+		
 		public function getTherapists() // *** Use getTherapists() in TherapistFunction instead
 		{
 			$result = $this->_dataMapper->getTherapists();

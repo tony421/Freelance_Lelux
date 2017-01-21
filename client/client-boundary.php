@@ -56,6 +56,13 @@
 				
 				$result = $clientFunction->updateReportItem($reportItemInfo);
 			}
+			else if ($mode == 'DELETE_REPORT') {
+				$reportItemInfo = $_POST['data'];
+				// Data consists of just "report_id"
+				Utilities::logInfo('Client-Boundary | data[reportItemInfo]: '.var_export($reportItemInfo, true));
+			
+				$result = $clientFunction->deleteReportItem($reportItemInfo);
+			}
 			else {
 				throw new Exception('Mode not found');
 			}

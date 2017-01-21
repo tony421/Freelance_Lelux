@@ -17,7 +17,9 @@
 				// the same as using multiple queries
 				
 				$sql = "select 0 as row_no
-					, massage_record_id, therapist.therapist_id, massage_record_date
+					, massage_record_id
+					, therapist.therapist_id, therapist.therapist_active
+					, massage_record_date
 					, therapist.therapist_name, massage_record_requested, massage_record_minutes
 					, date_format(massage_record_time_in, '%H:%i') as massage_record_time_in
 					, date_format(massage_record_time_out, '%H:%i') as massage_record_time_out
@@ -26,8 +28,10 @@
 					, massage_record_credit, massage_record_hicaps, massage_record_voucher
 					, massage_record_commission, massage_record_request_reward
 					, massage_record_commission + massage_record_request_reward as massage_record_commission_total
+					, massage_type.massage_type_id, massage_type.massage_type_name, massage_type.massage_type_active, massage_type.massage_type_commission 
 				from massage_record
 				join therapist on therapist.therapist_id = massage_record.therapist_id
+				join massage_type on massage_type.massage_type_id = massage_record.massage_type_id 
 				where massage_record_date = '$date'
 					and massage_record_void_user = 0
 				order by massage_record_create_datetime asc;";
@@ -43,7 +47,9 @@
 		{
 			$sql = "
 					insert into massage_record (
-						therapist_id, massage_record_minutes
+						therapist_id
+						, massage_type_id
+						, massage_record_minutes
 						, massage_record_requested, massage_record_request_reward
 						, massage_record_promotion, massage_record_commission
 						, massage_record_cash, massage_record_credit, massage_record_hicaps
@@ -52,7 +58,9 @@
 						, massage_record_time_in, massage_record_time_out
 					)
 					values (
-						{$recordInfo['therapist_id']}, {$recordInfo['massage_record_minutes']}
+						{$recordInfo['therapist_id']}
+						, {$recordInfo['massage_type_id']}
+						, {$recordInfo['massage_record_minutes']}
 						, {$recordInfo['massage_record_requested']}, {$recordInfo['massage_record_request_reward']}
 						, {$recordInfo['massage_record_promotion']}, {$recordInfo['massage_record_commission']}
 						, {$recordInfo['massage_record_cash']}, {$recordInfo['massage_record_credit']}, {$recordInfo['massage_record_hicaps']}
@@ -68,6 +76,7 @@
 		{
 			$sql = "update massage_record
 					set therapist_id = {$recordInfo['therapist_id']}
+						, massage_type_id = {$recordInfo['massage_type_id']}
 						, massage_record_requested = {$recordInfo['massage_record_requested']}
 						, massage_record_minutes = {$recordInfo['massage_record_minutes']}
 						, massage_record_stamp = {$recordInfo['massage_record_stamp']}
