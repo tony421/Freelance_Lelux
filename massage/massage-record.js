@@ -583,16 +583,16 @@ function calReqReward()
 				reward += parseFloat(_editModeMassageTypeOptions[selectedIndexMassageType]['massage_type_commission']);
 			
 			$txtReqReward.autoNumeric('set', reward);
-			calCommission();
 		}
 		else {
 			$txtReqReward.autoNumeric('set', 0);
-			calCommission();
 		}
 	}
 	else {
 		$txtReqReward.autoNumeric('set', 0);
 	}
+	
+	calCommission();
 }
 
 function validateRecordInfo()
