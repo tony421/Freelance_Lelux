@@ -44,6 +44,7 @@
 					update provider
 					set provider_no = '%s'
 						, provider_name = '%s'
+						, provider_update_datetime = NOW()
 					where provider_id = %d";
 			
 			$sql = sprintf($sql_format

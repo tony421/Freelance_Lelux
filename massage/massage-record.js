@@ -10,7 +10,7 @@ var $txtTimeIn, $txtTimeOut;
 var $txtCash, $cbPromotionPrice, $txtCredit, $txtHICAPS, $txtVoucher;
 var $txtStdCommission, $txtReqReward, $txtCommissionTotal;
 var $btnAdd, $btnUpdate, $btnDelete, $btnCancelEdit;
-var $btnCommissionReport, $btnIncomeReport;
+//var $btnCommissionReport, $btnIncomeReport;
 var $tableRecord, $tableRecordBody;
 var dtTableRecord;
 
@@ -27,7 +27,7 @@ function initPage()
 	_is_add_mode = true;
 	
 	$dateInput = $('#dateInput');
-	$txtDate = $('#txtDate');
+	//$txtDate = $('#txtDate');
 	$ddlTherapist = $('#ddlTherapist');
 	$ddlMassageType = $('#ddlMassageType');
 	$cbRequested = $('#cbRequested');
@@ -47,8 +47,8 @@ function initPage()
 	$btnUpdate = $('#btnUpdate');
 	$btnDelete = $('#btnDelete');
 	$btnCancelEdit = $('#btnCancelEdit');
-	$btnCommissionReport = $('#btnCommissionReport');
-	$btnIncomeReport = $('#btnIncomeReport');
+	//$btnCommissionReport = $('#btnCommissionReport');
+	//$btnIncomeReport = $('#btnIncomeReport');
 	
 	$btnAdd.click(function(){
 		addRecord();
@@ -64,11 +64,13 @@ function initPage()
 	
 	$btnCancelEdit.click(function(){
 		turnOffEditMode();
-		initDatepicker();
+		//initDatepicker();
+		parent.initDatepicker();
 		setRecordRowsSelection();
 		clearInputs();
 	});
 	
+	/*
 	$btnCommissionReport.click(function(){
 		date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
 		main_open_new_tab('../report/report.php?report_type=COMMISSION_DAILY_REPORT&date=' + date);
@@ -78,8 +80,9 @@ function initPage()
 		date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
 		main_open_new_tab('../report/report.php?report_type=INCOME_DAILY_REPORT&date=' + date);
 	});
+	*/
 	
-	$txtDate.change(function(){
+	/*$txtDate.change(function(){
 		//alert(moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT) + ' | ' + getDate());
 		if ($txtDate.val().trim().length) {
 			initConfig();
@@ -87,7 +90,7 @@ function initPage()
 		else {
 			main_alert_message('Please enter "Date"!', function(){ $txtDate.focus();});
 		}
-	});
+	});*/
 	
 	$txtMinutes.TouchSpin({
 		verticalbuttons: true,
@@ -175,7 +178,8 @@ function initPage()
 		calReqReward();
 	});
 	
-	initDatepicker(new Date());
+	//initDatepicker(new Date());
+	//parent.initDatepicker(new Date()); // first initialize only in the paret page 
 	initDataTable();
 	
 	initTherapists();
@@ -231,6 +235,8 @@ function onInitMassageTypesDone(response)
 		else {
 			setEditModeMassageType();
 		}
+		
+		calReqReward();
 	}
 }
 
@@ -249,7 +255,8 @@ function bindMassageTypeOption(massageTypes)
 
 function initConfig()
 {
-	date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
+	//date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
+	date = parent.getSelectedDailyRecordDate(); // use getDate function of the parent
 	main_request_ajax('../massage/massage-boundary.php', 'GET_CONFIG', date, onInitConfigRequestDone);
 }
 
@@ -271,22 +278,14 @@ function onInitConfigRequestDone(response)
 	}
 }
 
-function initDatepicker(date)
+/*function initDatepicker(date)
 {
-	$dateInput.datepicker({
-	    format: DATE_PICKER_FORMAT,
-	    weekStart: 1,
-	    todayBtn: "linked",
-	    daysOfWeekHighlighted: "0,6",
-	    autoclose: true,
-	    showOnFocus: false,
-	    orientation: "bottom auto"
-	});
+	initDatepickerInput($dateInput);
 	
 	// set current date
 	if (typeof(date) !== 'undefined') $dateInput.datepicker('setDate', date);
 	//$txtDate.val(moment().format(MOMENT_DATE_PICKER_FORMAT));
-}
+}*/
 
 function initDataTable()
 {
@@ -302,7 +301,7 @@ function initDataTable()
 		rowId: 'massage_record_id',
 		columns: [
 		    { data: "row_no"},
-		    { data: "therapist_name"
+		    { data: "therapist_name", className: 'text-nowrap'
 		    	, render: function ( data, type, row ) { return (row['massage_record_requested'] == 1) ? data + ' <img src="../image/req.png" title="Requested">' : data; } },
 		    //{ data: "massage_record_requested", orderable: false, className: 'text-center'
 		    	//, render: function ( data, type, row ) { return (data == 1) ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>' } },
@@ -390,7 +389,8 @@ function getDate()
 
 function getRecords()
 {
-	date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
+	//date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
+	date = parent.getSelectedDailyRecordDate(); // use getDate function of the parent
 	main_request_ajax('../massage/massage-boundary.php', 'GET_RECORDS', date, onGetRecordsRequestDone);
 }
 
@@ -465,8 +465,9 @@ function setEditingRecord(recordIndex)
 	_editingRecord = _records[recordIndex];
 	
 	// set editing record in inputs
-	//$dateInput.datepicker('setDate', _editingRecord['massage_record_date']);
-	$dateInput.datepicker('destroy'); // users cannot change the date during editing the item
+	//
+	//$dateInput.datepicker('destroy'); // users cannot change the date during editing the item
+	parent.destroyDatepicker();
 	
 	if (_editingRecord['therapist_active'] == 0) {
 		listWithDeletedItem = _therapistOptions.slice(0);
@@ -597,7 +598,7 @@ function calReqReward()
 
 function validateRecordInfo()
 {
-	if ($txtDate.val().trim().length) {
+	if (parent.getSelectedDailyRecordDate().length) {
 		if ($txtMinutes.val().trim().length) {
 			if ($txtStamp.val().trim().length) {
 				if ($txtCash.val().length) {
@@ -636,7 +637,9 @@ function validateRecordInfo()
 		}
 	}
 	else {
-		main_alert_message('Please enter "Date"!', function(){ $txtDate.focus();});
+		main_alert_message('Please enter "Date"!', function(){ 
+			//$txtDate.focus();
+		});
 	}
 	
 	return false;
@@ -646,7 +649,7 @@ function getRecordInfo(recordID)
 {
 	var recordInfo = {
 		'massage_record_id': typeof(recordID) === 'undefined' ? 0 : recordID,
-		'massage_record_date': moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT),
+		'massage_record_date': parent.getSelectedDailyRecordDate(), // use getDate function of the parent
 		'therapist_id': $ddlTherapist.val(),
 		'massage_type_id': $ddlMassageType.val(),
 		'massage_record_requested': $cbRequested.is(':checked'),
@@ -693,7 +696,8 @@ function updateRecord()
 	if (validateRecordInfo()) {
 		// Need to initialize datepicker first so that can use its method 'getDate' in 'getRecordInfo'
 		// otherwise datepicker will work incorrectly after 'getDate' called
-		initDatepicker();  
+		//initDatepicker();
+		parent.initDatepicker();
 		recordInfo = getRecordInfo(_editingRecord['massage_record_id']);
 		turnOffEditMode();
 		clearInputs();
@@ -708,6 +712,7 @@ function onUpdateRecordRequestDone(response)
 		main_info_message(response.msg, getRecords);
 	}
 	else {
+		setRecordRowsSelection();
 		main_alert_message(response.msg);
 	}
 }
@@ -715,7 +720,8 @@ function onUpdateRecordRequestDone(response)
 function deleteRecord()
 {
 	main_confirm_message('Do you want to DELETE the massage record?', function() {
-		initDatepicker();  
+		//initDatepicker();
+		parent.initDatepicker();
 		recordID = _editingRecord['massage_record_id'];
 		turnOffEditMode();
 		clearInputs();
@@ -732,6 +738,7 @@ function onDeleteRecordRequestDone(response)
 		main_info_message(response.msg, getRecords);
 	}
 	else {
+		setRecordRowsSelection();
 		main_alert_message(response.msg);
 	}
 }
@@ -761,7 +768,9 @@ function calTimeOut()
 function getTimeIn()
 {
 	timeIn = $txtTimeIn.val().split(":");
-	date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
+	//date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
+	date = parent.getSelectedDailyRecordDate(); // use getDate function of the parent
+	
 	//alert(moment(date));
 	//alert(moment($dateInput.datepicker('getDate')).add(timeIn[0], 'hours'));
 	//alert(moment(date).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT));
@@ -773,6 +782,30 @@ function getTimeOut()
 {
 	minutes = $txtMinutes.val().trim().length ? $txtMinutes.val() : 0;
 	return moment(getTimeIn()).add(minutes, 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+}
+
+function getSelectedDailyRecordDate() {
+	return convertDBFormatDate(new Date());
+}
+
+// will be called by PARENT
+function clearFrameEditMode()
+{
+	//alert('CLEAR - MASSAGE');
+	if (!_is_add_mode) {
+		parent.initDatepicker();
+		
+		turnOffEditMode();
+		setRecordRowsSelection();
+		clearInputs();
+	}
+}
+
+//will be called by PARENT
+function updateFrameContent()
+{
+	//alert("UPDATE - MASSAGE");
+	initConfig();
 }
 
 function dummyDataSet()

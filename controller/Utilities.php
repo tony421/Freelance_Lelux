@@ -69,9 +69,20 @@
 			return date('Y-m-d H:i:s');
 		}
 		
+		public static function getDateNowForDB()
+		{
+			//return date('Y-m-d'); //1999-01-01
+			return date('Y-n-j'); //1999-1-1
+		}
+		
 		public static function getDateNowForDisplay()
 		{
 			return date('d/m/Y');
+		}
+		
+		public static function getTimeNow()
+		{
+			return date('H:i:s');
 		}
 		
 		public static function convertDate($date)
@@ -87,7 +98,7 @@
 		
 		public static function convertDateForDisplay($date)
 		{
-			return date_format(date_create($date), 'd/m/Y'); // e.g. 23/12/2016
+			return date_format(date_create($date), 'j/n/Y'); // e.g. 23/12/2016
 		}
 		
 		public static function convertDateForFullDisplay($date)

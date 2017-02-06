@@ -49,6 +49,7 @@
 					update massage_type
 					set massage_type_name = '%s'
 						, massage_type_commission = %d
+						, massage_type_update_datetime = NOW()
 					where massage_type_id = %d";
 			
 			$sql = sprintf($sql_format
@@ -64,6 +65,7 @@
 			$sql_format = "
 					update massage_type
 					set massage_type_active = 0
+						, massage_type_update_datetime = NOW()
 					where massage_type_id = %d";
 				
 			$sql = sprintf($sql_format

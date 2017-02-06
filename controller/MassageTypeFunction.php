@@ -21,7 +21,7 @@
 			}
 			else {
 				Utilities::logInfo("There is no massage type data in the system.");
-				return Utilities::getResponseResult(false, 'There is no massage type data in the system!');
+				return Utilities::getResponseResult(true, 'There is no massage type data in the system!', []);
 			}
 		} // getMassageTypes
 		
@@ -34,7 +34,7 @@
 			}
 			else {
 				Utilities::logInfo("There is no massage type data in the system.");
-				return Utilities::getResponseResult(false, 'There is no massage type data in the system!');
+				return Utilities::getResponseResult(true, 'There is no massage type data in the system!', []);
 			}
 		} // getMassageTypesDisplay
 		

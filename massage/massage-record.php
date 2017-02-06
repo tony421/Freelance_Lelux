@@ -52,17 +52,13 @@
 	</head>
 	
 	<body>
-		<?php require_once '../master-page/header.php';?>
-    	
-    	<?php $_GET['page'] = 'massage-record'; require_once '../master-page/menu.php';?>
-    	
     	<div id="content">
 			<div class="title-container">
 				<div class="title-text">~:: Massage Record ::~</div>
 			</div>
 			<div class="container">
 				<form class="form-horizontal">
-					<div class="option-container">
+					<!--<div class="option-container">
 						<button type="button" id="btnCommissionReport" class="btn btn-success btn-lg">
 							<span class="glyphicon glyphicon-print"></span>
 							Commission Report
@@ -81,7 +77,7 @@
 							    </span>
 							</div>
 						</div>
-					</div>
+					</div>-->
 					<div class="form-group">
 						<label class="col-sm-offset-1 col-sm-2 control-label">Therapist</label>
 						<div class="col-sm-2">
@@ -204,7 +200,7 @@
 						                <th rowspan="2">Type (Minute)</th>
 						                <th rowspan="2">Time In/Out</th>
 						                <th rowspan="2" style="border-right: 1px solid #000;">Free Stamp (Minute)</th>
-						                <th colspan="5" class="text-center" style="border-right: 1px solid #000;">Paid By</th>
+						                <th colspan="4" class="text-center" style="border-right: 1px solid #000;">Paid By</th>
 						                <th colspan="3" class="text-center">Commission</th>
 						            </tr>
 						            <tr>
@@ -224,9 +220,6 @@
 				</form>
 			</div>
 		</div>
-		
-		<div id="footer">
-		</div> <!-- footer -->
 	</body>
 </html>
 

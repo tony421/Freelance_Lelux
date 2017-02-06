@@ -34,6 +34,7 @@ function initPage()
 	$txtName = $('#txtName');
 	
 	$txtComm.autoNumeric('init', { vMin: 0, vMax: 999, aSign: '$' });
+	$txtComm.focus(function(){ $(this).select(); });
 	
 	$tableMassageType = $('#tableMassageType');
 	// keep instance of DataTable so that it will be used for row.add(), rows().remove() and others
@@ -275,6 +276,7 @@ function turnOffEditMode()
 
 function parentCallback(selfCallback)
 {
+	// "opener" will be NULL if there is no parent window.
 	if (_is_child) {
 		opener.parentCallback();
 		self.close();

@@ -1,5 +1,8 @@
 _main_datatable_scroll_y = 350;
 
+var DATE_PICKER_FORMAT = 'DD, d MM yyyy';
+var MOMENT_DATE_DB_FORMAT = 'YYYY-M-D';
+
 // First, checks if it isn't implemented yet.
 if (!String.prototype.format) {
   String.prototype.format = function() {
@@ -104,31 +107,31 @@ function main_convert_date_format(date)
 
 function main_alert_message(msg, fnOnOK)
 {
-	$.messagebox.alert({ message : msg, icon : 'error', onOK : fnOnOK });
+	parent.$.messagebox.alert({ message : msg, icon : 'error', onOK : fnOnOK });
 }
 
 function main_info_message(msg, fnOnOK)
 {
-	$.messagebox.alert({ message : msg, icon : 'info', onOK : fnOnOK });
+	parent.$.messagebox.alert({ message : msg, icon : 'info', onOK : fnOnOK });
 }
 
 function main_confirm_message(msg, fnOnYes, fnOnNo, defaultBtn)
 {
 	if (typeof(defaultBtn) === 'undefined') defaultBtn = 0;
 	
-	$.messagebox.confirm({ message : msg, icon : 'question', onYes : fnOnYes, onNo : fnOnNo, defaultButton: defaultBtn });
+	parent.$.messagebox.confirm({ message : msg, icon : 'question', onYes : fnOnYes, onNo : fnOnNo, defaultButton: defaultBtn });
 }
 
 // show loading
 function main_loading_show()
 {
-	$.loadingpanel.show();
+	parent.$.loadingpanel.show();
 }
 
 // hide loading
 function main_loading_hide()
 {
-	$.loadingpanel.hide();
+	parent.$.loadingpanel.hide();
 }
 
 // used for hide loading when any ajax request finished
@@ -148,6 +151,16 @@ function main_move_to_title_text(completeFunc) {
 	});
 }
 
+function main_enable_control(ctrl) {
+	if ($(ctrl).prop('disabled') == true)
+		$(ctrl).prop('disabled', '');
+}
+
+function main_disable_control(ctrl) {
+	if ($(ctrl).prop('disabled') == false)
+		$(ctrl).prop('disabled', 'true');
+}
+
 function main_is_int(n){
     return n % 1 === 0;
 }
@@ -156,8 +169,90 @@ function main_is_float(n){
     return n % 1 !== 0;
 }
 
+function main_resize_frame(obj) {
+    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+}
 
+function main_get_frame_content(frameName) {
+	return window.frames[frameName].frameElement.contentWindow;
+}
 
+function initMoneyInput(control, min, max) {
+	$(control).autoNumeric('init', { vMin: min, vMax: max, aSign: '$' });
+}
+
+function setMoneyInputValue(control, val) {
+	$(control).autoNumeric('set', val);
+}
+
+function getMoneyInputValue(control) {
+	return $(control).autoNumeric('get');
+	//return $(control).val().replace(/\$/i, '');
+}
+
+function setSubmitTabIndex(currentControl, nextControl) {
+	$(currentControl).keypress(function(e){
+		if (e.which == 13) {
+			if (typeof(nextControl) == 'function')
+				nextControl();
+			else
+				$(nextControl).focus();
+			
+			return false;
+		}
+	});
+}
+
+function setTextAllSelection(control) {
+	$(control).focus(function(){ $(this).select(); });
+}
+
+function initDatepickerInput(control) {
+	$(control).datepicker({
+	    format: DATE_PICKER_FORMAT,
+	    weekStart: 1,
+	    todayBtn: "linked",
+	    daysOfWeekHighlighted: "0,6",
+	    autoclose: true,
+	    showOnFocus: false,
+	    orientation: "bottom auto"
+	});
+}
+
+function destroyDatepickerInput(control) {
+	$(control).datepicker('destroy');
+}
+
+function getDatepickerValue(control) {
+	return moment($(control).datepicker('getDate')).format(MOMENT_DATE_DB_FORMAT);
+	//return $(control).datepicker('getDate');
+}
+
+function setDatepickerInputValue(control, date) {
+	$(control).datepicker('setDate', date);
+}
+
+function initTouchSpinInput(control, min, max, initVal, step) {
+	$(control).TouchSpin({
+		verticalbuttons: true,
+		initval: initVal,
+		min: min,
+		max: max,
+		step: step
+	});
+}
+
+function setTouchSpinInputValue(control, val) {
+	$(control).val(val);
+}
+
+function getTouchSpinInputValue(control) {
+	return $(control).val();
+}
+
+function convertDBFormatDate(date) {
+	return moment(date).format('YYYY-M-D');
+}
 
 
 

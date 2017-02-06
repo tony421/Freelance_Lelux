@@ -21,7 +21,7 @@
 			}
 			else {
 				Utilities::logInfo("There is no provider data in the system.");
-				return Utilities::getResponseResult(false, 'There is no provider data in the system!');
+				return Utilities::getResponseResult(true, 'There is no provider data in the system!', []);
 			}
 		} // getProviders
 		
@@ -34,7 +34,7 @@
 			}
 			else {
 				Utilities::logInfo("There is no provider data in the system.");
-				return Utilities::getResponseResult(false, 'There is no provider data in the system!');
+				return Utilities::getResponseResult(true, 'There is no provider data in the system!', []);
 			}
 		} // getProvidersDisplay
 		

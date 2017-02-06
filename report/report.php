@@ -3,6 +3,8 @@
 	require_once '../controller/ReportFunction.php';
 	require_once '../controller/Utilities.php';
 	
+	//Utilities::handleError(); // when an error happens you use this function to catch the error
+	
 	if (!empty($_GET['report_type'])) {
 		$reportType = $_GET['report_type'];
 		Utilities::logInfo('Report | report_type: '.$reportType);
@@ -71,6 +73,20 @@
 				$htmlReportInfo = $reportFunction->getIncomeDailyReport($date);
 		
 				$pdf->show('income-daily-report', $htmlReportInfo);
+				//echo $htmlReportInfo;
+			}
+			else {
+				echo 'Some of criteria data is missing.';
+			}
+		}
+		else if ($reportType == 'SALE_RECEIPT') {
+			if (!empty($_GET['uid'])) {
+				$uid = $_GET['uid'];
+				Utilities::logInfo('Report | criteria_data[uid]: '.$uid);
+		
+				$htmlReportInfo = $reportFunction->getSaleReceipt($uid);
+		
+				$pdf->show('sale-receipt', $htmlReportInfo);
 				//echo $htmlReportInfo;
 			}
 			else {

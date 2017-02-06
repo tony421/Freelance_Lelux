@@ -3,9 +3,13 @@
 	require_once '../config/client_config.php';
 	require_once '../controller/ClientFunction.php';
 	require_once '../controller/MassageFunction.php';
+	require_once '../controller/SaleFunction.php';
+	require_once '../controller/ReportDataMapper.php';
 	
 	class ReportFunction
 	{
+		private $_dataMapper;
+		
 		private $_SEPARATE_LINE = "<br><br>";
 		private $_CSS = <<<EOF
 <style>
@@ -386,6 +390,61 @@ table;
 			
 			return $reportHeader.$reportTable;
 		} // getIncomeDailyReport
+		
+		public function getSaleReceipt($uid)
+		{
+			$saleFunction = new SaleFunction();
+			$sale = $saleFunction->getSaleReceipt($uid);
+			
+			$fullDate = Utilities::convertDateForFullDisplay($sale['sale_date']);
+			
+			$reportHeader = <<<header
+			<h1 style="text-align: center;">Receipt</h1>
+			<h3 style="text-align: center;">on {$fullDate} at {$sale['sale_time']}</h3>
+header;
+			$columnHeaders = <<<colHeader
+			<thead>
+				<tr style="text-align: center; font-weight: bold;">
+					<th></th>
+					<th class="text">Description</th>
+					<th class="text" style="text-align: right;">$$</th>
+					<th></th>
+				</tr>
+			</thead>
+colHeader;
+			$reportRows = "";
+			foreach ($sale['sale_items'] as $row) {
+				if ($row['sale_item_amount'] > 1)
+					$row['product_name'] = $row['product_name'].'<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$row['sale_item_amount'].' @ $'.$row['sale_item_price'].' each'; 
+				
+				$reportRows .= <<<row
+				<tr><td></td><td class="text">{$row['product_name']}</td><td class="text" style="text-align: right;">\${$row['sale_item_total']}</td><td></td></tr>
+row;
+			}
+				
+			// add receipt TOTAL
+			$reportRows .= <<<row
+			<tr><td></td><td style="text-align: right"><b>Total</b></td><td style="text-align: right;">\${$sale['sale_total']}</td><td></td></tr>
+row;
+			$reportTable = <<<table
+			<table cellspacing="0" cellpadding="5" border="0">
+				{$columnHeaders}
+				<tbody>
+					{$reportRows}
+				</tbody>
+			</table>
+table;
+			
+			return $this->_CSS.$reportHeader.$reportTable;
+		} // getSaleReceipt
+		
+		public function getDailyShopIncomeSummary($date)
+		{
+			$this->_dataMapper = new ReportDataMapper();
+			$result['shop_income'] = $this->_dataMapper->getDailyShopIncomeSummary($date)[0]['amount']; 
+			
+			return Utilities::getResponseResult(true, '', $result); 
+		}
 	}
 ?>
 
