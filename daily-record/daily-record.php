@@ -48,7 +48,7 @@
 	<body>
 		<?php require_once '../master-page/header.php';?>
     	
-    	<?php $_GET['page'] = 'massage-record'; require_once '../master-page/menu.php';?>
+    	<?php $_GET['page'] = 'daily-record'; require_once '../master-page/menu.php';?>
     	
     	<div id="content">
 			<div class="title-container">
@@ -82,9 +82,9 @@
 				<div class="container">
 	                <div class="panel-heading" style="padding-bottom: 0;">
                         <ul class="nav nav-tabs">
-                            <li name="sad"><a name="frameMassage" href="#tab1" data-toggle="tab">Massage Record</a></li>
-                            <li><a name="frameSale" href="#tab2" data-toggle="tab">Sale Record</a></li>
-                            <li class="active"><a name="frameReception" href="#tab3" data-toggle="tab">Reception Record</a></li>
+                            <li class="active"><a name="frameMassage" class="tab-title" href="#tab1" data-toggle="tab">Massage Record</a></li>
+                            <li><a name="frameSale" class="tab-title" href="#tab2" data-toggle="tab">Sale Record</a></li>
+                            <li><a name="frameReception" class="tab-title" href="#tab3" data-toggle="tab">Reception Record</a></li>
                             <!--<li class="dropdown">
                                 <a href="#" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
@@ -97,17 +97,17 @@
                 </div>
                 <div class="panel-body" style="padding: 0;">
                     <div class="tab-content">
-                        <div class="tab-pane fade" id="tab1">
+                        <div class="tab-pane fade in active" id="tab1">
                         	<iframe name="frameMassage" src="../massage/massage-record.php" 
-                        		frameborder="0" width="100%" onload="main_resize_frame(this)"></iframe>
+                        		frameborder="0" width="100%" height="826""></iframe>
                         </div>
                         <div class="tab-pane fade" id="tab2">
                         	<iframe name="frameSale" src="../sale/sale.php" 
-                        		frameborder="0" width="100%" onload="main_resize_frame(this)"></iframe>
+                        		frameborder="0" width="100%" height="987"></iframe>
                         </div>
-                        <div class="tab-pane fade in active" id="tab3">
+                        <div class="tab-pane fade" id="tab3">
                         	<iframe name="frameReception" src="../reception/reception.php" 
-                        		frameborder="0" width="100%" onload="main_resize_frame(this)"></iframe>
+                        		frameborder="0" width="100%" height="731"></iframe>
                         </div>
                     </div>
                 </div>

@@ -27,6 +27,20 @@
 	font-size: 35px;
 }
 
+.nav-tabs li.active .tab-title
+{
+	font-size: 2.0em;
+	font-style: italic;
+	text-shadow: red 0px 0px 3px;
+}
+.nav-tabs .tab-title
+{
+	font-size: 1.9em;
+	/*color: #337ab7;
+	font-style: italic;
+    text-shadow: #cc7b7b 0px 0px 3px;*/
+}
+
 .log-out
 {
 	font-style: italic;

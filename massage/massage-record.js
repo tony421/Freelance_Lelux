@@ -149,7 +149,7 @@ function initPage()
 		calReqReward();
 	});
 
-	$ddlTherapist.change(function(){
+	/*$ddlTherapist.change(function(){
 		// ***This can be deleted, if retail function is implemented!!!
 		selectedTherapist = $ddlTherapist.find('option:selected').text();
 		if ($ddlTherapist.find('option:selected').text() == '[Voucher]') {
@@ -166,7 +166,7 @@ function initPage()
 		_previousSelectedTherapist = selectedTherapist;
 		
 		calReqReward();
-	});
+	});*/
 	
 	$ddlMassageType.change(function(){
 		if ($(this).val() === 'ADD_NEW_MASSAGE_TYPE') // "ADD NEW MASSAGE TYPE" selected 
@@ -533,67 +533,70 @@ function clearInputs()
 
 function calCommission()
 {
-	if ($ddlTherapist.find('option:selected').text() != '[Voucher]') {
-		minutes = $txtMinutes.val();
-		reward = parseFloat($txtReqReward.autoNumeric('get'));
-		commission = minutes * _commissionRate;
+	minutes = $txtMinutes.val();
+	reward = parseFloat($txtReqReward.autoNumeric('get'));
+	commission = minutes * _commissionRate;
+
+	$txtStdCommission.autoNumeric('set', commission);
+	$txtCommissionTotal.autoNumeric('set', commission + reward);
 	
-		$txtStdCommission.autoNumeric('set', commission);
-		$txtCommissionTotal.autoNumeric('set', commission + reward);
+	/*if ($ddlTherapist.find('option:selected').text() != '[Voucher]') {
+		
 	}
 	else {
 		$txtStdCommission.autoNumeric('set', 0);
 		$txtCommissionTotal.autoNumeric('set', 0);	
-	}
+	}*/
 }
 
 function calReqReward()
 {
-	if ($ddlTherapist.find('option:selected').text() != '[Voucher]') {
-		minutes = parseInt($txtMinutes.val());
-		freeStamp = parseInt($txtStamp.val());
-	
-		minutes = minutes - freeStamp;
-	
-		if (minutes >= _minimumRequest) {
-			reward = 0.0;
-			
-			req = $cbRequested.is(':checked');
-			//stamp = parseInt($txtStamp.val()) > 0 ? true : false; // stamp condition is changed to be minute condition
-			promo = $cbPromotionPrice.is(':checked');
-			
-			//alert(req + '|' + stamp + '|' + promo);
-			
-			$.each(_requestConditions, function (i, condition){
-				if (condition['request_condition_request'] == req 
-						//&& condition['request_condition_stamp'] == stamp 
-						&& condition['request_condition_promotion'] == promo) {
-					
-					reward = parseFloat(condition['request_condition_amt']);
-					//$txtReqReward.autoNumeric('set', reward);
-					
-					return false; // use as break statement
-				}
-			});
-			
-			// calculate Extra Commission from MassageType
-			selectedIndexMassageType = $ddlMassageType.prop('selectedIndex');
-			if (_is_add_mode)
-				reward += parseFloat(_massageTypeOptions[selectedIndexMassageType]['massage_type_commission']);
-			else
-				reward += parseFloat(_editModeMassageTypeOptions[selectedIndexMassageType]['massage_type_commission']);
-			
-			$txtReqReward.autoNumeric('set', reward);
-		}
-		else {
-			$txtReqReward.autoNumeric('set', 0);
-		}
+	minutes = parseInt($txtMinutes.val());
+	freeStamp = parseInt($txtStamp.val());
+
+	minutes = minutes - freeStamp;
+
+	if (minutes >= _minimumRequest) {
+		reward = 0.0;
+		
+		req = $cbRequested.is(':checked');
+		//stamp = parseInt($txtStamp.val()) > 0 ? true : false; // stamp condition is changed to be minute condition
+		promo = $cbPromotionPrice.is(':checked');
+		
+		//alert(req + '|' + stamp + '|' + promo);
+		
+		$.each(_requestConditions, function (i, condition){
+			if (condition['request_condition_request'] == req 
+					//&& condition['request_condition_stamp'] == stamp 
+					&& condition['request_condition_promotion'] == promo) {
+				
+				reward = parseFloat(condition['request_condition_amt']);
+				//$txtReqReward.autoNumeric('set', reward);
+				
+				return false; // use as break statement
+			}
+		});
+		
+		// calculate Extra Commission from MassageType
+		selectedIndexMassageType = $ddlMassageType.prop('selectedIndex');
+		if (_is_add_mode)
+			reward += parseFloat(_massageTypeOptions[selectedIndexMassageType]['massage_type_commission']);
+		else
+			reward += parseFloat(_editModeMassageTypeOptions[selectedIndexMassageType]['massage_type_commission']);
+		
+		$txtReqReward.autoNumeric('set', reward);
 	}
 	else {
 		$txtReqReward.autoNumeric('set', 0);
 	}
 	
 	calCommission();
+	
+	/*if ($ddlTherapist.find('option:selected').text() != '[Voucher]') {
+	}
+	else {
+		$txtReqReward.autoNumeric('set', 0);
+	}*/
 }
 
 function validateRecordInfo()

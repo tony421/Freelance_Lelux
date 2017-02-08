@@ -39,6 +39,19 @@
 			}
 		} // getTherapistsForManagement
 		
+		public function getTherapistsWithUnknown()
+		{
+			$result = $this->_dataMapper->getTherapistsWithUnknown();
+		
+			if (count($result) > 0) {
+				return Utilities::getResponseResult(true, '', $result);
+			}
+			else {
+				Utilities::logInfo("There is no therapist data in the system.");
+				return Utilities::getResponseResult(false, 'There is no therapist data in the system!');
+			}
+		} // getTherapists
+		
 		public function addTherapist($therapistInfo)
 		{
 			// Check existed names in every cases
@@ -47,7 +60,7 @@
 				//return Utilities::getResponseResult(false, 'Therapist Name ['.$therapistInfo['therapist_name'].'] or Username ['.$therapistInfo['therapist_username'].'] already existed, please check the infotmation.');
 			}
 			
-			$affectedRow = $this->_dataMapper->addTherapist($therapistInfo);
+			$affectedRow = $this->_dataMapper->addTherapist($this->manipulateNameInfo($therapistInfo));
 			
 			if ($affectedRow > 0) {
 				return Utilities::getResponseResult(true, 'New therapist has been inserted successfully.');
@@ -65,7 +78,7 @@
 				//return Utilities::getResponseResult(false, 'Therapist Name ['.$therapistInfo['therapist_name'].'] or Username ['.$therapistInfo['therapist_username'].'] already existed, please check the infotmation.');
 			}
 			
-			$affectedRow = $this->_dataMapper->updateTherapist($therapistInfo);
+			$affectedRow = $this->_dataMapper->updateTherapist($this->manipulateNameInfo($therapistInfo));
 				
 			if ($affectedRow > 0) {
 				return Utilities::getResponseResult(true, 'Updating therapist has been successful.');
@@ -86,6 +99,12 @@
 				return Utilities::getResponseResult(false, 'Deleting therapist has failed!');
 			}
 		} // deleteTherapist
+		
+		private function manipulateNameInfo($info)
+		{
+			$info['therapist_name'] = ucwords(strtolower($info['therapist_name']));
+			return  $info;
+		}
 	}
 ?>
 

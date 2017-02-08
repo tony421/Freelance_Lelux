@@ -19,6 +19,9 @@
 			else if ($mode == "GET_THERAPIST_FOR_MANAGE") {
 				$result = $therapistFunction->getTherapistsForManagement();
 			}
+			else if ($mode == "GET_THERAPIST_WITH_UNKNOWN") {
+				$result = $therapistFunction->getTherapistsWithUnknown();
+			}
 			else if ($mode == "ADD_THERAPIST") {
 				$therapistInfo = $_POST['data'];
 				$result = $therapistFunction->addTherapist($therapistInfo);

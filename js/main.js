@@ -170,7 +170,7 @@ function main_is_float(n){
 }
 
 function main_resize_frame(obj) {
-    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+	obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
 }
 
 function main_get_frame_content(frameName) {

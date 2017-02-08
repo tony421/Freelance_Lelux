@@ -47,7 +47,7 @@
 	<body>
 		<?php require_once '../master-page/header.php';?>
     	
-    	<?php $_GET['page'] = 'client-search'; require_once '../master-page/menu.php';?>
+    	<?php $_GET['page'] = 'client'; require_once '../master-page/menu.php';?>
 		
 		<div id="content">
 			<div class="title-container">

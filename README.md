@@ -51,4 +51,10 @@ Deployment Instruction:
 	- Patient ID "0" is allowed
 	
 Next!!! Deployment Instruction:
-	- alter the type of tracable column info (eg. create_user, create_datetime) to "SMALL INT" 
+	- alter the type of tracable column info (eg. create_user, create_datetime) to "SMALL INT"
+	- Delete [Voucher] from "Therapist" Table
+	
+	
+	
+	 
+	 

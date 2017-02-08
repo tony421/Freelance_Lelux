@@ -12,7 +12,7 @@
 		
 		public function getTherapists()
 		{
-			$sql = "select * from therapist where therapist_active = 1 order by therapist_name";
+			$sql = "select * from therapist where therapist_id != 0 and therapist_active = 1 order by therapist_name";
 				
 			return $this->_dataAccess->select($sql);
 		}
@@ -20,6 +20,13 @@
 		public function getTherapistsForManagement()
 		{
 			$sql = "select * from therapist where therapist_active = 1 and therapist_permission != 9 and therapist_permission != 0 order by therapist_name";		
+			return $this->_dataAccess->select($sql);
+		}
+		
+		public function getTherapistsWithUnknown()
+		{
+			$sql = "select * from therapist where therapist_active = 1 order by therapist_name";
+		
 			return $this->_dataAccess->select($sql);
 		}
 		

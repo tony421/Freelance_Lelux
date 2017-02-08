@@ -56,7 +56,7 @@
 				$date = $_GET['date'];
 				Utilities::logInfo('Report | criteria_data[date]: '.$date);
 		
-				$htmlReportInfo = $reportFunction->getCommissionDailyReport($date);
+				$htmlReportInfo = $reportFunction->getDailyCommissionReport($date);
 		
 				$pdf->show('commission-daily-report', $htmlReportInfo);
 				//echo $htmlReportInfo;
@@ -70,7 +70,7 @@
 				$date = $_GET['date'];
 				Utilities::logInfo('Report | criteria_data[date]: '.$date);
 		
-				$htmlReportInfo = $reportFunction->getIncomeDailyReport($date);
+				$htmlReportInfo = $reportFunction->getDailyIncomeReport($date);
 		
 				$pdf->show('income-daily-report', $htmlReportInfo);
 				//echo $htmlReportInfo;

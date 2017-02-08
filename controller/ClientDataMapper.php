@@ -18,7 +18,7 @@
 						select client_id
 						from client
 						where (
-							client_membership_no = '%s'
+							lower(client_membership_no) = lower('%s')
 							and client_patient_id = %d
 							and client_id != '%s'
 						)";
@@ -46,9 +46,9 @@
 						select client_id
 						from client
 						where (
-							client_first_name = '%s'
-							and client_last_name = '%s'
-							and client_id != '%s'
+							lower(client_first_name) = lower('%s')
+							and lower(client_last_name) = lower('%s')
+							and lower(client_id) != lower('%s')
 						)";
 			
 			$sql = sprintf($sql_format,

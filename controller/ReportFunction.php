@@ -23,8 +23,18 @@
 		border-bottom: 1px solid #000;
 		/*text-decoration: underline;*/
 	}
+				
+	.border
+	{
+		border: 1px solid #000;
+	}
 </style>
 EOF;
+		
+		public function ReportFunction()
+		{
+			$this->_dataMapper = new ReportDataMapper();
+		}
 		
 		public function getClientReport($clientID)
 		{
@@ -298,10 +308,11 @@ table;
 			return $this->_CSS.$receiptTable.$receiptSeparator.$receiptTableCopy;
 		} // getClientReceipt
 		
-		public function getCommissionDailyReport($date)
+		public function getDailyCommissionReport($date)
 		{
-			$massagFunction = new MassageFunction();
-			$reportInfo = $massagFunction->getCommissionDailyReport($date);
+			//$massagFunction = new MassageFunction();
+			//$reportInfo = $massagFunction->getCommissionDailyReport($date);
+			$reportInfo = $this->_dataMapper->getDailyCommission($date);
 			
 			$fullDate = Utilities::convertDateForFullDisplay($date);
 			
@@ -315,7 +326,7 @@ header;
 				<tr style="text-align: center; font-weight: bold;">
 					<th>Therapist</th>
 					<th>Standard Commission</th>
-					<th>Request Reward</th>
+					<th>Extra Commission</th>
 					<th>Total</th>
 				</tr>
 			</thead>
@@ -343,10 +354,12 @@ table;
 			return $reportHeader.$reportTable;
 		} // getCommissionDailyReport
 		
-		public function getIncomeDailyReport($date)
+		public function getDailyIncomeReport($date)
 		{
-			$massagFunction = new MassageFunction();
-			$reportInfo = $massagFunction->getIncomeDailyReport($date);
+			//$massagFunction = new MassageFunction();
+			//$reportInfo = $massagFunction->getIncomeDailyReport($date);
+			$reportInfo = $this->_dataMapper->getDailyIncome($date);
+			$relatedInfo = $this->_dataMapper->getDailyRelatedIncomeInfo($date);
 			
 			$fullDate = Utilities::convertDateForFullDisplay($date);
 			
@@ -358,37 +371,70 @@ header;
 			$columnHeaders = <<<colHeader
 			<thead>
 				<tr style="text-align: center; font-weight: bold;">
-					<th>Paid By</th>
-					<th>Amount</th>
+					<th></th>
+					<th class="border">Paid By</th>
+					<th class="border">Amount</th>
+					<th></th>
 				</tr>
 			</thead>
 colHeader;
 			
 			$reportRows = "";
 			foreach ($reportInfo as $row) {
-				if ($row['paid_by'] != 'Free Stamp') {
+				/*if ($row['paid_by'] != 'Free Stamp') {
 					$amount = '$'.$row['amount'];
 				}
 				else {
 					$amount = $row['amount'] > 1 ? (int)$row['amount'].' minutes' : (int)$row['amount'].' minute';
-				}
-				//$amount = $row['paid_by'] != 'Stamp' ? '$'.$row['amount'] : (int)$row['amount'].' min';
+				}*/
 			
 				$reportRows .= <<<row
-				<tr><td><b>{$row['paid_by']}</b></td><td style="text-align: right;">{$amount}</td></tr>
+				<tr><td></td><td class="border"><b>{$row['paid_by']}</b></td><td class="border" style="text-align: right;">\${$row['amount']}</td><td></td></tr>
 row;
 			}
 				
 			$reportTable = <<<table
-			<table cellspacing="0" cellpadding="5" border="1">
+			<table cellspacing="0" cellpadding="5" border="0">
 				{$columnHeaders}
 				<tbody>
 					{$reportRows}
 				</tbody>
 			</table>
 table;
+				
+			$relatedInfoRows = "";
+			foreach ($relatedInfo as $row) {
+				if ($row['info'] != 'Free Stamp') {
+					$amount = '$'.$row['amount'];
+				}
+				else {
+					$amount = $row['amount'] > 1 ? (int)$row['amount'].' minutes' : (int)$row['amount'].' minute';
+				}
+				
+				$relatedInfoRows .= <<<row
+				<tr><td></td><td class="border"><b>{$row['info']}</b></td><td class="border" style="text-align: right;">{$amount}</td><td></td></tr>
+row;
+			}
 			
-			return $reportHeader.$reportTable;
+			$raltedInfoTable = <<<table
+			<table cellspacing="0" cellpadding="5" border="0">
+				<thead>
+					<tr style="text-align: center; font-weight: bold;">
+						<th></th>
+						<th class="border">Related Info.</th>
+						<th class="border">Amount</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{$relatedInfoRows}
+				</tbody>
+			</table>
+table;
+			
+			
+			
+			return $this->_CSS.$reportHeader.$reportTable.$this->_SEPARATE_LINE.$this->_SEPARATE_LINE.$raltedInfoTable;
 		} // getIncomeDailyReport
 		
 		public function getSaleReceipt($uid)
@@ -438,10 +484,9 @@ table;
 			return $this->_CSS.$reportHeader.$reportTable;
 		} // getSaleReceipt
 		
-		public function getDailyShopIncomeSummary($date)
+		public function getDailyIncomeSummary($date)
 		{
-			$this->_dataMapper = new ReportDataMapper();
-			$result['shop_income'] = $this->_dataMapper->getDailyShopIncomeSummary($date)[0]['amount']; 
+			$result['shop_income'] = $this->_dataMapper->getDailyIncomeSummary($date)[0]['amount']; 
 			
 			return Utilities::getResponseResult(true, '', $result); 
 		}

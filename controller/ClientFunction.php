@@ -142,8 +142,8 @@
 			
 			$client->setMembershipNo($clientInfo['client_membership_no']);
 			$client->setHealthFundID($clientInfo['health_fund_id']);
-			$client->setFirstName($clientInfo['client_first_name']);
-			$client->setLastName($clientInfo['client_last_name']);
+			$client->setFirstName(ucwords(strtolower($clientInfo['client_first_name'])));
+			$client->setLastName(ucwords(strtolower($clientInfo['client_last_name'])));
 			$client->setGender($clientInfo['client_gender']);
 			$client->setAddress($clientInfo['client_address']);
 			$client->setPostCode($clientInfo['client_postcode']);

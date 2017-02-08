@@ -53,9 +53,9 @@
 	
 	<body>
     	<div id="content">
-			<div class="title-container">
+			<!--<div class="title-container">
 				<div class="title-text">~:: Massage Record ::~</div>
-			</div>
+			</div>-->
 			<div class="container">
 				<form class="form-horizontal">
 					<!--<div class="option-container">
@@ -161,7 +161,7 @@
 						</div>
 						<div class="col-sm-3">
 							<div class="input-group">
-							    <span class="input-group-addon">Extra Reward</span>
+							    <span class="input-group-addon">Extra Commission</span>
 							    <input type="text" id="txtReqReward" class="form-control" value="0">
 						    </div>
 						</div>
@@ -210,7 +210,7 @@
 						            	<th>HICAPS</th>
 						            	<th style="border-right: 1px solid #000;">Voucher</th>
 						            	<th>Standard</th>
-						            	<th>Reward</th>
+						            	<th>Extra</th>
 						            	<th>Total</th>
 						            </tr>
 						        </thead>

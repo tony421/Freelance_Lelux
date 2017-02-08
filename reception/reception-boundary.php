@@ -21,7 +21,7 @@
 			else if ($mode == 'GET_SHOP_INCOME') {
 				$date = $_POST['data'];
 				$reportFunction = new ReportFunction();
-				$result = $reportFunction->getDailyShopIncomeSummary($date);
+				$result = $reportFunction->getDailyIncomeSummary($date);
 			}
 			else if ($mode == 'GET_RECORDS') {
 				$date = $_POST['data'];

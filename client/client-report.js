@@ -160,7 +160,7 @@ function initPage()
 
 function initTherapists()
 {
-	main_request_ajax('../therapist/therapist-boundary.php', 'GET_THERAPIST', {}, onGetTherapistsDone);
+	main_request_ajax('../therapist/therapist-boundary.php', 'GET_THERAPIST_WITH_UNKNOWN', {}, onGetTherapistsDone);
 }
 
 function onGetTherapistsDone(response)
@@ -170,12 +170,12 @@ function onGetTherapistsDone(response)
 		therapists = response.result;
 
 		$.each(therapists, function (i, therapist){
-			if (therapist['therapist_name'] != '[Voucher]') {
-				option = "<option value='" + therapist['therapist_id'] + "'>" + therapist['therapist_name'] + "</option>";
+			option = "<option value='" + therapist['therapist_id'] + "'>" + therapist['therapist_name'] + "</option>";
 			
-				_therapistOptions.push(option);
-				$ddlReportTherapist.append(option);
-			}
+			_therapistOptions.push(option);
+			$ddlReportTherapist.append(option);
+			
+			//if (therapist['therapist_name'] != '[Voucher]') { }
 		});
 		
 		getReports();

@@ -48,11 +48,11 @@
 	<body>
 		<?php require_once '../master-page/header.php';?>
     	
-    	<?php $_GET['page'] = 'client-add'; require_once '../master-page/menu.php';?>
+    	<?php $_GET['page'] = 'client'; require_once '../master-page/menu.php';?>
 		
 		<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: New Client ::~</div>
+				<div class="title-text">~:: Add Client ::~</div>
 			</div>
 			<div class="container">
 				<form class="form-horizontal">

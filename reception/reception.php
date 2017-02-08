@@ -53,9 +53,9 @@
 	
 	<body>
 		<div id="content">
-			<div class="title-container">
+			<!--<div class="title-container">
 				<div class="title-text">~:: Reception Record ::~</div>
-			</div>
+			</div>-->
 			<div class="container">
 				<form class="form-horizontal">
 					<div class="form-group">
@@ -66,7 +66,7 @@
 						</div>
 						<div class="col-sm-4">
 							<label class="checkbox-inline">
-								<input type="checkbox" id="cbLateNightWork"> Work after 9.30 PM
+								<input type="checkbox" id="cbLateNightWork"> Late Work (After 9.30 PM)
 							</label>
 						</div>
 					</div>

@@ -29,9 +29,16 @@ function initPage()
 	initDatepicker(new Date());
 	
 	$('.panel-heading .nav a').click(function(){
+		currentFrame = frameName = $('.panel-heading .nav li.active a').prop("name");
 		frameName = $(this).prop("name");
-		main_get_frame_content(frameName).clearFrameEditMode();
-		main_get_frame_content(frameName).updateFrameContent();
+		
+		if (frameName != currentFrame) {
+			main_get_frame_content(frameName).clearFrameEditMode();
+			main_get_frame_content(frameName).updateFrameContent();
+		}
+		
+		//alert(main_get_frame_content(frameName).document.body.scrollHeight);
+		//alert($(main_get_frame_content(frameName).document).find('html').height());
 	});
 }
 

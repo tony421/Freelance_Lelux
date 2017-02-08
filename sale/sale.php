@@ -53,9 +53,9 @@
 	
 	<body>
 		<div id="content">
-			<div class="title-container">
+			<!--<div class="title-container">
 				<div class="title-text">~:: Sale Record ::~</div>
-			</div>
+			</div>-->
 			<div class="container">
 				<form class="form-horizontal">
 					<div class="form-group">
