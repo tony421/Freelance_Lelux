@@ -48,7 +48,7 @@
         			<li class="dropdown" <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'report') { echo 'class="active"'; } }?>>
         				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <span class="caret"></span></a>
         				<ul class="dropdown-menu">
-            				<li><a href="#">Client Contacts</a></li>
+            				<li><a href="../report/report.php?report_type=CLIENT_CONTACTS">Client Contacts</a></li>
             			</ul>
         			</li>
       			</ul>

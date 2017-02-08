@@ -6,6 +6,8 @@
 	require_once '../controller/SaleFunction.php';
 	require_once '../controller/ReportDataMapper.php';
 	
+	require_once '../excel/PHPExcel.php';
+	
 	class ReportFunction
 	{
 		private $_dataMapper;
@@ -489,6 +491,42 @@ table;
 			$result['shop_income'] = $this->_dataMapper->getDailyIncomeSummary($date)[0]['amount']; 
 			
 			return Utilities::getResponseResult(true, '', $result); 
+		}
+		
+		private function initExcelExporter($subject)
+		{
+			$excel = new PHPExcel();
+			$excel->getProperties()->setCreator("Lelux Thai Massage")
+							 ->setTitle("Lelux Thai Massage - Report")
+							 ->setSubject($subject);
+			return $excel;
+		}
+		
+		public function getClientContactsExcel()
+		{
+			$excel = $this->initExcelExporter('Client Contacts');
+			$clients = $this->_dataMapper->getClientContacts();
+			
+			// Add headers
+			$excel->setActiveSheetIndex(0)
+            		->setCellValue('A1', 'Client Name')
+            		->setCellValue('B1', 'Contact No.')
+            		->setCellValue('C1', 'Email');
+            	
+            Utilities::logDebug("Client Amount : ".count($clients));
+            
+            // Add contents
+            for ($i = 0, $sheetRow = 2; $i < count($clients); $i++, $sheetRow++) {
+            	$excel->setActiveSheetIndex(0)
+            			->setCellValue("A{$sheetRow}", $clients[$i]['client_name'])
+            			->setCellValue("B{$sheetRow}", $clients[$i]['client_contact_no'])
+            			->setCellValue("C{$sheetRow}", $clients[$i]['client_email']);
+            }
+            
+            // Set worksheet name
+            $excel->getActiveSheet()->setTitle('Client Contacts');
+            
+            return $excel;
 		}
 	}
 ?>

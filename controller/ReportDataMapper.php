@@ -137,13 +137,14 @@
 			return $this->_dataAccess->select($sql);
 		}
 		
-		public function getClientEmails()
+		public function getClientContacts()
 		{
 			$sql = "
 					select concat(client_first_name, ' ', client_last_name) as client_name, client_contact_no, client_email
-					from client";
+					from client
+					order by client_first_name, client_last_name";
 			
-			$this->_dataAccess->select($sql);
+			return $this->_dataAccess->select($sql);
 		}
 	}
 ?>

@@ -3,6 +3,8 @@
 	require_once '../controller/ReportFunction.php';
 	require_once '../controller/Utilities.php';
 	
+	require_once '../excel/PHPExcel.php';
+	
 	//Utilities::handleError(); // when an error happens you use this function to catch the error
 	
 	if (!empty($_GET['report_type'])) {
@@ -93,6 +95,12 @@
 				echo 'Some of criteria data is missing.';
 			}
 		}
+		else if ($reportType == 'CLIENT_CONTACTS') {
+			setExcelHtmlHeader('client_contacts');
+			$excelInfo = $reportFunction->getClientContactsExcel();
+			sendExcelFile($excelInfo);
+		}
+		
 		else {
 			echo 'Report type is not found.';
 		}
@@ -101,5 +109,31 @@
 		echo 'Report type is empty.';
 	}
 	
+	function setExcelHtmlHeader($fileName) 
+	{
+		//Redirect output to a client's web browser (Excel2007)
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Disposition: attachment;filename=\"{$fileName}.xlsx\"");
+		//header('Content-Disposition: attachment;filename="'.$fileName.'.xlsx"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+	}
+	
+	function sendExcelFile($excelInfo)
+	{
+		ob_end_clean(); // It is added to solve "the file format/extension is not valid" 
+		$objWriter = PHPExcel_IOFactory::createWriter($excelInfo, 'Excel2007');
+		$objWriter->save('php://output');
+	}
+	
 	exit;
 ?>
+
+
+
+
+
+
+
+
