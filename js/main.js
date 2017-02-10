@@ -142,11 +142,12 @@ function main_ajax_success_hide_loading()
 	});
 }
 
-function main_move_to_title_text(completeFunc) {
+function main_move_to_title_text(scrollTop, completeFunc) {
+	if (typeof(scrollTop) === 'undefined') scrollTop = 230;
 	if (typeof(completeFunc) === 'undefined') completeFunc = function(){};
 	
-	$('body').animate({ scrollTop: 230 }, {
-		duration: 400,
+	$(parent.document.body).animate({ scrollTop: scrollTop }, {
+		duration: 500,
 		complete: completeFunc
 	});
 }

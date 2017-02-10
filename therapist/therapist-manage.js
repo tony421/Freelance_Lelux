@@ -271,7 +271,7 @@ function turnOnEditMode(therapistIndex)
 	$txtPassword.val(_editingTherapist['therapist_password']);
 	
 	//showActiveInputs();
-	main_move_to_title_text(function(){ $txtName.focus(); });
+	main_move_to_title_text(230, function(){ $txtName.focus(); });
 }
 
 function turnOffEditMode()

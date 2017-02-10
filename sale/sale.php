@@ -163,7 +163,7 @@
 								<thead>
 				            		<tr>
 				            			<th rowspan="2">#</th>
-				               			<th rowspan="2">Date/Time</th>
+				               			<th rowspan="2">Receipt No. (Date/Time)</th>
 				               			<th rowspan="2">Product</th>
 				               			<th rowspan="2">$</th>
 				               			<th rowspan="2" style="border-right: 1px solid #000;">Total</th>

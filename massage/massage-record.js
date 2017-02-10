@@ -507,7 +507,7 @@ function setEditingRecord(recordIndex)
 	//$txtPassword.val(_editingTherapist['therapist_password']);
 	
 	unbindRecordRowsSelection(); // users cannot select a row in datatable during editing the item
-	main_move_to_title_text();
+	main_move_to_title_text(450);
 }
 
 function clearInputs()

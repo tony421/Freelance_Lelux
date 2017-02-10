@@ -326,7 +326,7 @@ header;
 			$columnHeaders = <<<colHeader
 			<thead>
 				<tr style="text-align: center; font-weight: bold;">
-					<th>Therapist</th>
+					<th>Staff</th>
 					<th>Standard Commission</th>
 					<th>Extra Commission</th>
 					<th>Total</th>
@@ -447,7 +447,7 @@ table;
 			$fullDate = Utilities::convertDateForFullDisplay($sale['sale_date']);
 			
 			$reportHeader = <<<header
-			<h1 style="text-align: center;">Receipt</h1>
+			<h1 style="text-align: center;">Receipt No. {$sale['sale_id']}</h1>
 			<h3 style="text-align: center;">on {$fullDate} at {$sale['sale_time']}</h3>
 header;
 			$columnHeaders = <<<colHeader
@@ -507,24 +507,55 @@ table;
 			$excel = $this->initExcelExporter('Client Contacts');
 			$clients = $this->_dataMapper->getClientContacts();
 			
+			$headerStyles = array(
+					'font' => array(
+							'bold' => true,
+					),
+					'alignment' => array(
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+					),
+					'fill' => array(
+							'type' => PHPExcel_Style_Fill::FILL_SOLID,
+							'startcolor' => array('argb' => 'FFC000')
+					)
+			);
+			$styles = array(
+					'borders' => array(
+							'allborders' => array(
+									'style' => PHPExcel_Style_Border::BORDER_THIN,
+							),
+					)
+			);
+			
 			// Add headers
 			$excel->setActiveSheetIndex(0)
             		->setCellValue('A1', 'Client Name')
             		->setCellValue('B1', 'Contact No.')
             		->setCellValue('C1', 'Email');
+			// Set headers style
+			$excel->getActiveSheet()->getStyle('A1:C1')->applyFromArray($headerStyles);
+            //$excel->getActiveSheet()->getStyle('A1:C1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             	
             Utilities::logDebug("Client Amount : ".count($clients));
             
             // Add contents
-            for ($i = 0, $sheetRow = 2; $i < count($clients); $i++, $sheetRow++) {
+            $sheetRow = 2;
+            for ($i = 0; $i < count($clients); $i++, $sheetRow++) {
             	$excel->setActiveSheetIndex(0)
             			->setCellValue("A{$sheetRow}", $clients[$i]['client_name'])
             			->setCellValue("B{$sheetRow}", $clients[$i]['client_contact_no'])
             			->setCellValue("C{$sheetRow}", $clients[$i]['client_email']);
             }
+            // Set style to all cells
+            $sheetRow--;
+            $excel->getActiveSheet()->getStyle("A2:C{$sheetRow}")->applyFromArray($styles);
             
             // Set worksheet name
             $excel->getActiveSheet()->setTitle('Client Contacts');
+            // Set auto width to columns
+            $excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+            $excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+            $excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
             
             return $excel;
 		}

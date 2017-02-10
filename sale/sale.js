@@ -258,6 +258,7 @@ function initTableSale()
 		        			  return data;
 		        		  } else {
 		        			  // Do not display a duplicate info
+		        			  row['sale_id'] = '';
 		        			  row['sale_total'] = '';
 		        			  row['sale_date'] = '';
 		        			  row['sale_time'] = '';
@@ -267,9 +268,12 @@ function initTableSale()
 		        		  }
 		        	  }
 		          },
-		          { data: "sale_date", orderable: false
+		          { data: "sale_id", orderable: false
 		        	  , render: function(data, type, row) {
-		        		  return data + ' ' + row['sale_time']
+		        		  if (data != "") // if it is not duplicate info
+		        			  return data + " (" + row['sale_date'] + ' ' + row['sale_time'] + ")";
+		        		  else
+		        			  return "";
 		        	  }
 		          },
 		          { data: "product_name", orderable: false, className: 'text-nowrap'
@@ -452,7 +456,7 @@ function setEditingSale(uid)
 	bindTableCart(_cartItems);
 	
 	unbindSaleRowSelection(); // users cannot select a row in datatable during editing the item
-	main_move_to_title_text();
+	main_move_to_title_text(450);
 }
 
 function getSale(uid) {

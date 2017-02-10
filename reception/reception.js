@@ -102,7 +102,7 @@ function initDataTable()
 		          { data: 'therapist_name', orderable: false, className: 'text-nowrap'
 		        	  , render: function(data, type, row) {
 		        		  if (row['reception_record_late_night'] == 1)
-		        			  return data + ' (late night)';
+		        			  return data + ' <img src="../image/late_night.png" title="Work After 9.30 PM">';
 		        		  else
 		        			  return data;
 		        	  }
@@ -472,7 +472,7 @@ function setEditingRecord(recordIndex)
 	calExtraCom();
 	
 	unbindRecordRowsSelection(); // users cannot select a row in datatable during editing the item
-	main_move_to_title_text();
+	main_move_to_title_text(450);
 }
 
 function setEditModeReceptionOption()

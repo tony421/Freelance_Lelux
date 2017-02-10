@@ -292,7 +292,7 @@ function setEditMode()
 			$('#txt' + conditionElements[i].suffix).prop('readonly', '');
 	}
 	
-	$('body').animate({ scrollTop: 230 }, 400);
+	main_move_to_title_text();
 }
 
 function setViewMode()
