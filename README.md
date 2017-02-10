@@ -54,6 +54,7 @@ Next!!! Deployment Instruction:
 	- Alter the type of tracable column info (eg. create_user, create_datetime) to "SMALL INT"
 	- Check all tables that possibly have "Active" flags & set them correctly
 	- Delete [Voucher] from "Therapist" Table
+	- "dummy content after confliction between workspace and master files"
 	
 	
 	
