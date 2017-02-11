@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 10, 2017 at 02:29 AM
+-- Generation Time: Feb 10, 2017 at 10:06 AM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.6.14
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `lelux`
 --
+CREATE DATABASE IF NOT EXISTS `lelux` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `lelux`;
 
 -- --------------------------------------------------------
 
@@ -46,11 +48,11 @@ CREATE TABLE `client` (
   `client_emergency_contact_name` varchar(50) NOT NULL,
   `client_emergency_contact_no` varchar(12) NOT NULL,
   `client_create_datetime` datetime NOT NULL,
-  `client_create_user` tinyint(4) NOT NULL,
+  `client_create_user` smallint(4) NOT NULL,
   `client_update_datetime` datetime NOT NULL,
-  `client_update_user` tinyint(4) NOT NULL,
+  `client_update_user` smallint(4) NOT NULL,
   `client_void_datetime` datetime NOT NULL,
-  `client_void_user` tinyint(4) NOT NULL
+  `client_void_user` smallint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -245,11 +247,11 @@ CREATE TABLE `reception_record` (
   `reception_record_std_com` decimal(10,2) NOT NULL,
   `reception_record_extra_com` decimal(10,2) NOT NULL,
   `reception_record_total_com` decimal(10,2) NOT NULL,
-  `reception_record_create_user` int(11) NOT NULL,
+  `reception_record_create_user` smallint(11) NOT NULL,
   `reception_record_create_datetime` datetime NOT NULL,
-  `reception_record_update_user` int(11) NOT NULL,
+  `reception_record_update_user` smallint(11) NOT NULL,
   `reception_record_update_datetime` datetime NOT NULL,
-  `reception_record_void_user` int(11) NOT NULL,
+  `reception_record_void_user` smallint(11) NOT NULL,
   `reception_record_void_datetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -270,11 +272,11 @@ CREATE TABLE `report` (
   `membership_no` int(11) NOT NULL,
   `pateint_id` int(11) NOT NULL,
   `report_create_datetime` datetime NOT NULL,
-  `report_create_user` tinyint(4) NOT NULL,
+  `report_create_user` smallint(4) NOT NULL,
   `report_update_datetime` datetime NOT NULL,
-  `report_update_user` tinyint(4) NOT NULL,
+  `report_update_user` smallint(4) NOT NULL,
   `report_void_datetime` datetime NOT NULL,
-  `report_void_user` tinyint(4) NOT NULL,
+  `report_void_user` smallint(4) NOT NULL,
   `client_id` varchar(23) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -481,42 +483,42 @@ ALTER TABLE `health_fund`
 -- AUTO_INCREMENT for table `massage_record`
 --
 ALTER TABLE `massage_record`
-  MODIFY `massage_record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5306;
+  MODIFY `massage_record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6198;
 --
 -- AUTO_INCREMENT for table `massage_type`
 --
 ALTER TABLE `massage_type`
-  MODIFY `massage_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `massage_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `provider`
 --
 ALTER TABLE `provider`
-  MODIFY `provider_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `provider_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `reception_record`
 --
 ALTER TABLE `reception_record`
-  MODIFY `reception_record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `reception_record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `sale`
 --
 ALTER TABLE `sale`
-  MODIFY `sale_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `sale_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `sale_item`
 --
 ALTER TABLE `sale_item`
-  MODIFY `sale_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `sale_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `therapist`
 --
 ALTER TABLE `therapist`
-  MODIFY `therapist_id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `therapist_id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

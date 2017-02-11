@@ -159,7 +159,8 @@ function onInitProductsDone(response)
 			bindProductOption(_products);
 		}
 		else {
-			setEditModeProduct();
+			setEditModeProductOption();
+			$ddlProduct.val(_editingCartItem['product_id']);
 		}
 		
 		setProductPrice();
@@ -169,22 +170,31 @@ function onInitProductsDone(response)
 function bindProductOption(products)
 {
 	$ddlProduct.empty();
-	$.each(products, function (i, product){
-		option = "<option value='" + product['product_id'] + "'>" + product['product_name'] + "</option>";
-		
-		$ddlProduct.append(option);
-	});
+	$ddlProduct.unbind('click');
 	
-	$ddlProduct.append("<optgroup label='--------------------------------------------'></optgroup>");
-	$ddlProduct.append("<option value='ADD_NEW_PRODUCT'>&gt;&gt; ADD/EDIT PRODUCT &lt;&lt;</option>");
+	if(products.length) {
+		$.each(products, function (i, product){
+			option = "<option value='" + product['product_id'] + "'>" + product['product_name'] + "</option>";
+			
+			$ddlProduct.append(option);
+		});
+		
+		$ddlProduct.append("<optgroup label='--------------------------------------------'></optgroup>");
+		$ddlProduct.append("<option value='ADD_NEW_PRODUCT'>&gt;&gt; ADD/EDIT PRODUCT &lt;&lt;</option>");
+	} else {
+		// If there is no product in the list, then do so
+		$ddlProduct.click(function(){
+			main_open_child_window('../product/product.php', initProducts);
+		});
+		$ddlProduct.append("<option value='ADD_NEW_PRODUCT'>ADD PRODUCT</option>");
+	}
 }
 
-function setEditModeProduct()
-{
+function setEditModeProductOption() {
 	_editModeProducts = _products.slice(0);
-	if (_editingRecord['product_active'] == 0) {
+	if (_editingCartItem['product_active'] == 0) {
 		_editModeProducts.push(getDeletedProduct());
-				
+		
 		bindProductOption(_editModeProducts);
 	}
 }
@@ -192,10 +202,11 @@ function setEditModeProduct()
 function getDeletedProduct()
 {
 	deletedItem = { 
-		product_id: _editingRecord['product_id']
-		, product_name: _editingRecord['product_name'] + " (Deleted)"
-		, product_active: _editingRecord['product_active']
-		, product_commission: _editingRecord['product_price']};
+		product_id: _editingCartItem['product_id']
+		, product_name: _editingCartItem['product_name'] + " (Deleted)"
+		, product_active: _editingCartItem['product_active']
+		, product_price: _editingCartItem['product_price']
+		, product_changeable: _editingCartItem['product_price_changeable']};
 		
 	return deletedItem;
 }
@@ -204,9 +215,14 @@ function getSelectedProduct() {
 	selectedIndex = $ddlProduct.prop('selectedIndex');
 	
 	if (_is_add_mode_cart)
-		return _products[selectedIndex];
+		selectedProduct = _products[selectedIndex];
 	else
-		return _editModeProducts[selectedIndex];
+		selectedProduct = _editModeProducts[selectedIndex];
+	
+	if (typeof(selectedProduct) == 'undefined')
+		selectedProduct = {product_id: 0, product_name: '', product_price: 0, product_price_changeable: 0};
+	
+	return selectedProduct;
 }
 
 function setProductPrice()
@@ -487,16 +503,20 @@ function getCartItemInfo() {
 }
 
 function validateCartItemInfo() {
-	if (getMoneyInputValue($txtPrice).length) {
-		if ($txtAmt.val().length) {
-			return true;
+	if ($ddlProduct.val() != 'ADD_NEW_PRODUCT') {
+		if (getMoneyInputValue($txtPrice).length) {
+			if ($txtAmt.val().length) {
+				return true;
+			}
+			else {
+				main_alert_message('Please enter "Amount"', function(){ $txtAmt.focus();});
+			}
 		}
 		else {
-			main_alert_message('Please enter "Amount"', function(){ $txtAmt.focus();});
+			main_alert_message('Please enter "Price"', function(){ $txtPrice.focus();});
 		}
-	}
-	else {
-		main_alert_message('Please enter "Price"', function(){ $txtPrice.focus();});
+	} else {
+		main_alert_message('Please add a product!', function() { main_open_child_window('../product/product.php', initProducts); });
 	}
 }
 
@@ -625,7 +645,7 @@ function setEditingCartItem(itemID)
 	_editingCartItem = getCartItem(itemID);
 	_editingCartItemID = _editingCartItem['sale_item_id'];	
 	
-	setEditModeProductList();
+	setEditModeProductOption();
 	$ddlProduct.val(_editingCartItem['product_id']);
 	$txtAmt.val(_editingCartItem['sale_item_amount']);
 	setMoneyInputValue($txtPrice, _editingCartItem['sale_item_price']);
@@ -637,27 +657,6 @@ function setEditingCartItem(itemID)
 		main_disable_control($txtPrice)
 	
 	$ddlProduct.focus();
-}
-
-function setEditModeProductList() {
-	_editModeProducts = _products.slice(0);
-	if (_editingCartItem['product_active'] == 0) {
-		_editModeProducts.push(getDeletedProduct());
-		
-		bindProductOption(_editModeProducts);
-	}
-}
-
-function getDeletedProduct()
-{
-	deletedItem = { 
-		product_id: _editingCartItem['product_id']
-		, product_name: _editingCartItem['product_name'] + " (Deleted)"
-		, product_active: _editingCartItem['product_active']
-		, product_price: _editingCartItem['product_price']
-		, product_changeable: _editingCartItem['product_price_changeable']};
-		
-	return deletedItem;
 }
 
 function turnOnCartEditMode()
@@ -681,6 +680,7 @@ function turnOffCartEditMode()
 function clearCartInputs()
 {
 	//$ddlProduct.focus();
+	bindProductOption(_products);
 	$txtAmt.val(1);
 	setProductPrice();
 }

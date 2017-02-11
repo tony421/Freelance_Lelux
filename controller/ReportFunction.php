@@ -406,7 +406,7 @@ table;
 				
 			$relatedInfoRows = "";
 			foreach ($relatedInfo as $row) {
-				if ($row['info'] != 'Free Stamp') {
+				if ($row['info'] != 'Used Free Stamp') {
 					$amount = '$'.$row['amount'];
 				}
 				else {
