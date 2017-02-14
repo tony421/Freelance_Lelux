@@ -10,6 +10,16 @@
 			$this->_dataAccess = new DataAccess();
 		}
 		
+		public function getClientYearOption()
+		{
+			$sql = "
+					select distinct date_format(client.client_create_datetime, '%Y') as year
+					from client
+					order by year desc";
+			
+			return $this->_dataAccess->select($sql);
+		}
+		
 		public function getDailyCommission($date)
 		{
 			$sql_details = "
@@ -86,15 +96,20 @@
 		public function getDailyRelatedIncomeInfo($date)
 		{
 			$sql = "
-					select 'Redeemed Voucher' as info, sum(massage_record_voucher) as amount
-					from massage_record
-					where massage_record_date = '{$date}'
-						and massage_record_void_user = 0
-					union all
-					select 'Used Free Stamp' as info, sum(massage_record_stamp) as amount
-					from massage_record
-					where massage_record_date = '{$date}'
-						and massage_record_void_user = 0
+					select info, sum(amount) as amount
+					from (
+						select 'Redeemed Voucher' as info, massage_record_minutes as amount
+						from massage_record
+						where massage_record_date = '{$date}'
+							and massage_record_void_user = 0
+							and massage_record_voucher != 0
+						union all
+						select 'Used Free Stamp' as info, massage_record_stamp as amount
+						from massage_record
+						where massage_record_date = '{$date}'
+							and massage_record_void_user = 0
+					) as details
+					group by info
 					";
 			
 			return $this->_dataAccess->select($sql);
@@ -143,12 +158,21 @@
 			return $this->_dataAccess->select($sql);
 		}
 		
-		public function getClientContacts()
+		public function getClientContacts($year, $month)
 		{
-			$sql = "
+			if ($year == null || $month == null) {
+				$sql = "
 					select concat(client_first_name, ' ', client_last_name) as client_name, client_contact_no, client_email
 					from client
 					order by client_first_name, client_last_name";
+			} else {
+				$sql = "
+					select concat(client_first_name, ' ', client_last_name) as client_name, client_contact_no, client_email
+					from client
+					where client_create_datetime like '{$year}-{$month}%'
+					order by client_first_name, client_last_name";
+					
+			}
 			
 			return $this->_dataAccess->select($sql);
 		}

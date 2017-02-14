@@ -722,7 +722,11 @@ function validateReceiptDetails()
 {
 	if ($txtReceiptDate.inputmask("isComplete") && $txtReceiptDate.val().trim().length) {
 		if ($txtReceiptValue.val().trim().replace(/\$/i, '').length > 0) {
-			return true;
+			if ($ddlProvider.val() != 'ADD_NEW_PROVIDER') {
+				return true;
+			} else {
+				main_alert_message('Please add a provider!', function() { main_open_child_window('../provider/provider.php', initProviders); });
+			}
 		}
 		else {
 			main_alert_message('Please enter "Receipt Value"!', function(){ $txtReceiptValue.focus();});
@@ -746,14 +750,24 @@ function onInitProviders(response)
 		providers = response.result;
 
 		$ddlProvider.empty();
-		$.each(providers, function (i, provider){
-			option = "<option value='" + provider['provider_no'] + "'>" + provider['provider_name'] + "</option>";
-			
-			$ddlProvider.append(option);
-		});
+		$ddlProvider.unbind('click');
 		
-		$ddlProvider.append("<optgroup label='--------------------------------------------'></optgroup>");
-		$ddlProvider.append("<option value='ADD_NEW_PROVIDER'>&gt;&gt; ADD/EDIT PROVIDER &lt;&lt;</option>");
+		if(providers.length) {
+			$.each(providers, function (i, provider){
+				option = "<option value='" + provider['provider_no'] + "'>" + provider['provider_name'] + "</option>";
+				
+				$ddlProvider.append(option);
+			});
+			
+			$ddlProvider.append("<optgroup label='--------------------------------------------'></optgroup>");
+			$ddlProvider.append("<option value='ADD_NEW_PROVIDER'>&gt;&gt; ADD/EDIT PROVIDER &lt;&lt;</option>");
+		} else {
+			// If there is no "Provider" in the list, then do so
+			$ddlProvider.click(function(){
+				main_open_child_window('../provider/provider.php', initProviders);
+			});
+			$ddlProvider.append("<option value='ADD_NEW_PROVIDER'>ADD PROVIDER</option>");
+		}
 	}
 }
 

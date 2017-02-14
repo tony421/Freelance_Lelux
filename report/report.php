@@ -97,7 +97,12 @@
 		}
 		else if ($reportType == 'CLIENT_CONTACTS') {
 			setExcelHtmlHeader('client_contacts');
-			$excelInfo = $reportFunction->getClientContactsExcel();
+			
+			if (empty($_GET['year']) || empty($_GET['month']))
+				$excelInfo = $reportFunction->getClientContactsExcel();
+			else
+				$excelInfo = $reportFunction->getClientContactsExcel($_GET['year'], $_GET['month']);
+			
 			sendExcelFile($excelInfo);
 		}
 		

@@ -45,10 +45,10 @@
 	        				<a href="../therapist/therapist-manage.php">Manage Therapist</a>
 	        			</li>
         			<?php } ?>
-        			<li class="dropdown" <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'report') { echo 'class="active"'; } }?>>
+        			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'report') { echo 'class="dropdown active"'; } else { echo 'class="dropdown"'; } }?>>
         				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <span class="caret"></span></a>
         				<ul class="dropdown-menu">
-            				<li><a href="../report/report.php?report_type=CLIENT_CONTACTS">Client Contacts</a></li>
+            				<li><a href="../report/client_contacts.php">Client Contacts</a></li>
             			</ul>
         			</li>
       			</ul>

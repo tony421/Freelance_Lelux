@@ -91,7 +91,11 @@ function initPage()
 		if ($(this).val() === 'ADD_NEW_PRODUCT') // "ADD NEW PRODUCT" selected 
 		{
 			main_open_child_window('../product/product.php', initProducts);
-			main_set_dropdown_index(this);
+			
+			if (_is_add_mode_cart)
+				main_set_dropdown_index(this);
+			else
+				$ddlProduct.val(_editingCartItem['product_id']);
 		}
 		
 		setProductPrice();

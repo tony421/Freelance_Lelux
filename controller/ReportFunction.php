@@ -204,7 +204,7 @@ report;
 		</tr>
 		<tr>
 			<td width="20%" class="caption">Recommendations:</td>
-			<td width="70%" class="text">{$item["report_recommandation"]}</td>
+			<td width="70%" class="text">{$item["report_recommendation"]}</td>
 		</tr>
 		<tr>
 			<td width="10%" class="caption">Remark:</td>
@@ -406,15 +406,15 @@ table;
 				
 			$relatedInfoRows = "";
 			foreach ($relatedInfo as $row) {
-				if ($row['info'] != 'Used Free Stamp') {
+				/*if ($row['info'] != 'Used Free Stamp') {
 					$amount = '$'.$row['amount'];
 				}
 				else {
 					$amount = $row['amount'] > 1 ? (int)$row['amount'].' minutes' : (int)$row['amount'].' minute';
-				}
+				}*/
 				
 				$relatedInfoRows .= <<<row
-				<tr><td></td><td class="border"><b>{$row['info']}</b></td><td class="border" style="text-align: right;">{$amount}</td><td></td></tr>
+				<tr><td></td><td class="border"><b>{$row['info']}</b></td><td class="border" style="text-align: right;">{$row['amount']} minutes</td><td></td></tr>
 row;
 			}
 			
@@ -493,6 +493,13 @@ table;
 			return Utilities::getResponseResult(true, '', $result); 
 		}
 		
+		public function getClientYearOption()
+		{
+			$result['years'] = $this->_dataMapper->getClientYearOption();
+				
+			return Utilities::getResponseResult(true, '', $result);
+		}
+		
 		private function initExcelExporter($subject)
 		{
 			$excel = new PHPExcel();
@@ -502,10 +509,10 @@ table;
 			return $excel;
 		}
 		
-		public function getClientContactsExcel()
+		public function getClientContactsExcel($year = null, $month = null)
 		{
 			$excel = $this->initExcelExporter('Client Contacts');
-			$clients = $this->_dataMapper->getClientContacts();
+			$clients = $this->_dataMapper->getClientContacts($year, $month);
 			
 			$headerStyles = array(
 					'font' => array(
@@ -526,20 +533,29 @@ table;
 							),
 					)
 			);
+			$sheetRow = 1;
+			
+			// Add report details
+			if ($year != null && $month != null) {
+				$monthName = date('F', strtotime("1999-$month-01"));
+				$excel->setActiveSheetIndex(0)->setCellValue("A{$sheetRow}", count($clients)." clients found in {$monthName}, {$year}");
+				$excel->getActiveSheet()->getStyle("A$sheetRow")->applyFromArray($headerStyles);
+				$sheetRow++;
+			}
 			
 			// Add headers
 			$excel->setActiveSheetIndex(0)
-            		->setCellValue('A1', 'Client Name')
-            		->setCellValue('B1', 'Contact No.')
-            		->setCellValue('C1', 'Email');
+            		->setCellValue("A$sheetRow", 'Client Name')
+            		->setCellValue("B$sheetRow", 'Contact No.')
+            		->setCellValue("C$sheetRow", 'Email');
 			// Set headers style
-			$excel->getActiveSheet()->getStyle('A1:C1')->applyFromArray($headerStyles);
+			$excel->getActiveSheet()->getStyle("A$sheetRow:C$sheetRow")->applyFromArray($headerStyles);
             //$excel->getActiveSheet()->getStyle('A1:C1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             	
             Utilities::logDebug("Client Amount : ".count($clients));
             
             // Add contents
-            $sheetRow = 2;
+            $sheetRow++;
             for ($i = 0; $i < count($clients); $i++, $sheetRow++) {
             	$excel->setActiveSheetIndex(0)
             			->setCellValue("A{$sheetRow}", $clients[$i]['client_name'])

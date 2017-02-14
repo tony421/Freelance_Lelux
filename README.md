@@ -24,7 +24,7 @@ Deployment Instruction: May 2016
 	- Add more "Health Fund" which are "Cessnock District...", "Teachers Union Health" and "Teacher Federation Health"
 	- Correct "Provider No" of "CBHS Health..."
 	
-Deployment Instruction: 27 July 2016 [Lastest]
+Deployment Instruction: 27 July 2016
 	- therapist/therapist-manage.js : no scrolling
 	- report/report.php : new reports
 	- master-page/menu.php : new menu
@@ -50,13 +50,20 @@ Deployment Instruction:
 	- adding "Loading Panel" 
 	- Patient ID "0" is allowed
 	
-Next!!! Deployment Instruction:
+Deployment Instruction on 10 Feb 2017:
 	- Alter the type of tracable column info (eg. create_user, create_datetime) to "SMALL INT"
 	- Check all tables that possibly have "Active" flags & set them correctly
 	- Delete [Voucher] from "Therapist" Table
 	- "dummy content after confliction between workspace and master files"
-	
-	
+
+Next Deployment:
+	** Need to fix:
+		- (Added) Lelux icon
+		- (Fixed) Income Report => display "Used Free Stamp" in minute
+		- (Fixed) Report.Client Contacts => provide options: print all clients and clients in specific month
+		- (Fixed) Editable Dropdown with no items bug (See example in "Sale.js" but not proper solution)
+		- (Fixed) No items in dropdown case (MassageRecord, ClientReport, Sale)
+		- Loading panel during HTML interpretation
 	
 	 
 	 

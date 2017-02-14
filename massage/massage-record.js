@@ -172,7 +172,11 @@ function initPage()
 		if ($(this).val() === 'ADD_NEW_MASSAGE_TYPE') // "ADD NEW MASSAGE TYPE" selected 
 		{
 			main_open_child_window('../massagetype/massagetype.php', initMassageTypes);
-			main_set_dropdown_index(this);
+			
+			if(_is_add_mode)
+				main_set_dropdown_index(this);
+			else
+				$ddlMassageType.val(_editingRecord['massage_type_id']);
 		}
 		
 		calReqReward();
@@ -234,6 +238,7 @@ function onInitMassageTypesDone(response)
 		}
 		else {
 			setEditModeMassageType();
+			$ddlMassageType.val(_editingRecord['massage_type_id']);
 		}
 		
 		calReqReward();
@@ -243,14 +248,24 @@ function onInitMassageTypesDone(response)
 function bindMassageTypeOption(massageTypes)
 {
 	$ddlMassageType.empty();
-	$.each(massageTypes, function (i, massageType){
-		option = "<option value='" + massageType['massage_type_id'] + "'>" + massageType['massage_type_name'] + "</option>";
-		
-		$ddlMassageType.append(option);
-	});
+	$ddlMassageType.unbind('click');
 	
-	$ddlMassageType.append("<optgroup label='--------------------------------------------'></optgroup>");
-	$ddlMassageType.append("<option value='ADD_NEW_MASSAGE_TYPE'>&gt;&gt; ADD/EDIT MASSAGE TYPE &lt;&lt;</option>");
+	if(massageTypes.length) {
+		$.each(massageTypes, function (i, massageType){
+			option = "<option value='" + massageType['massage_type_id'] + "'>" + massageType['massage_type_name'] + "</option>";
+			
+			$ddlMassageType.append(option);
+		});
+		
+		$ddlMassageType.append("<optgroup label='--------------------------------------------'></optgroup>");
+		$ddlMassageType.append("<option value='ADD_NEW_MASSAGE_TYPE'>&gt;&gt; ADD/EDIT MASSAGE TYPE &lt;&lt;</option>");
+	} else {
+		// If there is no "Massage Type" in the list, then do so
+		$ddlMassageType.click(function(){
+			main_open_child_window('../massagetype/massagetype.php', initMassageTypes);
+		});
+		$ddlMassageType.append("<option value='ADD_NEW_MASSAGE_TYPE'>ADD MASSAGE TYPE</option>");
+	}
 }
 
 function initConfig()
@@ -380,11 +395,6 @@ function setRecordRowsSelection()
 function unbindRecordRowsSelection() 
 {
 	$tableRecordBody.unbind(); // unbind events to prevent duplicate events
-}
-
-function getDate()
-{
-	moment($dateInput.datepicker('getDate')).format('D/M/YYYY');
 }
 
 function getRecords()
@@ -578,11 +588,8 @@ function calReqReward()
 		});
 		
 		// calculate Extra Commission from MassageType
-		selectedIndexMassageType = $ddlMassageType.prop('selectedIndex');
-		if (_is_add_mode)
-			reward += parseFloat(_massageTypeOptions[selectedIndexMassageType]['massage_type_commission']);
-		else
-			reward += parseFloat(_editModeMassageTypeOptions[selectedIndexMassageType]['massage_type_commission']);
+		selectedMassageType = getSelectedMassageType();
+		reward += parseFloat(selectedMassageType['massage_type_commission']);
 		
 		$txtReqReward.autoNumeric('set', reward);
 	}
@@ -599,50 +606,62 @@ function calReqReward()
 	}*/
 }
 
+function getSelectedMassageType()
+{
+	selectedIndex = $ddlMassageType.prop('selectedIndex');
+	
+	if (_is_add_mode)
+		selectedItem = _massageTypeOptions[selectedIndex];
+	else
+		selectedItem = _editModeMassageTypeOptions[selectedIndex];
+	
+	if (typeof(selectedItem) == 'undefined')
+		selectedItem = {massage_type_id: 0, massage_type_name: '', massage_type_commission: 0};
+	
+	return selectedItem;
+}
+
 function validateRecordInfo()
 {
-	if (parent.getSelectedDailyRecordDate().length) {
-		if ($txtMinutes.val().trim().length) {
-			if ($txtStamp.val().trim().length) {
-				if ($txtCash.val().length) {
-					if ($txtCredit.val().length) {
-						if ($txtHICAPS.val().length) {
-							if ($txtVoucher.val().length) {
-								if ($txtTimeIn.inputmask('isComplete')) {
+	if ($txtMinutes.val().trim().length) {
+		if ($txtStamp.val().trim().length) {
+			if ($txtCash.val().length) {
+				if ($txtCredit.val().length) {
+					if ($txtHICAPS.val().length) {
+						if ($txtVoucher.val().length) {
+							if ($txtTimeIn.inputmask('isComplete')) {
+								if ($ddlMassageType.val() != 'ADD_NEW_MASSAGE_TYPE') {
 									return true;
-								}
-								else {
-									main_alert_message('Please enter "Time In"!', function(){ $txtTimeIn.focus();});
+								} else {
+									main_alert_message('Please add a massage type!', function() { main_open_child_window('../massagetype/massagetype.php', initMassageTypes); });
 								}
 							}
 							else {
-								main_alert_message('Please enter "Voucher"!', function(){ $txtVoucher.focus();});
+								main_alert_message('Please enter "Time In"!', function(){ $txtTimeIn.focus();});
 							}
 						}
 						else {
-							main_alert_message('Please enter "HICAPS"!', function(){ $txtHICAPS.focus();});
+							main_alert_message('Please enter "Voucher"!', function(){ $txtVoucher.focus();});
 						}
 					}
 					else {
-						main_alert_message('Please enter "Credit"!', function(){ $txtCredit.focus();});
+						main_alert_message('Please enter "HICAPS"!', function(){ $txtHICAPS.focus();});
 					}
 				}
 				else {
-					main_alert_message('Please enter "Cash"!', function(){ $txtCash.focus();});
+					main_alert_message('Please enter "Credit"!', function(){ $txtCredit.focus();});
 				}
 			}
 			else {
-				main_alert_message('Please enter "Stamp"!', function(){ $txtStamp.focus();});
+				main_alert_message('Please enter "Cash"!', function(){ $txtCash.focus();});
 			}
 		}
 		else {
-			main_alert_message('Please enter "Minutes"!', function(){ $txtMinutes.focus();});
+			main_alert_message('Please enter "Stamp"!', function(){ $txtStamp.focus();});
 		}
 	}
 	else {
-		main_alert_message('Please enter "Date"!', function(){ 
-			//$txtDate.focus();
-		});
+		main_alert_message('Please enter "Minutes"!', function(){ $txtMinutes.focus();});
 	}
 	
 	return false;
@@ -778,13 +797,13 @@ function getTimeIn()
 	//alert(moment($dateInput.datepicker('getDate')).add(timeIn[0], 'hours'));
 	//alert(moment(date).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT));
 	
-	return moment(date).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+	return moment(date, MOMENT_DATE_FORMAT).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT);
 }
 
 function getTimeOut()
 {
 	minutes = $txtMinutes.val().trim().length ? $txtMinutes.val() : 0;
-	return moment(getTimeIn()).add(minutes, 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+	return moment(getTimeIn(), MOMENT_DATE_TIME_FORMAT).add(minutes, 'minutes').format(MOMENT_DATE_TIME_FORMAT);
 }
 
 function getSelectedDailyRecordDate() {
