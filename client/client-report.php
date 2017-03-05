@@ -358,7 +358,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-offset-2 col-sm-2 control-label">Therapist</label>
+						<label class="col-sm-offset-2 col-sm-2 control-label">Remark</label>
 						<div class="col-sm-2">
 							<select id="ddlReportTherapist" class="form-control">
 							</select>
