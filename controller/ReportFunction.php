@@ -206,10 +206,10 @@ report;
 			<td width="20%" class="caption">Recommendations:</td>
 			<td width="70%" class="text">{$item["report_recommendation"]}</td>
 		</tr>
-		<tr>
+		<!--<tr>
 			<td width="10%" class="caption">Remark:</td>
 			<td width="30%" class="text">{$item["therapist_name"]}</td>
-		</tr>
+		</tr>-->
 	</tbody>
 </table>
 reportItem;

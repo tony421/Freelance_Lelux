@@ -358,12 +358,8 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-offset-2 col-sm-2 control-label">Remark</label>
-						<div class="col-sm-2">
-							<select id="ddlReportTherapist" class="form-control">
-							</select>
-						</div>
-						<label class="col-sm-1 control-label">Hours</label>
+						<!--<label class="col-sm-1 control-label">Hours</label>-->
+						<label class="col-sm-offset-2 col-sm-2 control-label">Hours</label>
 						<div class="col-sm-2">
 							<select id="ddlReportHour" class="form-control">
 								<option value="30">30 Min</option>
@@ -381,6 +377,11 @@
 								<option value="210">3 Hr 30 Min</option>
 								<option value="225">3 Hr 45 Min</option>
 								<option value="240">4 Hr</option>
+							</select>
+						</div>
+						<label class="col-sm-offset-2 col-sm-2 control-label hidden">Remark</label>
+						<div class="col-sm-2 hidden">
+							<select id="ddlReportTherapist" class="form-control">
 							</select>
 						</div>
 					</div>
