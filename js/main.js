@@ -73,7 +73,7 @@ function main_log_out()
 function main_on_log_out_success(response)
 {
 	if (response.success) {
-		main_redirect('../login/login.php');
+		main_redirect('../login/');
 	}
 	else {
 		main_alert_message(response.msg);

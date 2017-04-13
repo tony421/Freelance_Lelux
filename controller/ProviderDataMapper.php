@@ -40,7 +40,7 @@
 			
 			$sql = sprintf($sql_format
 					, $providerInfo['provider_no']
-					, $providerInfo['provider_name']);
+					, ucwords(strtolower($providerInfo['provider_name'])));
 			
 			return $this->_dataAccess->insert($sql);
 		} // addProvider
@@ -56,7 +56,7 @@
 			
 			$sql = sprintf($sql_format
 					, $providerInfo['provider_no']
-					, $providerInfo['provider_name']
+					, ucwords(strtolower($providerInfo['provider_name']))
 					, $providerInfo['provider_id']);
 			
 			return $this->_dataAccess->update($sql);

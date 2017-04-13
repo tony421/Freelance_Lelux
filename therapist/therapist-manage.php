@@ -1,11 +1,5 @@
 <?php
-	//ob_start();
-	
-	require_once '../controller/authentication.php';
-
-	Authentication::authenticateAdminUser();
-	
-	//ob_end_flush();
+	require_once '../login/page-authentication.php';
 ?>
 
 <!DOCTYPE html>
