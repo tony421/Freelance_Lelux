@@ -76,7 +76,7 @@
 		public static function authenticateUser()
 		{
 			if (!Session::userExists())
-				Utilities::redirect('../login/login.php');
+				Utilities::redirect('../login/');
 		}
 		
 		public static function authenticateAdminUser()
