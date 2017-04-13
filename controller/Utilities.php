@@ -4,7 +4,10 @@
 	date_default_timezone_set('Australia/Melbourne');
 
 	class Utilities
-	{		
+	{
+		const log_path = "/Freelance_Lelux/log/";
+		//const log_path = "/support/log/";
+		
 		public static function getUniqueID()
 		{
 			return uniqid();
@@ -43,19 +46,19 @@
 		
 		public static function logDebug($line)
 		{
-			$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].'/Freelance_Lelux/log/log-'.date('Ymd'), KLogger::DEBUG);
+			$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].self::log_path.'log-'.date('Ymd'), KLogger::DEBUG);
 			$logger->LogDebug($line);
 		}
 		
 		public static function logInfo($line)
 		{
-			$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].'/Freelance_Lelux/log/log-'.date('Ymd'), KLogger::DEBUG);
+			$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].self::log_path.'log-'.date('Ymd'), KLogger::DEBUG);
 			$logger->LogInfo($line);
 		}
 		
 		public static function logError($line)
 		{
-			$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].'/Freelance_Lelux/log/log-'.date('Ymd'), KLogger::DEBUG);
+			$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].self::log_path.'log-'.date('Ymd'), KLogger::DEBUG);
 			$logger->LogError($line);
 		}
 		

@@ -199,6 +199,10 @@ report;
 			<td width="20%" class="text">{$item["report_date"]}</td>
 		</tr>
 		<tr>
+			<td width="20%" class="caption">Therapist:</td>
+			<td width="20%" class="text">{$item["provider_name"]}</td>
+		</tr>
+		<tr>
 			<td width="19%" class="caption">Massage Details:</td>
 			<td width="71%" class="text">{$item["report_detail"]}</td>
 		</tr>

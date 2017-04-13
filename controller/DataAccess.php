@@ -8,9 +8,9 @@ class DataAccess
 	private $_db_name = "lelux";
 	
 	//private $_server = "localhost";
-	//private $_user = "aya20540";
-	//private $_password = "P-FgY39eDx";
-	//private $_db_name = "aya20540_massage";
+	//private $_user = "leluxtha_sup1";
+	//private $_password = "leluxsup1";
+	//private $_db_name = "leluxtha_support";
 	
 	private $_conn;
 	private $_db;

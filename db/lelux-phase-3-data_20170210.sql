@@ -19,8 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `lelux`
 --
-CREATE DATABASE IF NOT EXISTS `lelux` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `lelux`;
+
 
 --
 -- Truncate table before insert `client`

@@ -2,6 +2,7 @@ var _clientID;
 var _clientInfo;
 var _reports;
 var _therapistOptions;
+var _providerOptions;
 
 var $btnEditClient;
 var $btnUpdateClient;
@@ -10,7 +11,7 @@ var $btnAddReport;
 var $btnPrintReport;
 var $btnPrintReceipt;
 
-var $ddlReportTherapist, $txtReportDate, $ddlReportHour, $txtReportDetail, $txtReportRecom;
+var $ddlReportProvider, $ddlReportTherapist, $txtReportDate, $ddlReportHour, $txtReportDetail, $txtReportRecom;
 var $popupPrintReceipt, $txtReceiptDate, $txtReceiptValue, $ddlProvider;
 var $panelReportContainer;
 var prefixPanelItem = '#panelItem';
@@ -18,6 +19,7 @@ var prefixBtnEditItem = '#btnEditItem';
 var prefixBtnDeleteItem = '#btnDeleteItem';
 var prefixBtnUpdateItem = '#btnUpdateItem';
 var prefixBtnCancelItem = '#btnCancelItem';
+var prefixItemProvider = '#ddlItemProvider';
 var prefixItemTherapist = '#ddlItemTherapist';
 var prefixItemHour = '#ddlItemHour';
 var prefixItemDetail = '#txtItemDetail';
@@ -25,7 +27,7 @@ var prefixItemRecom = '#txtItemRecom';
 var prefixItemUpdateUser = '#lblItemUpdateUser';
 var prefixItemUpdateDatetime = '#lblItemUpdateDatetime';
 
-var panelItemTemplate = "<div id=\"panelItem{0}\" class=\"panel panel-warning\"> <div class=\"panel-heading\"> <div class=\"row\"> <div class=\"col-sm-6\"> <div class=\"panel-title\"> <b>Report on</b> <span id=\"lblItemDate{0}\">{2}</span> </div> </div> <div class=\"col-sm-6 text-right\"> <button type=\"button\" id=\"btnEditItem{0}\" class=\"btn btn-info btn-xs\" name=\"{0}\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span> Edit</button> <button type=\"button\" id=\"btnDeleteItem{0}\" class=\"btn btn-danger btn-xs\" name=\"{0}\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>Delete</button> <button type=\"button\" id=\"btnUpdateItem{0}\" class=\"btn btn-warning btn-xs\" name=\"{1}\"><span class=\"glyphicon glyphicon-floppy-save\" aria-hidden=\"true\"></span> Update</button> <button type=\"button\" id=\"btnCancelItem{0}\" class=\"btn btn-default btn-xs\" name=\"{1}\">Cancel</button> </div> </div> </div> <div class=\"panel-body\"> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Hours</label> <div class=\"col-sm-3\"> <select id=\"ddlItemHour{0}\" class=\"form-control\" disabled> <option value=\"30\">30 Min</option> <option value=\"45\">45 Min</option> <option value=\"60\" selected>1 Hr</option> <option value=\"75\">1 Hr 15 Min</option> <option value=\"90\">1 Hr 30 Min</option> <option value=\"105\">1 Hr 45 Min</option> <option value=\"120\">2 Hr</option> <option value=\"135\">2 Hr 15 Min</option> <option value=\"150\">2 Hr 30 Min</option> <option value=\"165\">2 Hr 45 Min</option> <option value=\"180\">3 Hr</option> <option value=\"195\">3 Hr 15 Min</option> <option value=\"210\">3 Hr 30 Min</option> <option value=\"225\">3 Hr 45 Min</option> <option value=\"240\">4 Hr</option> </select> </div> <label class=\"col-sm-3 control-label hidden\">Remark</label> <div class=\"col-sm-3 hidden\"> <select id=\"ddlItemTherapist{0}\" class=\"form-control\" disabled> {9} </select> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Massage Details</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemDetail{0}\" rows=\"2\" class=\"form-control\" readonly>{3}</textarea> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Recommendations</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemRecom{0}\" rows=\"2\" class=\"form-control\" readonly>{4}</textarea> </div> </div> </div> <div class=\"panel-footer\"> <small> <b>Created by:</b> <span id=\"lblItemCreateUser{0}\">{5}</span> <b>Created on:</b> <span id=\"lblItemCreateDatetime{0}\">{6}</span> <b>Updated by:</b> <span id=\"lblItemUpdateUser{0}\">{7}</span> <b>Updated on:</b> <span id=\"lblItemUpdateDatetime{0}\">{8}</span> </small> </div> </div>";
+var panelItemTemplate = "<div id=\"panelItem{0}\" class=\"panel panel-warning\"> <div class=\"panel-heading\"> <div class=\"row\"> <div class=\"col-sm-6\"> <div class=\"panel-title\"> <b>Report on</b> <span id=\"lblItemDate{0}\">{2}</span> </div> </div> <div class=\"col-sm-6 text-right\"> <button type=\"button\" id=\"btnEditItem{0}\" class=\"btn btn-info btn-xs\" name=\"{0}\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span> Edit</button> <button type=\"button\" id=\"btnDeleteItem{0}\" class=\"btn btn-danger btn-xs\" name=\"{0}\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>Delete</button> <button type=\"button\" id=\"btnUpdateItem{0}\" class=\"btn btn-warning btn-xs\" name=\"{1}\"><span class=\"glyphicon glyphicon-floppy-save\" aria-hidden=\"true\"></span> Update</button> <button type=\"button\" id=\"btnCancelItem{0}\" class=\"btn btn-default btn-xs\" name=\"{1}\">Cancel</button> </div></div> </div> <div class=\"panel-body\"> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Therapist</label><div class=\"col-sm-5\"><select id=\"ddlItemProvider{0}\" class=\"form-control\" disabled>{10}</select></div><label class=\"col-sm-1 control-label\">Hours</label><div class=\"col-sm-3\"> <select id=\"ddlItemHour{0}\" class=\"form-control\" disabled> <option value=\"30\">30 Min</option> <option value=\"45\">45 Min</option> <option value=\"60\" selected>1 Hr</option> <option value=\"75\">1 Hr 15 Min</option> <option value=\"90\">1 Hr 30 Min</option> <option value=\"105\">1 Hr 45 Min</option> <option value=\"120\">2 Hr</option> <option value=\"135\">2 Hr 15 Min</option> <option value=\"150\">2 Hr 30 Min</option> <option value=\"165\">2 Hr 45 Min</option> <option value=\"180\">3 Hr</option> <option value=\"195\">3 Hr 15 Min</option> <option value=\"210\">3 Hr 30 Min</option> <option value=\"225\">3 Hr 45 Min</option> <option value=\"240\">4 Hr</option> </select> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Remark</label> <div class=\"col-sm-3\"> <select id=\"ddlItemTherapist{0}\" class=\"form-control\" disabled> {9} </select> </div></div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Massage Details</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemDetail{0}\" rows=\"2\" class=\"form-control\" readonly>{3}</textarea> </div> </div> <div class=\"form-group\"> <label class=\"col-sm-3 control-label\">Recommendations</label> <div class=\"col-sm-9\"> <textarea id=\"txtItemRecom{0}\" rows=\"2\" class=\"form-control\" readonly>{4}</textarea> </div> </div> </div> <div class=\"panel-footer hidden\"> <small> <b>Created by:</b> <span id=\"lblItemCreateUser{0}\">{5}</span> <b>Created on:</b> <span id=\"lblItemCreateDatetime{0}\">{6}</span> <b>Updated by:</b> <span id=\"lblItemUpdateUser{0}\">{7}</span> <b>Updated on:</b> <span id=\"lblItemUpdateDatetime{0}\">{8}</span> </small> </div> </div>";
 
 function initPage()
 {
@@ -56,6 +58,7 @@ function initPage()
 		$btnPrintReceipt = $('#btnPrintReceipt');
 		
 		$panelReportContainer = $('#panelReportContainer');
+		$ddlReportProvider = $('#ddlReportProvider');
 		$ddlReportTherapist = $('#ddlReportTherapist');
 		$txtReportDate = $('#txtReportDate');
 		$ddlReportHour = $('#ddlReportHour');
@@ -481,6 +484,7 @@ function getReportInfo()
 	var reportInfo = {
 			report_id: '',
 			client_id: _clientID,
+			provider_id: $ddlReportProvider.val(),
 			therapist_id: $ddlReportTherapist.val(),
 			report_date: $txtReportDate.val(),
 			report_hour: $ddlReportHour.val(),
@@ -507,8 +511,14 @@ function onGetReportsDone(response)
 			
 			therapistList = _therapistOptions.slice(0); // duplicate the array to a new object
 			if (_reports[i]['therapist_active'] == '0') {
-				deletedTherapistoption = "<option value='" + _reports[i]['therapist_id'] + "'>" + _reports[i]['therapist_name'] + " (Deleted)</option>";
-				therapistList.push(deletedTherapistoption);
+				deletedTherapistOption = "<option value='" + _reports[i]['therapist_id'] + "'>" + _reports[i]['therapist_name'] + " (Deleted)</option>";
+				therapistList.push(deletedTherapistOption);
+			}
+			
+			providerList = _providerOptions.slice(0); // duplicate the array to a new object
+			if (_reports[i]['provider_active'] == '0') {
+				deletedProviderOption = "<option value='" + _reports[i]['provider_id'] + "'>" + _reports[i]['provider_name'] + " (Deleted)</option>";
+				providerList.push(deletedProviderOption);
 			}
 			
 			$panelReportContainer.append(panelItemTemplate.format(
@@ -521,7 +531,8 @@ function onGetReportsDone(response)
 					_reports[i]['report_create_datetime'],
 					_reports[i]['report_update_user'],
 					_reports[i]['report_update_datetime'],
-					therapistList
+					therapistList,
+					providerList
 				));
 			
 			setReportItemBtnEdit(reportID);
@@ -530,6 +541,7 @@ function onGetReportsDone(response)
 			setReportItemBtnCancel(reportID);
 			
 			setReportItemViewMode(reportID);
+			setReportItemProvider(reportID, _reports[i]['provider_id']);
 			setReportItemTherapist(reportID, _reports[i]['therapist_id']);
 			setReportItemHour(reportID, _reports[i]['report_hour']);
 		}
@@ -574,6 +586,7 @@ function onDeleteReportItemDone(response)
 function setReportItemBtnUpdate(reportID)
 {
 	$(prefixBtnUpdateItem + reportID).click(function(){
+		// It the event bound via funtion then
 		// Don't need to find "report_id" agian because the value of [reportID] is already bound
 		//reportItemID = $(this).prop('name');
 		setReportItemViewMode(reportID);
@@ -586,7 +599,8 @@ function setReportItemBtnUpdate(reportID)
 			report_hour: getReportItemHour(reportID),
 			report_detail: getReportItemDetail(reportID),
 			report_recommendation: getReportItemRecom(reportID),
-			therapist_id: getReportItemTherapist(reportID)
+			therapist_id: getReportItemTherapist(reportID),
+			provider_id: getReportItemProvider(reportID)
 		};
 		
 		updateReportItem(reportItemInfo);
@@ -609,6 +623,7 @@ function onUpdateReportItem(response)
 		updatedReportID = reportItemInfo['report_id'];
 		updatedReportItemIndex = reportItemInfo['report_item_index'];
 		
+		_reports[updatedReportItemIndex]['provider_id'] = reportItemInfo['provider_id'];
 		_reports[updatedReportItemIndex]['therapist_id'] = reportItemInfo['therapist_id'];
 		_reports[updatedReportItemIndex]['report_hour'] = reportItemInfo['report_hour'];
 		_reports[updatedReportItemIndex]['report_detail'] = reportItemInfo['report_detail'];
@@ -641,6 +656,7 @@ function setReportItemViewMode(reportID)
 	$(prefixBtnUpdateItem + reportID).addClass('hidden');
 	$(prefixBtnCancelItem + reportID).addClass('hidden');
 	
+	$(prefixItemProvider + reportID).prop('disabled', true);
 	$(prefixItemTherapist + reportID).prop('disabled', true);
 	$(prefixItemHour + reportID).prop('disabled', true);
 	$(prefixItemDetail + reportID).prop('readonly', true);
@@ -654,6 +670,7 @@ function setReportItemEditMode(reportID)
 	$(prefixBtnUpdateItem + reportID).removeClass('hidden');
 	$(prefixBtnCancelItem + reportID).removeClass('hidden');
 	
+	$(prefixItemProvider + reportID).prop('disabled', '');
 	$(prefixItemTherapist + reportID).prop('disabled', '');
 	$(prefixItemHour + reportID).prop('disabled', '');
 	$(prefixItemDetail + reportID).prop('readonly', '');
@@ -662,10 +679,21 @@ function setReportItemEditMode(reportID)
 
 function reverseReportItem(reportID, reportItemIndex)
 {
+	setReportItemProvider(reportID, _reports[reportItemIndex]['provider_id']);
 	setReportItemTherapist(reportID, _reports[reportItemIndex]['therapist_id']);
 	setReportItemHour(reportID, _reports[reportItemIndex]['report_hour']);
 	setReportItemDetail(reportID, _reports[reportItemIndex]['report_detail']);
 	setReportItemRecom(reportID, _reports[reportItemIndex]['report_recommendation']);
+}
+
+function setReportItemProvider(reportID, providerID)
+{
+	$(prefixItemProvider + reportID).val(providerID);
+}
+
+function getReportItemProvider(reportID)
+{
+	return $(prefixItemProvider + reportID).val();
 }
 
 function setReportItemTherapist(reportID, therapistID)
@@ -747,16 +775,23 @@ function initProviders()
 function onInitProviders(response)
 {
 	if (response.success) {
+		_providerOptions = [];
 		providers = response.result;
 
 		$ddlProvider.empty();
 		$ddlProvider.unbind('click');
+		$ddlReportProvider.empty();
 		
 		if(providers.length) {
 			$.each(providers, function (i, provider){
+				// ddl for printing a receipt
 				option = "<option value='" + provider['provider_no'] + "'>" + provider['provider_name'] + "</option>";
-				
 				$ddlProvider.append(option);
+				
+				// ddl for recording a massage report
+				option = "<option value='" + provider['provider_id'] + "'>" + provider['provider_name_short'] + "</option>";
+				_providerOptions.push(option);
+				$ddlReportProvider.append(option);
 			});
 			
 			$ddlProvider.append("<optgroup label='--------------------------------------------'></optgroup>");

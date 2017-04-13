@@ -56,7 +56,7 @@ Deployment Instruction on 10 Feb 2017:
 	- Delete [Voucher] from "Therapist" Table
 	- "dummy content after confliction between workspace and master files"
 
-Next Deployment:
+Fixing bug:
 	** Need to fix:
 		- (Added) Lelux icon
 		- (Fixed) Income Report => display "Used Free Stamp" in minute
@@ -64,6 +64,10 @@ Next Deployment:
 		- (Fixed) Editable Dropdown with no items bug (See example in "Sale.js" but not proper solution)
 		- (Fixed) No items in dropdown case (MassageRecord, ClientReport, Sale)
 		- Loading panel during HTML interpretation
-	
+
+Next Deployment:
+	- Change Table Structure [Provider, Report]
+	- Update Data of "active" attribute in Table [Provider] = 1
+	- Update Data of "provider_id" attribute in Table [Report] = 1
 	 
 	 

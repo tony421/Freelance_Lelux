@@ -12,14 +12,21 @@
 		
 		public function getProviders()
 		{
-			$sql = "select * from provider order by provider_id";
+			$sql = "select * 
+					from provider
+					where provider_active = 1
+					order by provider_id";
 				
 			return $this->_dataAccess->select($sql);
 		}
 		
 		public function getProvidersDisplay()
 		{
-			$sql = "select provider_id, provider_no, concat(provider_name, ' (', provider_no, ')') as provider_name from provider order by provider_id";
+			$sql = "select provider_id, provider_no, provider_name as provider_name_short
+						, concat(provider_name, ' (', provider_no, ')') as provider_name, provider_active 
+					from provider
+					where provider_active = 1
+					order by provider_id";
 		
 			return $this->_dataAccess->select($sql);
 		}
@@ -28,8 +35,8 @@
 		{
 			$sql_format = "
 					insert into provider
-						(provider_no, provider_name)
-					values ('%s', '%s')";
+						(provider_no, provider_name, provider_active)
+					values ('%s', '%s', 1)";
 			
 			$sql = sprintf($sql_format
 					, $providerInfo['provider_no']
@@ -57,9 +64,8 @@
 		
 		public function deleteProvider($providerInfo)
 		{
-			$sql_format = "
-					delete from provider
-					where provider_id = %d";
+			$sql_format = "update provider set provider_active = 0 where provider_id = %d";
+			//$sql_format = "delete from provider where provider_id = %d";
 				
 			$sql = sprintf($sql_format
 					, $providerInfo['provider_id']);

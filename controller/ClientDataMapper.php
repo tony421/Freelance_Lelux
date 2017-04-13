@@ -349,20 +349,23 @@ order by client_name";
 						client_id, report_date, report_detail,
 						report_recommendation, report_hour, therapist_id,
 						report_create_user, report_create_datetime,
-						report_update_user, report_update_datetime
+						report_update_user, report_update_datetime,
+						provider_id
 					) 
 					values ('%s',
 						'%s', '%s', '%s',
 						'%s', %2f, %d,
 						'%s', '%s',
-						'%s', '%s'
+						'%s', '%s',
+						%d
 					)";
 			
 			$sql = sprintf($sql_format, $reportInfo['report_id'],
 					$reportInfo['client_id'], $reportInfo['report_date'], $reportInfo['report_detail'],
 					$reportInfo['report_recommendation'], $reportInfo['report_hour'], $reportInfo['therapist_id'],
 					$reportInfo['report_create_user'], $reportInfo['report_create_datetime'],
-					$reportInfo['report_update_user'], $reportInfo['report_update_datetime']);
+					$reportInfo['report_update_user'], $reportInfo['report_update_datetime'],
+					$reportInfo['provider_id']);
 			
 			return $this->_dataAccess->insert($sql);
 		} // insertReport
@@ -380,10 +383,12 @@ order by client_name";
 						, DATE_FORMAT(report_create_datetime, '%%e/%%m/%%Y %%T') as report_create_datetime
 						, t_update.therapist_name as report_update_user
 						, DATE_FORMAT(report_update_datetime, '%%e/%%m/%%Y %%T') as report_update_datetime
+						, report.provider_id, provider.provider_active, provider.provider_name
 					from report 
 					join therapist t on report.therapist_id = t.therapist_id
 					join therapist t_create on report.report_create_user = t_create.therapist_id
 					join therapist t_update on report.report_update_user = t_update.therapist_id
+					join provider on report.provider_id = provider.provider_id
 					where client_id = '%s'
 						and report.report_void_user = 0
 					order by report.report_date desc, report.report_create_datetime desc";
@@ -400,7 +405,8 @@ order by client_name";
 						report_detail = '%s',
 						report_recommendation = '%s',
 						report_update_user = '%s',
-						report_update_datetime = '%s'
+						report_update_datetime = '%s',
+						provider_id = %d
 					where report_id = '%s'";
 			
 			$sql = sprintf($sql_format, 
@@ -410,6 +416,7 @@ order by client_name";
 					$reportItemInfo['report_recommendation'],
 					$reportItemInfo['report_update_user'],
 					$reportItemInfo['report_update_datetime'],
+					$reportItemInfo['provider_id'],
 					$reportItemInfo['report_id']
 				);
 			
