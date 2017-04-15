@@ -562,26 +562,25 @@ function calCommission()
 function calReqReward()
 {
 	minutes = parseInt($txtMinutes.val());
-	freeStamp = parseInt($txtStamp.val());
-
-	minutes = minutes - freeStamp;
+	
+	//freeStamp = parseInt($txtStamp.val()); // changed back when 15/4/17
+	//minutes = minutes - freeStamp; // changed back when 15/4/17
 
 	if (minutes >= _minimumRequest) {
 		reward = 0.0;
 		
 		req = $cbRequested.is(':checked');
-		//stamp = parseInt($txtStamp.val()) > 0 ? true : false; // stamp condition is changed to be minute condition
+		stamp = parseInt($txtStamp.val()) > 0 ? true : false; // stamp condition is changed to be minute condition; changed back when 15/4/17
 		promo = $cbPromotionPrice.is(':checked');
 		
 		//alert(req + '|' + stamp + '|' + promo);
 		
 		$.each(_requestConditions, function (i, condition){
 			if (condition['request_condition_request'] == req 
-					//&& condition['request_condition_stamp'] == stamp 
+					&& condition['request_condition_stamp'] == stamp // changed back when 15/4/17
 					&& condition['request_condition_promotion'] == promo) {
 				
 				reward = parseFloat(condition['request_condition_amt']);
-				//$txtReqReward.autoNumeric('set', reward);
 				
 				return false; // use as break statement
 			}
@@ -598,12 +597,6 @@ function calReqReward()
 	}
 	
 	calCommission();
-	
-	/*if ($ddlTherapist.find('option:selected').text() != '[Voucher]') {
-	}
-	else {
-		$txtReqReward.autoNumeric('set', 0);
-	}*/
 }
 
 function getSelectedMassageType()

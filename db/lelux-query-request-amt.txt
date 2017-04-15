@@ -1,0 +1,25 @@
+Instruction:: Out specific year in these 2 sub queries for the request amount
+
+select Name, Date, Request_Amount
+from (
+    select therapist_name as Name
+        , date_format(massage_record_date, '%b %Y') as Date
+    	, date_format(massage_record_date, '%m') as Seq
+        , sum(massage_record_requested) as 'Request_Amount'
+    from massage_record
+    join therapist on therapist.therapist_id = massage_record.therapist_id
+    where date_format(massage_record_date, '%Y') = 2017
+    	and massage_record.therapist_id != 0
+    group by therapist.therapist_name, Date, Seq
+    union all
+    select therapist_name as Name
+        , '== Total =='as Date
+    	, 99 as Seq
+        , sum(massage_record_requested) as 'Request_Amount'
+    from massage_record
+    join therapist on therapist.therapist_id = massage_record.therapist_id
+    where date_format(massage_record_date, '%Y') = 2017
+    	and massage_record.therapist_id != 0
+    group by therapist.therapist_name
+) as Request_Summary
+order by Name, Seq
