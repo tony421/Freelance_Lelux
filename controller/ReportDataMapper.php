@@ -23,15 +23,15 @@
 		public function getDailyCommission($date)
 		{
 			$sql_details = "
-			select therapist_name, sum(massage_record_commission) as massage_record_commission, sum(massage_record_request_reward) as massage_record_request_reward, sum(massage_record_commission_total) as massage_record_commission_total
+			select seq, therapist_name, therapist_guarantee, sum(massage_record_minutes) as massage_record_minutes, sum(massage_record_commission) as massage_record_commission, sum(massage_record_request_reward) as massage_record_request_reward, sum(massage_record_commission_total) as massage_record_commission_total
 			from (
-				select therapist.therapist_name, massage_record_commission, massage_record_request_reward, massage_record_commission + massage_record_request_reward as massage_record_commission_total
+				select 1 as seq, therapist.therapist_name, therapist_guarantee, massage_record_minutes, massage_record_commission, massage_record_request_reward, massage_record_commission + massage_record_request_reward as massage_record_commission_total
 				from massage_record
 				join therapist on massage_record.therapist_id = therapist.therapist_id
 				where massage_record_date = '{$date}'
 					and massage_record_void_user = 0
 				union all
-	            select therapist.therapist_name as therapist_name, reception_record_std_com, reception_record_extra_com, reception_record_total_com
+	            select 9 as seq, therapist.therapist_name as therapist_name, reception_record_total_com as therapist_guarantee, null, reception_record_std_com, reception_record_extra_com, reception_record_total_com
 	            from reception_record
 	            join therapist on therapist.therapist_id = reception_record.therapist_id
 	            where reception_record.reception_record_date = '{$date}'
@@ -41,10 +41,11 @@
 	        ";
 			
 			$sql_total = "
-					select 'Total', null, null, sum(massage_record_commission_total)
+					select 99 as seq, 'Total', null, null, null, null, sum(massage_record_commission_total)
 					from (
 						{$sql_details}
-					) as details";
+					) as details
+					order by seq, therapist_name";
 						
 			$sql = "
 					{$sql_details}

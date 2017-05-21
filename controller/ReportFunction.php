@@ -343,8 +343,35 @@ colHeader;
 				$commission = $row['massage_record_commission'] != '' ? '$'.$row['massage_record_commission'] : '';
 				$reward = $row['massage_record_request_reward'] != '' ? '$'.$row['massage_record_request_reward'] : '';
 				
+				// check guaranteed commission
+				$total = (float)$row['massage_record_commission_total'];
+				$guarantee = (float)$row['therapist_guarantee'];
+				
+				$com_total = '$'.number_format($total, 2);
+				// ***Enable this when staff shift control is built
+				/*if ($guarantee > $total)
+					$com_total = '(*) $'.number_format($guarantee, 2);
+				else
+					$com_total = '$'.number_format($total, 2);*/
+				
+				// calculate massage duration for each staff
+				if ($row['massage_record_minutes'] == '') {
+					$duration = '';
+				} else {
+					$hours = (int)((float)$row['massage_record_minutes'] / 60);
+					$minutes = (float)$row['massage_record_minutes'] % 60;
+					
+					if ($hours > 0)
+						$minutes > 0 ? $duration = $hours.'hr '.$minutes.'m' : $duration = $hours.'hr';
+					else
+						$duration = $minutes.'m';
+					
+					$duration = '('.$duration.')';
+				}
+				//$duration = $row['massage_record_minutes'];
+				
 				$reportRows .= <<<row
-				<tr><td><b>{$row['therapist_name']}</b></td><td style="text-align: right;">{$commission}</td><td style="text-align: right;">$reward</td><td style="text-align: right;">\${$row['massage_record_commission_total']}</td></tr>
+				<tr><td><b>{$row['therapist_name']} {$duration}</b></td><td style="text-align: right;">{$commission}</td><td style="text-align: right;">$reward</td><td style="text-align: right;"><b>{$com_total}</b></td></tr>
 row;
 			}
 				
