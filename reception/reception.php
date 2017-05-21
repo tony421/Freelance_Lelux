@@ -36,7 +36,7 @@
 	    <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
 	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="../js/moment.js"></script>
-	    <script type="text/javascript" src="reception.js"></script>	    
+	    <script type="text/javascript" src="reception.js?<?php echo time(); ?>"></script>	    
 	    
 	   	<script type="text/javascript">
 	    	$(document).ready(function(){
@@ -100,7 +100,7 @@
 						<div class="col-sm-3">
 							<div class="input-group">
 							    <span class="input-group-addon">Extra Commission</span>
-							    <input type="text" id="txtExtraCom" class="form-control" value="0" disabled>
+							    <input type="text" id="txtExtraCom" class="form-control" value="0">
 						    </div>
 						</div>
 						<div class="col-sm-2">

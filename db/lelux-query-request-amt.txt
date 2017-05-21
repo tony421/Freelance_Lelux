@@ -1,4 +1,4 @@
-Instruction:: Out specific year in these 2 sub queries for the request amount
+Instruction:: Define specific year in these 2 sub queries for the request amount
 
 select Name, Date, Request_Amount
 from (

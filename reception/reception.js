@@ -60,6 +60,10 @@ function initPage()
 		calHalfDayCom();
 	});
 	
+	$txtExtraCom.change(function(){
+		calTotalCom();
+	});
+	
 	$btnAdd.click(function(){
 		addRecord();
 	});
