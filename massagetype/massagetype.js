@@ -96,7 +96,7 @@ function initPage()
 
 function getMassageTypes()
 {
-	main_request_ajax('massageType-boundary.php', 'GET_MASSAGE_TYPE_DISPLAY', {}, onGetMassageTypeDone);
+	main_request_ajax('massagetype-boundary.php', 'GET_MASSAGE_TYPE_DISPLAY', {}, onGetMassageTypeDone);
 }
 
 function onGetMassageTypeDone(response)

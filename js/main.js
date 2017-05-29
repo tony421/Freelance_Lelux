@@ -33,9 +33,9 @@ function main_request_ajax(url, mode, data, onSuccess)
 		// eg. result from print_r()
 		dataType: 'json', 
 		success: onSuccess,
-		error: function(xhr, desc, err){
+		error: function(xhr, errType, err){
 			main_loading_hide(); // hide loading when error occurred
-			main_alert_message('Details: ' + desc + ' | Error:' + err);
+			main_alert_message('Error Type: ' + errType + ' | Error:' + err);
 			
 			// N.B.
 			// undefined object (non-exist jquery object) from Client-Side cause ParserError
