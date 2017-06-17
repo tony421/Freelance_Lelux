@@ -370,6 +370,7 @@ function getEditedClientInfo()
 			client_id: _clientID,
 			client_membership_no: $txtMemNo.val(),
 			client_patient_id: $txtPatientID.val(),
+			health_fund_name: $ddlHealthFund.find('option:selected').text(),
 			health_fund_id: $ddlHealthFund.val(),
 			client_first_name: $txtFirstName.val(),
 			client_last_name: $txtLastName.val(),

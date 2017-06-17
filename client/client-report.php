@@ -31,7 +31,7 @@
 	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
 	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
 	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
-	    <script type="text/javascript" src="client-report.js"></script>
+	    <script type="text/javascript" src="client-report.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="client-variable.js"></script>
 	    
 	    <script type="text/javascript">

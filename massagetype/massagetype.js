@@ -165,7 +165,7 @@ function validateInputs()
 function addMassageType()
 {
 	var massageTypeInfo = getMassageTypeInfo();
-	main_request_ajax('massageType-boundary.php', 'ADD_MASSAGE_TYPE', massageTypeInfo, onAddMassageTypeDone);
+	main_request_ajax('massagetype-boundary.php', 'ADD_MASSAGE_TYPE', massageTypeInfo, onAddMassageTypeDone);
 }
 
 function onAddMassageTypeDone(response)
@@ -182,7 +182,7 @@ function onAddMassageTypeDone(response)
 function updateMassageType()
 {
 	var massageTypeInfo = getEditedMassageTypeInfo();
-	main_request_ajax('massageType-boundary.php', 'UPDATE_MASSAGE_TYPE', massageTypeInfo, onUpdateMassageTypeDone);
+	main_request_ajax('massagetype-boundary.php', 'UPDATE_MASSAGE_TYPE', massageTypeInfo, onUpdateMassageTypeDone);
 }
 
 function onUpdateMassageTypeDone(response)
@@ -200,7 +200,7 @@ function onUpdateMassageTypeDone(response)
 function deleteMassageType()
 {
 	var massageTypeInfo = getEditedMassageTypeInfo();
-	main_request_ajax('massageType-boundary.php', 'DELETE_MASSAGE_TYPE', massageTypeInfo, onDeleteMassageTypeDone);
+	main_request_ajax('massagetype-boundary.php', 'DELETE_MASSAGE_TYPE', massageTypeInfo, onDeleteMassageTypeDone);
 }
 
 function onDeleteMassageTypeDone(response)

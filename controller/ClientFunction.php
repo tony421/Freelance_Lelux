@@ -19,29 +19,39 @@
 		
 		public function addClient($clientInfo)
 		{
-			$client = $this->generateClientModel($clientInfo, self::MODE_ADD);
-			
-			// Check existed memberships only in a case that clients use health fund 
-			if ($client->isHealthFund()) {
-				if ($this->_dataMapper->isExistedClientMember($client)) {
-					return Utilities::getResponseResult(false, 'Membership No. ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.');
+			try {
+				$client = $this->generateClientModel($clientInfo, self::MODE_ADD);
+				
+				// Check existed memberships only in a case that clients use health fund 
+				if ($client->isHealthFund()) {
+					if ($this->_dataMapper->isExistedClientMember($client)) {
+						$msg = 'Client with Health Fund ['.$clientInfo['health_fund_name'].'], Membership No. ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.';
+						return Utilities::getResponseResult(false, $msg);
+					}
 				}
-			}
-			
-			// Check existed names in every cases
-			if ($this->_dataMapper->isExistedClientName($client)) {
-				return Utilities::getResponseResult(false, 'Client Name ['.$client->getFirstName().' '.$client->getLastName().'] already existed, please check the infotmation.');
-			}
-			
-			$affectedRow = $this->_dataMapper->insertClient($client);
-			
-			if ($affectedRow > 0) {
-				$this->_dataMapper->insertFindings($client);
-				$this->_dataMapper->insertConditions($client);
-				return Utilities::getResponseResult(true, 'New client has been added successfully.', $client->getID());
-			}
-			else {
-				return Utilities::getResponseResult(false, 'Adding new client has failed!');
+				
+				// Check existed names in every cases
+				if ($this->_dataMapper->isExistedClientName($client)) {
+					if ($client->isHealthFund())
+						$msg = 'Client Name ['.$client->getFirstName().' '.$client->getLastName().'] with Health Fund ['.$clientInfo['health_fund_name'].'], Membership No ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.';
+					else
+						$msg = 'Client Name ['.$client->getFirstName().' '.$client->getLastName().'] already existed, please check the infotmation.';
+					
+					return Utilities::getResponseResult(false, $msg);
+				}
+				
+				$affectedRow = $this->_dataMapper->insertClient($client);
+				
+				if ($affectedRow > 0) {
+					$this->_dataMapper->insertFindings($client);
+					$this->_dataMapper->insertConditions($client);
+					return Utilities::getResponseResult(true, 'New client has been added successfully.', $client->getID());
+				}
+				else {
+					return Utilities::getResponseResult(false, 'Adding new client has failed!');
+				}
+			} catch(Exception $e) {
+				throw $e;
 			}
 		} // addClient
 		
@@ -89,13 +99,19 @@
 			// Check existed memberships only in a case that clients use health fund
 			if ($client->isHealthFund()) {
 				if ($this->_dataMapper->isExistedClientMember($client)) {
-					return Utilities::getResponseResult(false, 'Membership No. ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.');
+					$msg = 'Client with Health Fund ['.$editedClientInfo['health_fund_name'].'], Membership No. ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.';
+					return Utilities::getResponseResult(false, $msg);
 				}
 			}
 			
 			// Check existed names in every cases
 			if ($this->_dataMapper->isExistedClientName($client)) {
-				return Utilities::getResponseResult(false, 'Client Name ['.$client->getFirstName().' '.$client->getLastName().'] already existed, please check the infotmation.');
+				if ($client->isHealthFund())
+					$msg = 'Client Name ['.$client->getFirstName().' '.$client->getLastName().'] with Health Fund ['.$clientInfo['health_fund_name'].'], Membership No ['.$client->getMembershipNo().'] and Patient ID ['.$client->getPatientID().'] already existed, please check the infotmation.';
+				else
+					$msg = 'Client Name ['.$client->getFirstName().' '.$client->getLastName().'] already existed, please check the infotmation.';
+					
+				return Utilities::getResponseResult(false, $msg);
 			}
 			
 			$affectedRow = $this->_dataMapper->updateClient($client);

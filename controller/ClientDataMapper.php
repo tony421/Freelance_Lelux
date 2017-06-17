@@ -18,12 +18,14 @@
 						select client_id
 						from client
 						where (
-							lower(client_membership_no) = lower('%s')
+							health_fund_id = %d
+							and lower(client_membership_no) = lower('%s')
 							and client_patient_id = %d
 							and client_id != '%s'
 						)";
 					
 				$sql = sprintf($sql_format,
+						$client->getHealthFundID(),
 						$client->getMembershipNo(),
 						$client->getPatientID(),
 						$client->getID());
@@ -42,26 +44,36 @@
 		
 		public function isExistedClientName($client)
 		{
-			$sql_format = "
-						select client_id
-						from client
-						where (
-							lower(client_first_name) = lower('%s')
-							and lower(client_last_name) = lower('%s')
-							and lower(client_id) != lower('%s')
-						)";
-			
-			$sql = sprintf($sql_format,
-					$client->getFirstName(),
-					$client->getLastName(),
-					$client->getID());
+			try {
+				$sql_format = "
+							select client_id
+							from client
+							where (
+								lower(client_first_name) = lower('%s')
+								and lower(client_last_name) = lower('%s')
+								and health_fund_id = %d
+								and lower(client_membership_no) = lower('%s')
+								and client_patient_id = %d
+								and client_id != '%s'
+							)";
 				
-			$result = $this->_dataAccess->select($sql);
-				
-			if (count($result) > 0)
-				return true;
+				$sql = sprintf($sql_format,
+						$client->getFirstName(),
+						$client->getLastName(),
+						$client->getHealthFundID(),
+						$client->getMembershipNo(),
+						$client->getPatientID(),
+						$client->getID());
+					
+				$result = $this->_dataAccess->select($sql);
+					
+				if (count($result) > 0)
+					return true;
 				else
 					return false;
+			} catch (Exception $e) {
+				throw $e;
+			}
 		} // isExistedClientName
 		
 		public function insertClient($client)
