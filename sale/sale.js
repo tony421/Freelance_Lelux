@@ -490,7 +490,7 @@ function getCartItemInfo() {
 	selectedProduct = getSelectedProduct();
 	
 	if (_is_add_mode_cart) {
-		item = JSON.parse(JSON.stringify(Sale_Item));
+		item = JSON.parse(JSON.stringify(Sale_Item)); // clone json object
 		item.sale_item_id = new Date().valueOf();
 	} else {
 		item = _editingCartItem;

@@ -194,7 +194,8 @@ function initPage()
 
 function initTherapists()
 {
-	main_request_ajax('../therapist/therapist-boundary.php', 'GET_THERAPIST', {}, onInitTherapistsRequestDone);
+	selectedDate = parent.getSelectedDailyRecordDate();
+	main_request_ajax('../therapist/therapist-boundary.php', 'GET_THERAPIST_WORKING_ON_SHIFT', selectedDate, onInitTherapistsRequestDone);
 }
 
 function onInitTherapistsRequestDone(response)
@@ -820,7 +821,8 @@ function clearFrameEditMode()
 function updateFrameContent()
 {
 	//alert("UPDATE - MASSAGE");
-	initConfig();
+	initTherapists();
+	setTimeIn();
 }
 
 function dummyDataSet()

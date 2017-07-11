@@ -38,7 +38,7 @@
         			</li>
         			-->
         			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'daily-record') { echo 'class="active"'; } }?>>
-        				<a href="../daily-record/daily-record.php">Daily Record</a>
+        				<a href="../daily-record/daily-record.php">Daily Records</a>
         			</li>
         			<?php if (Authentication::isAdmin()) { ?>
 	        			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'therapist-manage') { echo 'class="active"'; } }?>>

@@ -52,6 +52,46 @@
 			}
 		} // getTherapists
 		
+		public function getTherapistsOffShift($date)
+		{
+			$result = $this->_dataMapper->getTherapistsOffShift($date);
+			
+			if (count($result) > 0) {
+				return Utilities::getResponseResult(true, '', $result);
+			}
+			else {
+				Utilities::logInfo("There is no therapist data in the system.");
+				return Utilities::getResponseResult(false, 'There is no therapist data in the system!');
+			}
+		}
+		
+		public function getTherapistsOnShift($date)
+		{
+			$result = $this->_dataMapper->getTherapistsOnShift($date);
+			
+			$countResult = count($result);
+			for ($i = 0; $i < $countResult; $i++) {
+				$result[$i]['row_no'] = $i + 1;
+			}
+			
+			if ($countResult <= 0) {
+				Utilities::logInfo("There is no therapist on shift {$date}");
+			}
+			
+			return Utilities::getResponseResult(true, '', $result);
+		}
+		
+		public function getTherapistsWokringOnShift($date)
+		{
+			$result = $this->_dataMapper->getTherapistsWorkingOnShift($date);
+			
+			if (count($result) <= 0) {
+				Utilities::logInfo("There is no therapist on shift {$date}");
+			}
+				
+			return Utilities::getResponseResult(true, '', $result);
+		}
+		
 		public function addTherapist($therapistInfo)
 		{
 			// Check existed names in every cases
@@ -99,6 +139,67 @@
 				return Utilities::getResponseResult(false, 'Deleting therapist has failed!');
 			}
 		} // deleteTherapist
+		
+		public function getShiftType()
+		{
+			$result = $this->_dataMapper->getShiftType();
+			
+			if (count($result) > 0) {
+				return Utilities::getResponseResult(true, '', $result);
+			}
+			else {
+				Utilities::logInfo("There is no shift type data in the system.");
+				return Utilities::getResponseResult(false, 'There is no shift type data in the system!');
+			}
+		}
+		
+		public function addTherapistToShift($shiftInfo)
+		{				
+			$affectedRow = $this->_dataMapper->addTherapistToShift($shiftInfo);
+				
+			if ($affectedRow > 0) {
+				return Utilities::getResponseResult(true, "{$shiftInfo['therapist_name']} has been added to the shift.");
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Adding the therapist has failed!');
+			}
+		}
+		
+		public function workTherapistOnShift($shiftInfo)
+		{
+			$affectedRow = $this->_dataMapper->workTherapistOnShift($shiftInfo['shift_id']);
+				
+			if ($affectedRow > 0) {
+				return Utilities::getResponseResult(true, "{$shiftInfo['therapist_name']} is working on the shift.");
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Setting the therapist to be working has failed!');
+			}
+		}
+		
+		public function absentTherapistOnShift($shiftInfo)
+		{
+			$affectedRow = $this->_dataMapper->absentTherapistOnShift($shiftInfo['shift_id']);
+			
+			if ($affectedRow > 0) {
+				return Utilities::getResponseResult(true, "{$shiftInfo['therapist_name']} is absent on the shift.");
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Absenting the therapist has failed!');
+			}
+		}
+		
+		public function deleteTherapistOnShift($shiftInfo)
+		{
+			$affectedRow = $this->_dataMapper->deleteTherapistOnShift($shiftInfo['shift_id']);
+				
+			if ($affectedRow > 0) {
+				return Utilities::getResponseResult(true, "{$shiftInfo['therapist_name']} is deleted from the shift.");
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Deleting the therapist has failed!');
+			}
+		}
 		
 		private function manipulateNameInfo($info)
 		{

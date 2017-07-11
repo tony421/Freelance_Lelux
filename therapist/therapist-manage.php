@@ -27,6 +27,7 @@
 	    
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
+	    <script type="text/javascript" src="../js/autonumeric.js"></script>
 	    <script type="text/javascript" src="../js/main.js"></script>
 	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 	    <script type="text/javascript" src="therapist-manage.js"></script>
@@ -49,9 +50,13 @@
 			<div class="container">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-offset-3 col-sm-2 control-label">Therapist Name</label>
-						<div class="col-sm-3">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Therapist Name</label>
+						<div class="col-sm-2">
 							<input type="text" id="txtName" class="form-control">
+						</div>
+						<label class="col-sm-1 control-label">Password</label>
+						<div class="col-sm-2">
+							<input type="text" id="txtPassword" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
@@ -59,9 +64,9 @@
 						<div class="col-sm-2">
 							<input type="text" id="txtUsername" class="form-control">
 						</div>-->
-						<label class="col-sm-offset-3 col-sm-2 control-label">Password</label>
-						<div class="col-sm-3">
-							<input type="text" id="txtPassword" class="form-control">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Guarantee</label>
+						<div class="col-sm-2">
+							<input type="text" id="txtGuarantee" class="form-control">
 						</div>
 					</div>
 					<!--<div id="rowActiveInput" class="form-group">

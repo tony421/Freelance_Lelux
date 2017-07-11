@@ -1,0 +1,1 @@
+var OPEN_TIME = '10:00';

@@ -1,7 +1,14 @@
 _main_datatable_scroll_y = 350;
 
 var DATE_PICKER_FORMAT = 'DD, d MM yyyy';
+
 var MOMENT_DATE_DB_FORMAT = 'YYYY-M-D';
+var MOMENT_DATE_FORMAT = 'YYYY-M-D';
+var MOMENT_TIME_FORMAT = 'HH:mm';
+var MOMENT_DATE_TIME_FORMAT = 'YYYY-M-D HH:mm';
+
+var ICON_OK = '<span class="glyphicon glyphicon-ok" style="color: green; font-size: 1.2em;" aria-hidden="true"></span>';
+var ICON_REMOVE = '<span class="glyphicon glyphicon-remove" style="color: red; font-size: 1.2em;" aria-hidden="true"></span>';
 
 // First, checks if it isn't implemented yet.
 if (!String.prototype.format) {
@@ -34,8 +41,14 @@ function main_request_ajax(url, mode, data, onSuccess)
 		dataType: 'json', 
 		success: onSuccess,
 		error: function(xhr, errType, err){
+			//console.log(xhr.responseText.trim());
+			
 			main_loading_hide(); // hide loading when error occurred
-			main_alert_message('Error Type: ' + errType + ' | Error:' + err);
+			//main_alert_message('Error Type: ' + errType + ' | Error:' + err);
+			main_alert_message('System Error! Please contact admin.');
+			
+			// write log on the server
+			main_request_ajax('../log/log-boundary.php', '', xhr.responseText.trim(), function(){});
 			
 			// N.B.
 			// undefined object (non-exist jquery object) from Client-Side cause ParserError
@@ -255,7 +268,19 @@ function convertDBFormatDate(date) {
 	return moment(date).format('YYYY-M-D');
 }
 
+function getDDLSelectedText(control) {
+	return $(control).find('option:selected').text();
+}
 
+function currentDate() {
+	return moment().format(MOMENT_DATE_FORMAT);
+}
+function currentTime() {
+	return moment().format(MOMENT_TIME_FORMAT);
+}
+function currentDateTime() {
+	return moment().format(MOMENT_DATE_TIME_FORMAT);
+}
 
 
 

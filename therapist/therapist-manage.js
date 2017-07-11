@@ -7,6 +7,7 @@ var $btnCancel;
 var $txtName;
 var $txtUsername;
 var $txtPassword;
+var $txtGuarantee;
 var $tableTherapist;
 var $tableTherapistBody;
 //var $rowActiveInput;
@@ -27,8 +28,11 @@ function initPage()
 	$txtName = $('#txtName');
 	//$txtUsername = $('#txtUsername');
 	$txtPassword = $('#txtPassword');
+	$txtGuarantee = $('#txtGuarantee');
 	//$rowActiveInput = $('#rowActiveInput');
 	//hideActiveInputs();
+	
+	initMoneyInput($txtGuarantee, 0, 999.99);
 	
 	$tableTherapist = $('#tableTherapist');
 	// keep instance of DataTable so that it will be used for row.add(), rows().remove() and others
@@ -42,6 +46,8 @@ function initPage()
 		columns: [
 		    { data: "therapist_id", title: "ID", visible: false },
 		    { data: "therapist_name", title: "Therapist Name" },
+		    { data: "therapist_guarantee", title: "Guarantee", className: 'text-right'
+		    	, render: function ( data, type, row ) { return '$'+ data; } }
             //{ data: "therapist_username", title: "Therapist Username", visible: false },
             //{ data: "therapist_active", title: "Currently Working", orderable: false, className: 'text-center'
 		    	//, render: function ( data, type, row ) { return (data == 1) ? '<span class="glyphicon glyphicon-ok text-success"></span>' : '<span class="glyphicon glyphicon-remove text-danger"></span>' } }
@@ -87,6 +93,14 @@ function initPage()
 	
 	$txtPassword.keypress(function(e){
 		if (e.which == 13) {
+			$txtGuarantee.focus();
+			return false;
+		}
+	});
+	
+	$txtGuarantee.focus(function(){ $(this).select(); });
+	$txtGuarantee.keypress(function(e){
+		if (e.which == 13) {
 			if (_is_add_mode)
 				$btnAdd.click();
 			else
@@ -129,7 +143,8 @@ function addTherapistRows(result)
 			therapist_id: result[i]['therapist_id'],
 			therapist_name: result[i]['therapist_name'],
 			//therapist_username: result[i]['therapist_username'],
-			therapist_password: result[i]['therapist_password']
+			therapist_password: result[i]['therapist_password'],
+			therapist_guarantee: result[i]['therapist_guarantee']
 			//therapist_active: result[i]['therapist_active']
 		}).draw();
 	}
@@ -158,7 +173,12 @@ function validateInputs()
 	if ($txtName.val().trim().length) {
 		//if ($txtUsername.val().trim().length) {
 			if ($txtPassword.val().trim().length) {
-				return true;
+				if ($txtGuarantee.val().length) {
+					return true;
+				}
+				else {
+					main_alert_message('Please enter "Guarantee"', function(){ $txtGuarantee.focus();});
+				}
 			}
 			else {
 				main_alert_message('Please enter "Password"', function(){ $txtPassword.focus();});
@@ -228,7 +248,8 @@ function getTherapistInfo()
 			therapist_id: '',
 			therapist_name: $txtName.val(),
 			//therapist_username: $txtUsername.val(),
-			therapist_password: $txtPassword.val()
+			therapist_password: $txtPassword.val(),
+			therapist_guarantee: getMoneyInputValue($txtGuarantee)
 	};
 	
 	return therapistInfo;
@@ -240,7 +261,8 @@ function getEditedTherapistInfo()
 			therapist_id: _editingTherapist['therapist_id'],
 			therapist_name: $txtName.val(),
 			//therapist_username: $txtUsername.val(),
-			therapist_password: $txtPassword.val()
+			therapist_password: $txtPassword.val(),
+			therapist_guarantee: getMoneyInputValue($txtGuarantee)
 	};
 	
 	return therapistInfo;
@@ -251,6 +273,7 @@ function clearInputs()
 	$txtName.val('');
 	//$txtUsername.val('');
 	$txtPassword.val('');
+	setMoneyInputValue($txtGuarantee, 0);
 	
 	$txtName.focus();
 }
@@ -269,6 +292,7 @@ function turnOnEditMode(therapistIndex)
 	$txtName.val(_editingTherapist['therapist_name']);
 	//$txtUsername.val(_editingTherapist['therapist_username']);
 	$txtPassword.val(_editingTherapist['therapist_password']);
+	$txtGuarantee.val(_editingTherapist['therapist_guarantee']);
 	
 	//showActiveInputs();
 	main_move_to_title_text(230, function(){ $txtName.focus(); });

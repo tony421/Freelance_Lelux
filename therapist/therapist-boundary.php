@@ -22,6 +22,18 @@
 			else if ($mode == "GET_THERAPIST_WITH_UNKNOWN") {
 				$result = $therapistFunction->getTherapistsWithUnknown();
 			}
+			else if ($mode == "GET_THERAPIST_OFF_SHIFT") {
+				$selectedDate = $_POST['data'];
+				$result = $therapistFunction->getTherapistsOffShift($selectedDate);
+			}
+			else if ($mode == "GET_THERAPIST_ON_SHIFT") {
+				$selectedDate = $_POST['data'];
+				$result = $therapistFunction->getTherapistsOnShift($selectedDate);
+			}
+			else if ($mode == "GET_THERAPIST_WORKING_ON_SHIFT") {
+				$selectedDate = $_POST['data'];
+				$result = $therapistFunction->getTherapistsWokringOnShift($selectedDate);
+			}
 			else if ($mode == "ADD_THERAPIST") {
 				$therapistInfo = $_POST['data'];
 				$result = $therapistFunction->addTherapist($therapistInfo);
@@ -33,6 +45,25 @@
 			else if ($mode == "DELETE_THERAPIST") {
 				$therapistInfo = $_POST['data'];
 				$result = $therapistFunction->deleteTherapist($therapistInfo);
+			}
+			else if ($mode == "GET_SHIFT_TYPE") {
+				$result = $therapistFunction->getShiftType();
+			}
+			else if ($mode == "ADD_THERAPIST_TO_SHIFT") {
+				$shiftInfo = $_POST['data'];
+				$result = $therapistFunction->addTherapistToShift($shiftInfo);
+			}
+			else if ($mode == "WORK_THERAPIST_ON_SHIFT") {
+				$shiftInfo = $_POST['data'];
+				$result = $therapistFunction->workTherapistOnShift($shiftInfo);
+			}
+			else if ($mode == "ABSENT_THERAPIST_ON_SHIFT") {
+				$shiftInfo = $_POST['data'];
+				$result = $therapistFunction->absentTherapistOnShift($shiftInfo);
+			}
+			else if ($mode == "DELETE_THERAPIST_ON_SHIFT") {
+				$shiftInfo = $_POST['data'];
+				$result = $therapistFunction->deleteTherapistOnShift($shiftInfo);
 			}
 			else {
 				throw new Exception('Mode not found');

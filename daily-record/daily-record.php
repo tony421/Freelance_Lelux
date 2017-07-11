@@ -46,7 +46,7 @@
     	
     	<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Daily Record ::~</div>
+				<div class="title-text">~:: Daily Records ::~</div>
 			</div>
 			<div class="container">
 				<form class="form-horizontal">
@@ -76,9 +76,12 @@
 				<div class="container">
 	                <div class="panel-heading" style="padding-bottom: 0;">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a name="frameMassage" class="tab-title" href="#tab1" data-toggle="tab">Massage Record</a></li>
-                            <li><a name="frameSale" class="tab-title" href="#tab2" data-toggle="tab">Sale Record</a></li>
-                            <li><a name="frameReception" class="tab-title" href="#tab3" data-toggle="tab">Reception Record</a></li>
+                        	<li><a name="frameTherapist" class="tab-title" href="#tab4" data-toggle="tab">Therapists</a></li>
+                        	<li><a name="frameQueueing" class="tab-title" href="#tab5" data-toggle="tab">Queueing</a></li>
+                        	<li class="active"><a name="frameBooking" class="tab-title" href="#tab6" data-toggle="tab">Booking</a></li>
+                            <li><a name="frameMassage" class="tab-title" href="#tab1" data-toggle="tab">Massages</a></li>
+                            <li><a name="frameSale" class="tab-title" href="#tab2" data-toggle="tab">Sales</a></li>
+                            <li><a name="frameReception" class="tab-title" href="#tab3" data-toggle="tab">Receptions</a></li>
                             <!--<li class="dropdown">
                                 <a href="#" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
@@ -91,7 +94,19 @@
                 </div>
                 <div class="panel-body" style="padding: 0;">
                     <div class="tab-content">
-                        <div class="tab-pane fade in active" id="tab1">
+                    	<div class="tab-pane fade" id="tab4">
+                        	<iframe name="frameTherapist" src="../therapist/shift.php" 
+                        		frameborder="0" width="100%" height="525"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="tab5">
+                        	<iframe name="frameQueueing" src="../queueing/queueing.php" 
+                        		frameborder="0" width="100%" height="720""></iframe>
+                        </div>
+                        <div class="tab-pane fade in active" id="tab6">
+                        	<iframe name="frameBooking" src="../booking/booking.php" 
+                        		frameborder="0" width="100%" height="800""></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="tab1">
                         	<iframe name="frameMassage" src="../massage/massage-record.php" 
                         		frameborder="0" width="100%" height="826""></iframe>
                         </div>
