@@ -64,5 +64,8 @@
 	white-space: nowrap;
 }
 
-
+.text-mark {
+	font-weight: bold; 
+	text-decoration: underline;
+}
 

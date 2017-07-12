@@ -25,6 +25,30 @@
 			return Utilities::getResponseResult(true, '', $result);
 		}
 		
+		public function addBooking($bookingInfo)
+		{
+			$id = Utilities::getUniqueID();
+			
+			$affectedRow = $this->_dataMapper->addBooking($id, $bookingInfo);
+			
+			if ($affectedRow > 0) {
+				$affectedRow = $this->_dataMapper->addBookingItems($id, $bookingInfo['therapists']);
+				
+				if ($affectedRow > 0) {
+					$affectedRow = $this->_dataMapper->addBookingRoom($id, $bookingInfo['single_room_amount'], $bookingInfo['double_room_amount']);
+				}
+			}
+			
+			if ($affectedRow > 0) {
+				$result['booking_move_to'] = $bookingInfo['time_in'];
+				
+				return Utilities::getResponseResult(true, $this->getSuccessfulAddingMessage($bookingInfo), $result);
+			} else {
+				$this->_dataMapper->deleteBooking($id);
+				return Utilities::getResponseResult(false, 'Adding the new booking is failed!');
+			}
+		}
+		
 		public function getBookings($date)
 		{
 			$bookings = $this->_dataMapper->getBookings($date);
@@ -38,8 +62,11 @@
 		{
 			$queueMapper = new QueueDataMapper();
 			
-			$bookings = $this->_dataMapper->getBookings($date);
 			$therapists = $queueMapper->getTherapistsOnQueue($date);
+			
+			$bookings = $this->_dataMapper->getBookings($date);
+			$bookingRooms = $this->_dataMapper->getBookingRooms($date);
+			$bookings = $this->combineBookingRooms($bookings, $bookingRooms);
 			
 			$timelineGroups = $this->getTimelineGroups($therapists);
 			$timelineGroups = $this->getTimelineItems($bookings, $timelineGroups); // items will be added into a group
@@ -48,6 +75,34 @@
 			$result['timeline_groups'] = $timelineGroups;
 			
 			return Utilities::getResponseResult(true, '', $result);
+		}
+		
+		private function combineBookingRooms($bookings, $bookingRooms)
+		{
+			for ($i = 0; $i < count($bookings); $i++) {
+				$bookings[$i]['single_room_amount'] = 0;
+				$bookings[$i]['double_room_amount'] = 0;
+				
+				for ($j = 0; $j < count($bookingRooms); $j++) {
+					if ($bookings[$i]['booking_id'] == $bookingRooms[$j]['booking_id']) {
+						if ($bookingRooms[$j]['room_type_id'] == 1) {
+							$bookings[$i]['single_room_amount'] = $bookingRooms[$j]['booking_room_amount'];
+						} else {
+							$bookings[$i]['double_room_amount'] = $bookingRooms[$j]['booking_room_amount'];
+						}
+					}
+				}				
+			}
+			
+			return $bookings;
+		}
+		
+		private function getSuccessfulAddingMessage($bookingInfo)
+		{
+			$timeIn = split(' ', $bookingInfo['time_in'])[1];
+			$timeOut = split(' ', $bookingInfo['time_out'])[1];
+			
+			return "The booking for <b><u>{$bookingInfo['client_amount']}</b></u> client from <b><u>{$timeIn}</b></u> to <b><u>{$timeOut}</b></u> is added.";
 		}
 		
 		private function getTimelineGroups($therapists)
@@ -72,6 +127,7 @@
 			$group_item['content'] = 'Therapist #'.($groupSize + 1);
 			$group_item['style'] = 'font-weight: bold; color: red;';
 			$group_item['title'] = 'Need On-Call Therapist!!!';
+			$group_item['items'] = array();
 			
 			return $group_item;
 		}
@@ -123,7 +179,7 @@
 				if (!$isItemAddedToGroup) {
 					$groupSize = count($timelineGroups);
 					array_push($timelineGroups, $this->getExcessiveTherapistGroup($groupSize));
-					array_push($timelineGroups[$groupSize]['items'], $this->getTimelineItem($booking, $timelineGroups[$groupSize]['id']));
+					array_push($timelineGroups[$groupSize]['items'], $this->getTimelineItem($booking, $timelineGroups[$groupSize]['id'], $singleRoomAmt, $doubleRoomAmt));
 				}
 			}
 			
@@ -162,11 +218,6 @@
 			$item['group'] = $groupNumber;
 			
 			return $item;
-		}
-		
-		public function searchAvailability($searchInfo)
-		{
-			
 		}
 	}
 ?>

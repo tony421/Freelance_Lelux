@@ -125,6 +125,11 @@
 			$error = array('error' => array('msg' => $msg,'code' => $code));
 		
 			return json_encode($error);
-		}	
+		}
+		
+		public static function upperFirstLetter($str)
+		{
+			return ucwords(strtolower($str));
+		}
 	}
 ?>

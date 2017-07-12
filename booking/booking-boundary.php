@@ -26,11 +26,11 @@
 			
 				$result = $bookingFunction->getBookingTimeline($date);
 			}
-			else if ($mode == 'SEARCH_AVAILABILITY_FOR_BOOKING') {
-				$searchInfo = $_POST['data'];
-				Utilities::logInfo('Booking-Boundary | data[$searchInfo]: '.$searchInfo);
+			else if ($mode == 'ADD_BOOKING') {
+				$bookingInfo = $_POST['data'];
+				Utilities::logInfo('Booking-Boundary | data[$bookingInfo]: '.var_export($bookingInfo, true));
 					
-				$result = $bookingFunction->searchAvailability($date);
+				$result = $bookingFunction->addBooking($bookingInfo);
 			}
 			else {
 				echo json_encode('Mode not found');

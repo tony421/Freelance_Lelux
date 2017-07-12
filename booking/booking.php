@@ -85,7 +85,7 @@
 						<div id="ddlTherapistContainer" class="col-sm-9" style="padding: 0;">
 							<!-- Therapist dropdown will be added automatically according the number of client -->
 							<div class="col-sm-2" style="padding-bottom: 5px;"> 
-								<select id="ddlTherapist" class="form-control"></select>
+								<select id="ddlTherapist0" class="form-control"></select>
 							</div>
 						</div>
 					</div>

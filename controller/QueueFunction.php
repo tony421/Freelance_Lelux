@@ -32,7 +32,7 @@
 				$availableTherapists = $this->excludeTherapistsOnRecords($allTherapists, $records);
 				$bookings = $this->_dataMapper->getBookings($timeIn, $timeOut);
 				
-				$isTherapistAvailableForWalkIn = $this->isTherapistAvailableForWalkIn($availableTherapists, $bookings, $clientAmt);
+				$isTherapistAvailableForWalkIn = $this->isTherapistAvailable($availableTherapists, $bookings, $clientAmt);
 				if ($isTherapistAvailableForWalkIn) {
 					$availableTherapists = $this->excludeTherapistsOnBookings($availableTherapists, $bookings);
 					//$result = $this->getResponseInfo(true, $searchInfo, $availableTherapists);
@@ -98,6 +98,90 @@
 			return Utilities::getResponseResult(true, '', $therapists);
 		}
 		
+		public function searchAvailabilityForBooking($searchInfo)
+		{
+			try {
+				$date = $searchInfo['date'];
+				$timeIn = $searchInfo['time_in'];
+				$timeOut = $searchInfo['time_out'];
+				$clientAmt= $searchInfo['client_amount'];
+				$singleRoomAmt = $searchInfo['single_room_amount'];
+				$doubleRoomAmt = $searchInfo['double_room_amount'];
+				$requestedTherapists = $searchInfo['therapists'];
+				
+				// init $result values with $searchInfo
+				$result = $searchInfo;
+				
+				// Therapist Availability
+				//
+				$allTherapists = $this->_dataMapper->getTherapistsOnQueue($date);
+				
+				$records = $this->_dataMapper->getRecords($timeIn, $timeOut);
+				$availableTherapists = $this->excludeTherapistsOnRecords($allTherapists, $records);
+				
+				$bookings = $this->_dataMapper->getBookings($timeIn, $timeOut);
+				
+				$isTherapistAvailable = $this->isTherapistAvailable($availableTherapists, $bookings, $clientAmt);
+				if ($isTherapistAvailable) {
+					$availableTherapists = $this->excludeTherapistsOnBookings($availableTherapists, $bookings);
+					// including ['available'] & ['unavailable_therapists']
+					$checkResult = $this->checkRequestedTherapistAvailability($availableTherapists, $requestedTherapists);
+					$result['available'] = $checkResult['available'];
+					$result['unavailable_therapists'] = $checkResult['unavailable_therapists'];
+					
+					if ($result['available']) {
+						// Room Availability
+						//
+						$roomDataMapper = new RoomDataMapper();
+						$allRooms = $roomDataMapper->getAllRooms();
+						$allDoubleRooms = $roomDataMapper->getDoubleRooms();
+						
+						// exclude rooms on records
+						$availableRooms = $this->excludeRoomsOnRecords($allRooms, $records);
+						
+						// exclude double rooms needed for bookings
+						$availableDoubleRooms = $this->getAvailableDoubleRooms($availableRooms, $allDoubleRooms);
+						$doubleRoomsNeededAmt = $this->_dataMapper->getDoubleRoomsNeededAmount($timeIn, $timeOut);
+						$doubleRoomsNeededAmt += $doubleRoomAmt;
+						
+						if (count($availableDoubleRooms) >= $doubleRoomsNeededAmt) {
+							$availableRooms = $this->excludeDoubleRoomsNeeded($availableRooms, $availableDoubleRooms, $doubleRoomsNeededAmt);
+							
+							// exclude single rooms needed for bookings
+							$availableSingleRooms = $this->getAvailableSingleRooms($availableRooms);
+							$singleRoomsNeededAmt = $this->_dataMapper->getSingleRoomsNeededAmount($timeIn, $timeOut);
+							$singleRoomsNeededAmt += $singleRoomAmt;
+							
+							if (count($availableSingleRooms) >= $singleRoomsNeededAmt) {
+								$result['available'] = true;
+								$result['remark'] = "Booking is available";
+							} else {
+								$result['available'] = false;
+								$result['remark'] = "Single room is not enough for the booking";
+							}
+						} else {
+							$result['available'] = false;
+							$result['remark'] = "Double room is not enough for the booking";
+						}
+					} else {
+						$result['remark'] = '';
+						foreach ($result['unavailable_therapists'] as $therapist)
+							$result['remark'] .= '['.$therapist.'] ';
+						
+						$result['remark'] .= "not available for the booking";
+					}
+				} else {
+					// cannot book
+					$result['available'] = false;
+					$result['remark'] = "There is no therapist available";
+				}
+				
+				return Utilities::getResponseResult(true, '', $result);
+			} catch(Exception $e) {
+				return Utilities::getResponseResult(false, 'Getting availability for booking is failed');
+			}
+		}
+		
 		private function addQueueSequence($therapists)
 		{
 			for ($i = 0; $i < count($therapists); $i++) {
@@ -122,7 +206,7 @@
 			return $allTherapists;
 		}
 		
-		private function isTherapistAvailableForWalkIn($availableTherapists, $bookings, $clientAmt)
+		private function isTherapistAvailable($availableTherapists, $bookings, $clientAmt)
 		{
 			$availableTherapistsAmt = 0;
 			
@@ -142,6 +226,29 @@
 				return true;
 			else
 				return false;
+		}
+		
+		private function checkRequestedTherapistAvailability($availableTherapists, $requestedTherapists)
+		{
+			$isAvailable = true;
+			$unavailableTherapists = array();
+			
+			for ($i = 0; $i < count($requestedTherapists); $i++) {
+				for ($j = 0; $j < count($availableTherapists); $j++) {
+					if ($requestedTherapists[$i]['therapist_id'] == $availableTherapists[$j]['therapist_id']) {
+						if ($availableTherapists[$j]['therapist_available'] == 0) {
+							$isAvailable = false;
+							array_push($unavailableTherapists, $availableTherapists[$j]['therapist_name']);
+							break;
+						}
+					}
+				}
+			}
+			
+			$result['available'] = $isAvailable;
+			$result['unavailable_therapists'] = $unavailableTherapists;
+			
+			return $result;
 		}
 		
 		private function excludeTherapistsOnBookings($availableTherapists, $bookings)
@@ -225,7 +332,7 @@
 			Utilities::logInfo("QueueFunction.excludeDoubleRoomsNeeded() | Needed Double Rooms: ".$doubleRoomsNeededAmt);
 			
 			// amount of double room must be more than needed amount of it 
-			for ($i = 0; $i < $doubleRoomsNeededAmt; $i++) {
+			for ($i = 0; ($i < $doubleRoomsNeededAmt) && ($i < count($availableDoubleRooms)); $i++) {
 				for ($j = 0; $j < count($allRooms); $j++) {
 					if ($availableDoubleRooms[$i]['room_no_1'] == $allRooms[$j]['room_no']
 							|| $availableDoubleRooms[$i]['room_no_2'] == $allRooms[$j]['room_no']) {

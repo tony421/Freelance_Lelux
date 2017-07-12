@@ -29,7 +29,9 @@
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
 	    <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
+	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="../js/moment.js"></script>
+	    <script type="text/javascript" src="../js/main.js"></script>
 	    <script type="text/javascript" src="daily-record.js"></script>
 	    
 	   	<script type="text/javascript">
@@ -123,6 +125,68 @@
 			</div>
 		</div>
 		<div id="footer"></div>
+		
+		<!-- Modal : Booking Details -->
+		<div class="modal fade" id="modalBookingDetails" tabindex="-1" role="dialog" aria-labelledby="modalBookingDetails">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="bookingDetails">Booking Details</h4>
+						<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label">Time</label>
+								<div class="col-md-7">
+									<span id="lblBookingTime" class="form-control" style="font-size: 1.2em"><span class="text-mark">60</span> minutes from <span class="text-mark">14:00</span> to <span class="text-mark">15:15</span></span>
+									<!-- <input type="text" id="txtBookingTime" class="form-control"> -->
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label">Room</label>
+								<div class="col-md-7">
+									<span id="lblBookingRoom" class="form-control" style="font-size: 1.2em"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label">Therapist</label>
+								<div class="col-md-7">
+									<span id="lblBookingTherapist" class="form-control" style="font-size: 1.2em; height: 60px;"/>
+									<!-- <input type="text" id="txtBookingTime" class="form-control"> -->
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label">Client Amount</label>
+								<div class="col-md-7">
+									<span id="lblBookingClientAmt" class="form-control" style="font-size: 1.2em"/>
+									<!-- <input type="text" id="txtBookingClient" class="form-control"> -->
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label">Client Name</label>
+								<div class="col-md-7">
+									<input type="text" id="txtBookingClientName" class="form-control" maxlength="20">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label">Client Tel</label>
+								<div class="col-md-7">
+									<input type="text" id="txtBookingClientTel" class="form-control">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="btnAddBooking" class="btn btn-primary btn-lg">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							Add Booking
+						</button>
+						<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
 

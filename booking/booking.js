@@ -5,7 +5,7 @@ var DDL_THERAPIST_ELEMENT_EMPTY = "<div class=\"col-sm-2\" style=\"padding-botto
 
 var _therapistAmt, _therapists, _therapistOptions;
 var _bookings, _bookingTimelineGroups;
-var _bookingTimeline;
+var _bookingTimeline, _bookingTimelineMoveTo;
 
 var $txtMinutes, $txtTimeIn, $txtTimeOut;
 var $txtClient, $txtSingleRoom, $txtDoubleRoom;
@@ -82,12 +82,12 @@ function initPage() {
 	});
 	$txtDoubleRoom.keypress(function(e){
 		if (e.which == 13) {
-			$(PREFIX_DDL_THERAPIST + '1').focus();
+			$(PREFIX_DDL_THERAPIST + '0').focus();
 			return false;
 		}
 	});
 	
-	$btnSearch.click(searchQueue);
+	$btnSearch.click(searchAvailability);
 	
 	initConfig();
 }
@@ -131,13 +131,16 @@ function onInitBookingTimelineDone(response) {
 		main_alert_message(response.msg);
 	}
 }
-function renderBookingTimeline(timelineGroups) {
+function renderBookingTimeline(timelineGroups, bgItem) {
 	// DOM element where the Timeline will be attached
 	var container = document.getElementById('bookingTimeline');
 
 	var groups = new vis.DataSet(timelineGroups);
 	var items = new vis.DataSet();
 	
+	if (typeof(bgItem) !== 'undefined')
+		items.add(bgItem);
+		
 	for (var i = 0; i < timelineGroups.length; i++) {
 		items.add(timelineGroups[i]['items']);
 	}
@@ -149,15 +152,36 @@ function renderBookingTimeline(timelineGroups) {
 	_bookingTimeline = new vis.Timeline(container, items, groups, getTimelineOptions(selectedDate));	
 }
 
+function addTimelineBackgound(timeIn, timeOut) {
+	setTimelineMoveTo(timeIn);
+	
+	bgItem = {id: 'BG', content: '', start: timeIn, end: timeOut, type: 'background'}
+	renderBookingTimeline(_bookingTimelineGroups, bgItem);
+	
+	//moveToTime = moment(timeIn, MOMENT_DATE_TIME_FORMAT).add(35, 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+	//setTimeout(function(){ _bookingTimeline.moveTo(moveToTime); }, 200);
+}
+
 function getTimelineOptions(date) {
+	var start, end;
+	
+	if (typeof(_bookingTimelineMoveTo) === 'undefined') {
+		start = getTimelineStart(date);
+		end = getTimelineEnd(date);
+	} else {
+		start = _bookingTimelineMoveTo;
+		end = moment(_bookingTimelineMoveTo, MOMENT_DATE_TIME_FORMAT).add(195, 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+		_bookingTimelineMoveTo = undefined;
+	}
+	
 	return {
 			orientation: 'both'
 			, zoomable: false
 			, showMajorLabels: false
 			, timeAxis: { scale: 'minute', step: 15 }
 			//, minHeight: '300px'
-			, start: getTimelineStart(date)
-		    , end: getTimelineEnd(date)
+			, start: start
+		    , end: end
 		    , min: getTimelineMin(date)
 		    , max: getTimelineMax(date)
 	};
@@ -185,6 +209,9 @@ function getTimelineGroups() {
 	}
 	
 	return new vis.DataSet(groups);
+}
+function setTimelineMoveTo(timeIn) {
+	_bookingTimelineMoveTo = moment(timeIn, MOMENT_DATE_TIME_FORMAT).add(-60, 'minutes').format(MOMENT_DATE_TIME_FORMAT);
 }
 
 function setTimeIn(time) {
@@ -260,11 +287,12 @@ function checkDuplicateSelectedTherapist(clientAmt, currentIndex, currentVal) {
 function getSearchInfo() {
 	var searchInfo = {
 		date: parent.getSelectedDailyRecordDate()
+		, minutes: $txtMinutes.val()
 		, time_in: getTimeIn()
 		, time_out: getTimeOut()
 		, client_amount: $txtClient.val()
-		, single_room: $txtSingleRoom.val()
-		, double_room: $txtDoubleRoom.val()
+		, single_room_amount: $txtSingleRoom.val()
+		, double_room_amount: $txtDoubleRoom.val()
 		, therapists: getSelectedTherapists()
 	};
 	
@@ -275,7 +303,14 @@ function getSelectedTherapists() {
 	clientAmt = $txtClient.val();
 	
 	for (var i = 0; i < clientAmt; i++) {
-		therapists[i] = $(PREFIX_DDL_THERAPIST + i).val();
+		therapist = {
+			therapist_id: $(PREFIX_DDL_THERAPIST + i).val()
+			, therapist_name: getDDLSelectedText(PREFIX_DDL_THERAPIST + i)
+		};
+		//therapist['therapist_id'] = $(PREFIX_DDL_THERAPIST + i).val();
+		//therapist['therapist_name'] = getDDLSelectedText(PREFIX_DDL_THERAPIST + i);
+		
+		therapists.push(therapist);
 	}
 	
 	return therapists;
@@ -365,12 +400,35 @@ function validateDoubleRoomAmount() {
 
 function searchAvailability() {
 	if (validateInputs()) {
-		//main_request_ajax('../booking/booking-boundary.php', 'SEARCH_AVAILABILITY_FOR_BOOKING', getSearchInfo(), onSearchAvailabilityDone);
+		searchInfo = getSearchInfo();
+		addTimelineBackgound(searchInfo['time_in'], searchInfo['time_out']);
+		
+		main_request_ajax('../queueing/queueing-boundary.php', 'SEARCH_AVAILABILITY_FOR_BOOKING', searchInfo, onSearchAvailabilityDone);
 	}
 }
 function onSearchAvailabilityDone(response) {
 	if (response.success) {
 		result = response.result;
+		
+		console.log(result['available'] + ' | ' + result['remark']);
+		bookingAvailable = result['available'];
+		
+		if (bookingAvailable) {
+			parent.showBookingDetails(
+					result['minutes']
+					, result['date']
+					, result['time_in']
+					, result['time_out']
+					, result['client_amount']
+					, result['single_room_amount']
+					, result['double_room_amount']
+					, result['therapists']);
+		} else {
+			var msg = result['remark'];
+			msg += ' from <span class="text-mark">{0}</span> to <span class="text-mark">{1}</span>';
+			
+			main_alert_message(msg.format(moment(result['time_in']).format(MOMENT_TIME_FORMAT), moment(result['time_out']).format(MOMENT_TIME_FORMAT)));
+		}
 	}
 	else
 		main_alert_message(response.msg);
@@ -389,7 +447,12 @@ function updateFrameContent()
 	initConfig();
 }
 
-
+//will be called by PARENT
+function onAddBookingDone(moveTo)
+{
+	setTimelineMoveTo(moveTo);
+	initBookingTimeline();
+}
 
 
 

@@ -31,6 +31,12 @@
 				
 				$result = $queueFunction->getQueueForWalkIn($searchInfo);
 			}
+			else if ($mode == 'SEARCH_AVAILABILITY_FOR_BOOKING') {
+				$searchInfo = $_POST['data'];
+				Utilities::logInfo('Queueing-Boundary | data[$searchInfo]: '.var_export($searchInfo, true));
+			
+				$result = $queueFunction->searchAvailabilityForBooking($searchInfo);
+			}
 			else if ($mode == 'SEARCH_QUEUE_FOR_BOOKING') {
 				$searchInfo = $_POST['data'];
 					
