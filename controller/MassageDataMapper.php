@@ -23,18 +23,25 @@
 					, therapist.therapist_name, massage_record_requested, massage_record_minutes
 					, date_format(massage_record_time_in, '%H:%i') as massage_record_time_in
 					, date_format(massage_record_time_out, '%H:%i') as massage_record_time_out
-					, concat(date_format(massage_record_time_in, '%H:%i'), ' - ', date_format(massage_record_time_out, '%H:%i')) as massage_record_time_in_out
+					, massage_record_time_in as massage_record_date_time_in 
+					, massage_record_time_out as massage_record_date_time_out
+					, concat(date_format(massage_record_time_in, '%l:%i %p'), ' - ', date_format(massage_record_time_out, '%l:%i %p')) as massage_record_time_in_out
 					, massage_record_stamp, massage_record_cash, massage_record_promotion
 					, massage_record_credit, massage_record_hicaps, massage_record_voucher
+					, massage_record_cash + massage_record_credit + massage_record_hicaps + massage_record_voucher as massage_record_paid_total 
 					, massage_record_commission, massage_record_request_reward
 					, massage_record_commission + massage_record_request_reward as massage_record_commission_total
-					, massage_type.massage_type_id, massage_type.massage_type_name, massage_type.massage_type_active, massage_type.massage_type_commission 
+					, massage_type.massage_type_id, massage_type.massage_type_name, massage_type.massage_type_active, massage_type.massage_type_commission
+					, room_no
+					, booking_item.booking_item_id, booking.booking_name, booking.booking_tel
 				from massage_record
 				join therapist on therapist.therapist_id = massage_record.therapist_id
-				join massage_type on massage_type.massage_type_id = massage_record.massage_type_id 
+				join massage_type on massage_type.massage_type_id = massage_record.massage_type_id
+				left join booking_item on booking_item.booking_item_id = massage_record.booking_item_id
+				left join booking on booking.booking_id = booking_item.booking_id
 				where massage_record_date = '$date'
 					and massage_record_void_user = 0
-				order by massage_record_create_datetime asc;";
+				order by massage_record_time_in, massage_record_time_out, massage_record_create_datetime asc;";
 				
 				return $this->_dataAccess->select($sql);
 			}
@@ -43,7 +50,7 @@
 			}
 		} // getRecords()
 		
-		public function addRecord($recordInfo)
+		public function addRecord($recordInfo, $bookingItemID = 0)
 		{
 			$sql = "
 					insert into massage_record (
@@ -56,6 +63,8 @@
 						, massage_record_voucher, massage_record_stamp, massage_record_date
 						, massage_record_create_user, massage_record_create_datetime
 						, massage_record_time_in, massage_record_time_out
+						, room_no
+						, booking_item_id
 					)
 					values (
 						{$recordInfo['therapist_id']}
@@ -67,6 +76,8 @@
 						, {$recordInfo['massage_record_voucher']}, {$recordInfo['massage_record_stamp']}, '{$recordInfo['massage_record_date']}'
 						, {$recordInfo['massage_record_create_user']}, '{$recordInfo['massage_record_create_datetime']}'
 						, '{$recordInfo['massage_record_time_in']}', '{$recordInfo['massage_record_time_out']}'
+						, {$recordInfo['room_no']}
+						, {$bookingItemID}
 					)";
 			
 			return $this->_dataAccess->insert($sql);
@@ -91,6 +102,7 @@
 						, massage_record_update_datetime = '{$recordInfo['massage_record_update_datetime']}'
 						, massage_record_time_in = '{$recordInfo['massage_record_time_in']}'
 						, massage_record_time_out = '{$recordInfo['massage_record_time_out']}'
+						, room_no = {$recordInfo['room_no']}
 					where massage_record_id = {$recordInfo['massage_record_id']}";
 			
 			return $this->_dataAccess->update($sql);
@@ -105,6 +117,16 @@
 			
 			return $this->_dataAccess->update($sql);
 		} // voidRecord
+		
+		public function deleteRecordByBookingItem($bookingItemID)
+		{
+			$sql = "
+				delete from massage_record
+				where booking_item_id = {$bookingItemID}
+			";
+			
+			return $this->_dataAccess->delete($sql);
+		}
 		
 		public function getCommissionDailyReport($date)
 		{

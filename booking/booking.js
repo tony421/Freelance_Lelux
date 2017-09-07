@@ -1,16 +1,20 @@
 var PREFIX_DDL_THERAPIST = '#ddlTherapist';
+var PREFIX_DDL_MASSAGE_TYPE = '#ddlMassageType';
 // {0} = id, {1} = options
 var DDL_THERAPIST_ELEMENT = "<div class=\"col-sm-2\" style=\"padding-bottom: 5px;\"> <select id=\"ddlTherapist{0}\" class=\"form-control\">{1}</select></div>";
-var DDL_THERAPIST_ELEMENT_EMPTY = "<div class=\"col-sm-2\" style=\"padding-bottom: 5px;\"> <select id=\"ddlTherapist\" class=\"form-control\"></select></div>";
 
-var _therapistAmt, _therapists, _therapistOptions;
+var DDL_MASSAGE_TYPE_ELEMENT = "<div class=\"col-sm-2\" style=\"padding-bottom: 5px;\"> <select id=\"ddlMassageType{0}\" class=\"form-control\">{1}</select></div>";
+
+var _therapistAmt, _therapists, _therapistOptions
+var _massageTypes, _massageTypeOptions;
 var _bookings, _bookingTimelineGroups;
 var _bookingTimeline, _bookingTimelineMoveTo;
 
 var $txtMinutes, $txtTimeIn, $txtTimeOut;
 var $txtClient, $txtSingleRoom, $txtDoubleRoom;
 var $btnSearch;
-var $ddlTherapistContainer;
+var $contextMenuShowRecord;
+var $ddlTherapistContainer, $ddlMassageTypeContainer;
 var $bookingTimeline;
 
 function initPage() {
@@ -23,14 +27,17 @@ function initPage() {
 	$txtSingleRoom = $('#txtSingleRoom');
 	$txtDoubleRoom = $('#txtDoubleRoom');
 	$btnSearch = $('#btnSearch');
+	$contextMenuShowRecord = $('#contextMenuShowRecord');
 	$ddlTherapistContainer = $('#ddlTherapistContainer');
+	$ddlMassageTypeContainer = $('#ddlMassageTypeContainer');
 	$bookingTimeline = $('#bookingTimeline');
 	
 	initTouchSpinInput($txtMinutes, 10, 1000, 60, 5);
 	$txtMinutes.change(calTimeOut);
 	
-	$txtTimeIn.inputmask("hh:mm"); // "hh:mm t" => 11:30 pm
-	$txtTimeIn.focus(function(){ $(this).select(); });
+	//$txtTimeIn.inputmask("hh:mm t"); // "hh:mm t" => 11:30 pm
+	//$txtTimeIn.focus(function(){ $(this).select(); });
+	initTimeInput($txtTimeIn);
 	$txtTimeIn.change(calTimeOut);
 	setTimeIn();
 	
@@ -49,6 +56,7 @@ function initPage() {
 		$(this).val(clientAmt);
 		setDefaultValueForRooms(clientAmt);
 		setDDLTherapist(clientAmt);
+		setDDLMassageType(clientAmt);
 	});
 	
 	initTouchSpinInput($txtSingleRoom, 0, 99, 0, 1);
@@ -89,6 +97,13 @@ function initPage() {
 	
 	$btnSearch.click(searchAvailability);
 	
+	$contextMenuShowRecord.click(function(){
+		//console.log($('#popupContextMenu').data('recordId'));
+		recordID = $('#popupContextMenu').data('recordId')
+		parent.showMassageRecordDetails(recordID);
+		$('#popupContextMenu').css('display', 'none');
+	});
+	
 	initConfig();
 }
 
@@ -110,6 +125,13 @@ function onInitConfigDone(response) {
 			_therapistOptions += "<option value='" + therapist['therapist_id'] + "'>" + therapist['therapist_name'] + "</option>";
 		});
 		
+		_massageTypes = result['massage_types'];
+		_massageTypeOptions = "";
+		$.each(_massageTypes, function (i, type){
+			_massageTypeOptions += "<option value='" + type['massage_type_id'] + "'>" + type['massage_type_name'] + "</option>";
+		});
+		
+		$txtClient.change();
 		initBookingTimeline();
 	} else {
 		main_alert_message(response.msg);
@@ -125,7 +147,7 @@ function onInitBookingTimelineDone(response) {
 		result = response.result;
 		_bookings = result['bookings'];
 		_bookingTimelineGroups = result['timeline_groups'];
-		
+
 		renderBookingTimeline(_bookingTimelineGroups);
 	} else {
 		main_alert_message(response.msg);
@@ -149,7 +171,70 @@ function renderBookingTimeline(timelineGroups, bgItem) {
 	if (typeof(_bookingTimeline) !== 'undefined')
 		_bookingTimeline.destroy();
 	
-	_bookingTimeline = new vis.Timeline(container, items, groups, getTimelineOptions(selectedDate));	
+	_bookingTimeline = new vis.Timeline(container, items, groups, getTimelineOptions(selectedDate));
+	
+	// make the timeline smaller
+	setTimeout(function(){_bookingTimeline.zoomOut(1, { animation: false})}, 10);
+	
+	//_bookingTimeline.off('select');
+	_bookingTimeline.on('select', function (properties) {
+		$('#popupContextMenu').css('display', 'none');
+		
+		if (properties.items != '') {
+			//console.log('selected items: ' + properties.items); // items = id
+			var bookingItemID = properties.items;
+			
+			var selectedTimelineItem = getSelectedTimelineItem(bookingItemID);
+			if (typeof(selectedTimelineItem) !== 'undefined') {
+				var type = selectedTimelineItem['item_type'];
+				if (type == 'booking') {
+					var selectedItem = getSelectedBookingItem(bookingItemID);
+					
+					// show the queue when its status is "coming"
+					if (selectedItem['booking_item_status'] == 1) {
+						showBookingQueue(bookingItemID);
+					}
+				} else if (type == 'record') {
+					// the item is a record, then show menu
+					var popoverOffset = $('.vis-item.vis-selected').offset();
+					popoverOffset.top = popoverOffset.top + $('.vis-item.vis-selected').height();
+					$('#popupContextMenu').css('display', 'block');
+					$('#popupContextMenu').offset(popoverOffset);
+					$('#popupContextMenu').data('recordId', bookingItemID);
+				} else if (type == 'gap') {
+					
+				}
+			}
+		} else {
+			
+		}
+		
+		/*console.log($('.vis-item.vis-selected').offset());
+		var popoverOffset = $('.vis-item.vis-selected').offset();
+		popoverOffset.top = popoverOffset.top + $('.vis-item.vis-selected').height() + 12;
+		$('.popupContextMenu').offset(popoverOffset);*/
+	});
+}
+
+function showBookingQueue(bookingItemID) {
+	var bookingItem = getSelectedBookingItem(bookingItemID);
+	parent.showBookingQueue(_bookings, bookingItem);
+}
+function getSelectedBookingItem(bookingItemID) {
+	for (var i = 0; i < _bookings.length; i++) {
+		if (_bookings[i]['booking_item_id'] == bookingItemID) {
+			return _bookings[i];
+		}
+	}
+}
+function getSelectedTimelineItem(itemID) {
+	for (var i = 0; i < _bookingTimelineGroups.length; i++) {
+		for (var j = 0; j < _bookingTimelineGroups[i]['items'].length; j++) {
+			if (_bookingTimelineGroups[i]['items'][j]['id'] == itemID) {
+				return _bookingTimelineGroups[i]['items'][j];
+			}
+		}
+	}
 }
 
 function addTimelineBackgound(timeIn, timeOut) {
@@ -178,17 +263,26 @@ function getTimelineOptions(date) {
 			orientation: 'both'
 			, zoomable: false
 			, showMajorLabels: false
-			, timeAxis: { scale: 'minute', step: 15 }
-			//, minHeight: '300px'
+			, format: {
+				minorLabels: {
+					hour: 'h:mm A'
+					, minute: 'h:mm A'
+				}
+			}
+			, timeAxis: { scale: 'minute', step: 60 }
+			//, minHeight: '430px'
+			, maxHeight: '480px'
+			, stack: false
 			, start: start
 		    , end: end
 		    , min: getTimelineMin(date)
 		    , max: getTimelineMax(date)
+		    , groupOrder: '' // this is added to fix bug when more 10 groups have to be shown
 	};
 }
 function getTimelineStart(date) {
 	if (date == currentDate()) {
-		return date + ' ' + currentTime();
+		return date + ' ' + moment().format(MOMENT_TIME_FORMAT);
 	} else {
 		return date + ' ' + OPEN_TIME;
 	}
@@ -215,17 +309,17 @@ function setTimelineMoveTo(timeIn) {
 }
 
 function setTimeIn(time) {
-	time = typeof(time) === "undefined" ? moment().format(MOMENT_TIME_FORMAT) : time;
+	time = typeof(time) === "undefined" ? currentTime() : time;
 	
-	$txtTimeIn.val(time);
+	setTimeInput($txtTimeIn, time);
 	calTimeOut();
 }
 function calTimeOut() {
-	if ($txtTimeIn.inputmask("isComplete")) {
-		timeIn = $txtTimeIn.val().split(":");
+	if (isTimeInputComplete($txtTimeIn)) {
+		timeIn = getTimeInput($txtTimeIn).split(":");
 		minutes = $txtMinutes.val().trim().length ? $txtMinutes.val() : 0;
 		
-		timeOut = moment([1900, 1, 1, timeIn[0], timeIn[1], 0]).add(minutes, 'minutes').format(MOMENT_TIME_FORMAT);
+		timeOut = moment([1900, 1, 1, timeIn[0], timeIn[1], 0]).add(minutes, 'minutes').format(MOMENT_TIME_12_FORMAT);
 		$txtTimeOut.val(timeOut);
 	}
 	else {
@@ -234,7 +328,7 @@ function calTimeOut() {
 }
 function getTimeIn()
 {
-	timeIn = $txtTimeIn.val().split(":");
+	timeIn = getTimeInput($txtTimeIn).split(":");
 	date = parent.getSelectedDailyRecordDate(); // use getDate function of the parent
 	
 	return moment(date, MOMENT_DATE_FORMAT).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT);
@@ -265,7 +359,7 @@ function setDDLTherapist(clientAmt) {
 			listenDDLTherapistChange(i);
 		}
 	} else {
-		$ddlTherapistContainer.append(DDL_THERAPIST_ELEMENT_EMPTY);
+		$ddlTherapistContainer.append(DDL_THERAPIST_ELEMENT.format('', ''));
 	}
 }
 function listenDDLTherapistChange(index) {
@@ -274,13 +368,26 @@ function listenDDLTherapistChange(index) {
 	});
 }
 function checkDuplicateSelectedTherapist(clientAmt, currentIndex, currentVal) {
-	console.log(clientAmt + " | " + currentIndex + " | " + currentVal);
+	//console.log(clientAmt + " | " + currentIndex + " | " + currentVal);
 	for (var i = 0; i < clientAmt; i++) {
 		if (i != currentIndex) {
 			if ($(PREFIX_DDL_THERAPIST + i).val() == currentVal) {
 				$(PREFIX_DDL_THERAPIST + currentIndex).val(0);
 			}
 		}
+	}
+}
+
+function setDDLMassageType(clientAmt) {
+	$ddlMassageTypeContainer.empty();
+	
+	if (clientAmt > 0) {
+		for (var i = 0; i < clientAmt; i++) {
+			ddlMassageType = DDL_MASSAGE_TYPE_ELEMENT.format(i, _massageTypeOptions);
+			$ddlMassageTypeContainer.append(ddlMassageType);
+		}
+	} else {
+		$ddlMassageTypeContainer.append(DDL_MASSAGE_TYPE_ELEMENT.format('', ''));
 	}
 }
 
@@ -294,6 +401,7 @@ function getSearchInfo() {
 		, single_room_amount: $txtSingleRoom.val()
 		, double_room_amount: $txtDoubleRoom.val()
 		, therapists: getSelectedTherapists()
+		, massage_types: getSelectedMassageTypes()
 	};
 	
 	return searchInfo;
@@ -315,11 +423,26 @@ function getSelectedTherapists() {
 	
 	return therapists;
 }
+function getSelectedMassageTypes() {
+	massageTypes = [];
+	clientAmt = $txtClient.val();
+	
+	for (var i = 0; i < clientAmt; i++) {
+		type = {
+			massage_type_id: $(PREFIX_DDL_MASSAGE_TYPE + i).val()
+			, massage_type_name: getDDLSelectedText(PREFIX_DDL_MASSAGE_TYPE+ i)
+		};
+			
+		massageTypes.push(type);
+	}
+	
+	return massageTypes;
+}
 
 function validateInputs()
 {
 	if ($txtMinutes.val().trim().length) {
-		if ($txtTimeIn.val().trim().length) {
+		if (isTimeInputComplete($txtTimeIn)) {
 			if ($txtClient.val().trim().length) {
 				if (parseInt($txtClient.val()) > 0) {
 					if ($txtSingleRoom.val().trim().length || $txtDoubleRoom.val().trim().length) {
@@ -352,6 +475,11 @@ function validateInputs()
 	
 	return false;
 } // validateInputs
+
+function clearBookingInputs() {
+	$txtClient.val(0);
+	$txtClient.change();
+}
 
 function validateRoomAmount() {
 	clientAmt = parseInt($txtClient.val());
@@ -410,7 +538,7 @@ function onSearchAvailabilityDone(response) {
 	if (response.success) {
 		result = response.result;
 		
-		console.log(result['available'] + ' | ' + result['remark']);
+		//console.log(result['available'] + ' | ' + result['remark']);
 		bookingAvailable = result['available'];
 		
 		if (bookingAvailable) {
@@ -422,12 +550,13 @@ function onSearchAvailabilityDone(response) {
 					, result['client_amount']
 					, result['single_room_amount']
 					, result['double_room_amount']
-					, result['therapists']);
+					, result['therapists']
+					, result['massage_types']);
 		} else {
 			var msg = result['remark'];
-			msg += ' from <span class="text-mark">{0}</span> to <span class="text-mark">{1}</span>';
+			msg += ' for <span class="text-mark">{0}</span> client from <span class="text-mark">{1}</span> to <span class="text-mark">{2}</span> (<span class="text-mark">{3}</span> minutes)';
 			
-			main_alert_message(msg.format(moment(result['time_in']).format(MOMENT_TIME_FORMAT), moment(result['time_out']).format(MOMENT_TIME_FORMAT)));
+			main_alert_message(msg.format(result['client_amount'], formatTime(result['time_in']), formatTime(result['time_out']), result['minutes']));
 		}
 	}
 	else
@@ -445,11 +574,31 @@ function updateFrameContent()
 {
 	//alert("UPDATE - Queueing");
 	initConfig();
+	setTimeIn();
 }
 
 //will be called by PARENT
 function onAddBookingDone(moveTo)
 {
+	clearBookingInputs();
+	setTimelineMoveTo(moveTo);
+	initBookingTimeline();
+}
+
+//will be called by PARENT
+function onAddMassageRecordDone(moveTo) {
+	setTimelineMoveTo(moveTo);
+	initBookingTimeline();
+}
+
+//will be called by PARENT
+function onUpdateBookingDone(moveTo) {
+	setTimelineMoveTo(moveTo);
+	initBookingTimeline();
+}
+
+//will be called by PARENT
+function onDeleteBookingDone(moveTo) {
 	setTimelineMoveTo(moveTo);
 	initBookingTimeline();
 }

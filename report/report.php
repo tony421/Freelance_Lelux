@@ -1,4 +1,7 @@
 <?php
+	require_once '../login/page-authentication.php';
+	ob_start();
+	
 	require_once '../controller/PDF.php';
 	require_once '../controller/ReportFunction.php';
 	require_once '../controller/Utilities.php';

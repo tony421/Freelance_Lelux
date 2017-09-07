@@ -52,7 +52,8 @@
 			$sql = "
 					select therapist.therapist_id, therapist.therapist_name, therapist.therapist_guarantee
 						, shift.shift_id, shift.shift_working
-						, shift_type.shift_type_name, shift_type.shift_type_rate
+						, shift_type.shift_type_id, shift_type.shift_type_name, shift_type.shift_type_rate
+						, shift_create_datetime as shift_time_start
 					from therapist
 					join shift on therapist.therapist_id = shift.therapist_id
 					join shift_type on shift.shift_type_id = shift_type.shift_type_id
@@ -194,6 +195,15 @@
 			delete from shift
 			where shift_id = {$shiftID}";
 				
+			return $this->_dataAccess->delete($sql);
+		}
+		
+		public function deleteAllTherapistOnShift($date)
+		{
+			$sql = "
+			delete from shift
+			where shift_date = '{$date}'";
+		
 			return $this->_dataAccess->delete($sql);
 		}
 	}

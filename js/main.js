@@ -5,6 +5,7 @@ var DATE_PICKER_FORMAT = 'DD, d MM yyyy';
 var MOMENT_DATE_DB_FORMAT = 'YYYY-M-D';
 var MOMENT_DATE_FORMAT = 'YYYY-M-D';
 var MOMENT_TIME_FORMAT = 'HH:mm';
+var MOMENT_TIME_12_FORMAT = 'hh:mm a';
 var MOMENT_DATE_TIME_FORMAT = 'YYYY-M-D HH:mm';
 
 var ICON_OK = '<span class="glyphicon glyphicon-ok" style="color: green; font-size: 1.2em;" aria-hidden="true"></span>';
@@ -39,7 +40,13 @@ function main_request_ajax(url, mode, data, onSuccess)
 		// eg. check the actual error on PHP if we received ParserError
 		// eg. result from print_r()
 		dataType: 'json', 
-		success: onSuccess,
+		success: function(response){
+			if (response.timeout === undefined) {
+				onSuccess(response);
+			} else {
+				main_redirect('../login/');
+			}
+		},
 		error: function(xhr, errType, err){
 			//console.log(xhr.responseText.trim());
 			
@@ -47,8 +54,9 @@ function main_request_ajax(url, mode, data, onSuccess)
 			//main_alert_message('Error Type: ' + errType + ' | Error:' + err);
 			main_alert_message('System Error! Please contact admin.');
 			
+			console.log(xhr.responseText.trim());
 			// write log on the server
-			main_request_ajax('../log/log-boundary.php', '', xhr.responseText.trim(), function(){});
+			main_request_ajax('../log/log-boundary.php', '', xhr.responseText.trim(), function(response){});
 			
 			// N.B.
 			// undefined object (non-exist jquery object) from Client-Side cause ParserError
@@ -59,7 +67,7 @@ function main_request_ajax(url, mode, data, onSuccess)
 
 function main_redirect(url)
 {
-	window.location.replace(url);
+	parent.window.location.replace(url);
 }
 
 function main_open_new_tab(url)
@@ -193,6 +201,12 @@ function main_get_frame_content(frameName) {
 
 function initMoneyInput(control, min, max) {
 	$(control).autoNumeric('init', { vMin: min, vMax: max, aSign: '$' });
+	$(control).css('text-align', 'right');
+	$(control).focus(function(){ $(this).select(); });
+	$(control).change(function() {
+		if (!($(this).val().length))
+			setMoneyInputValue($(this), 0);
+	});
 }
 
 function setMoneyInputValue(control, val) {
@@ -200,7 +214,7 @@ function setMoneyInputValue(control, val) {
 }
 
 function getMoneyInputValue(control) {
-	return $(control).autoNumeric('get');
+	return parseFloat($(control).autoNumeric('get'));
 	//return $(control).val().replace(/\$/i, '');
 }
 
@@ -254,6 +268,11 @@ function initTouchSpinInput(control, min, max, initVal, step) {
 		max: max,
 		step: step
 	});
+	
+	$(control).change(function() {
+		if (!($(this).val().length))
+			$(this).val(min);
+	});
 }
 
 function setTouchSpinInputValue(control, val) {
@@ -262,6 +281,20 @@ function setTouchSpinInputValue(control, val) {
 
 function getTouchSpinInputValue(control) {
 	return $(control).val();
+}
+
+function initTimeInput(control) {
+	$(control).inputmask("hh:mm t"); // "hh:mm t" => "07:10 pm", "hh:mm" => "19:10"
+	//$(control).focus(function(){ $(this).select(); });
+}
+function setTimeInput(control, val) {
+	$(control).val(moment(currentDate() + ' ' + val).format(MOMENT_TIME_12_FORMAT));
+}
+function getTimeInput(control) {
+	return moment(currentDate() + ' ' + $(control).val()).format(MOMENT_TIME_FORMAT);
+}
+function isTimeInputComplete(control) {
+	return $(control).inputmask("isComplete");
 }
 
 function convertDBFormatDate(date) {
@@ -276,13 +309,14 @@ function currentDate() {
 	return moment().format(MOMENT_DATE_FORMAT);
 }
 function currentTime() {
-	return moment().format(MOMENT_TIME_FORMAT);
+	return moment().round(5, 'minutes').format(MOMENT_TIME_12_FORMAT);
 }
 function currentDateTime() {
 	return moment().format(MOMENT_DATE_TIME_FORMAT);
 }
-
-
+function formatTime(val) {
+	return moment(val).format(MOMENT_TIME_12_FORMAT);
+}
 
 
 

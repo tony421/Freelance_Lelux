@@ -5,5 +5,5 @@
 
 	Authentication::authenticateUser();
 	
-	ob_end_flush();
+	ob_end_clean();
 ?>

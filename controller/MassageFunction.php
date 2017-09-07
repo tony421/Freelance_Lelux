@@ -1,6 +1,7 @@
 <?php
 	require_once '../controller/Authentication.php';
 	require_once '../controller/MassageDataMapper.php';
+	require_once '../controller/BookingDataMapper.php';
 	require_once '../controller/Config.php';
 	require_once '../controller/Utilities.php';
 
@@ -71,12 +72,16 @@
 			}
 		}
 		
-		public function voidRecord($recordID)
+		public function voidRecord($recordInfo)
 		{
-			$recordInfo['massage_record_id'] = $recordID;
 			$affectedRow = $this->executeCommand($recordInfo, self::MODE_VOID);
 			
 			if ($affectedRow > 0) {
+				if ($recordInfo['booking_item_id'] != 0) {
+					$bookingDataMapper = new BookingDataMapper();
+					$bookingDataMapper->reverseBookingItemStatus($recordInfo['booking_item_id']);
+				}					
+					
 				return Utilities::getResponseResult(true, 'Deleting the record has been successful.');
 			}
 			else {
@@ -84,13 +89,68 @@
 			}
 		}
 		
-		private function executeCommand($recordInfo, $mode = self::MODE_ADD)
+		public function addRecordByQueueing($recordInfo)
+		{
+			$recordInfo['massage_record_commission'] = $this->getCommission($recordInfo['massage_record_date'], $recordInfo['massage_record_minutes']);
+			$recordInfo['massage_record_request_reward'] = $this->getExtraCommission(
+					$recordInfo['massage_record_date'], $recordInfo['massage_record_minutes']
+					, filter_var($recordInfo['massage_record_requested'], FILTER_VALIDATE_BOOLEAN), $recordInfo['massage_record_stamp']
+					, filter_var($recordInfo['massage_record_promotion'], FILTER_VALIDATE_BOOLEAN)
+					, $recordInfo['massage_type_commission']);
+			
+			$affectedRow = $this->executeCommand($recordInfo, self::MODE_ADD);
+				
+			if ($affectedRow > 0) {
+				return Utilities::getResponseResult(true, 'The massage record has been added successfully.');
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Adding a new massage record has failed!');
+			}
+		}
+		
+		public function addRecordByBooking($recordInfo)
+		{
+			$recordInfo['massage_record_commission'] = $this->getCommission($recordInfo['massage_record_date'], $recordInfo['massage_record_minutes']);
+			$recordInfo['massage_record_request_reward'] = $this->getExtraCommission(
+					$recordInfo['massage_record_date'], $recordInfo['massage_record_minutes']
+					, filter_var($recordInfo['massage_record_requested'], FILTER_VALIDATE_BOOLEAN), $recordInfo['massage_record_stamp']
+					, filter_var($recordInfo['massage_record_promotion'], FILTER_VALIDATE_BOOLEAN)
+					, $recordInfo['massage_type_commission']);
+			
+			$affectedRow = $this->executeCommand($recordInfo, self::MODE_ADD, $recordInfo['booking_item_id']);
+			
+			if ($affectedRow > 0) {
+				$bookingDataMapper = new BookingDataMapper();
+				$affectedRow = $bookingDataMapper->confirmArrivalBookingItem($recordInfo['booking_id'], $recordInfo['booking_item_id']);
+			}
+			
+			if ($affectedRow > 0) {
+				$result['booking_move_to'] = $recordInfo['booking_time_in'];
+				
+				return Utilities::getResponseResult(true, 'The record is added successfully.', $result);
+			} else {
+				$this->_dataMapper->deleteRecordByBookingItem($recordInfo['booking_item_id']);
+				return Utilities::getResponseResult(false, 'Adding record is failed!');
+			}
+		}
+		
+		public function getCommissionDailyReport($date)
+		{
+			return $this->_dataMapper->getCommissionDailyReport($date);
+		}
+		
+		public function getIncomeDailyReport($date)
+		{
+			return $this->_dataMapper->getIncomeDailyReport($date);
+		}
+		
+		private function executeCommand($recordInfo, $mode = self::MODE_ADD, $bookingItemID = 0)
 		{
 			switch($mode) {
 				case self::MODE_ADD :
 					$recordInfo['massage_record_create_user'] = Authentication::getUser()->getID();
-					$recordInfo['massage_record_create_datetime'] = Utilities::getDateTimeNowForDB();
-					return $this->_dataMapper->addRecord($recordInfo);
+					$recordInfo['massage_record_create_datetime'] = Utilities::getDateTimeNowForDB();					
+					return $this->_dataMapper->addRecord($recordInfo, $bookingItemID);
 					
 				case self::MODE_UPDATE :
 					$recordInfo['massage_record_update_user'] = Authentication::getUser()->getID();
@@ -104,14 +164,44 @@
 			}
 		}
 		
-		public function getCommissionDailyReport($date)
+		private function getCommission($date, $minutes)
 		{
-			return $this->_dataMapper->getCommissionDailyReport($date);
+			$config = new Config();
+			$comRate = $config->getCommissionRate($date);
+			
+			Utilities::logDebug('MassageFunction.getExtraCommission() | Standard Commission: '.($minutes * $comRate));
+			
+			return $minutes * $comRate;
 		}
 		
-		public function getIncomeDailyReport($date)
-		{
-			return $this->_dataMapper->getIncomeDailyReport($date);
+		private function getExtraCommission($date, $minutes, $isRequested, $stamp, $isPromo, $massageTypeCommission) {
+			$config = new Config();
+			$reqConditions = $config->getRequestConditions($date);
+			$minReq = $config->getMinRequest($date);
+			
+			$commission = $massageTypeCommission;
+			
+			if ($minutes >= $minReq) {
+				$isStampUsed = false;
+				if ($stamp > 0)
+					$isStampUsed = true; 
+				
+				for ($i = 0; $i < count($reqConditions); $i++) {
+					Utilities::logDebug("Condition.Request[{$reqConditions[$i]['request_condition_request']}] | isRequested[{$isRequested}]");
+					Utilities::logDebug("Condition.Stamp[{$reqConditions[$i]['request_condition_stamp']}] | isStampUsed[{$isStampUsed}]");
+					Utilities::logDebug("Condition.Promotion[{$reqConditions[$i]['request_condition_promotion']}] | isPromo[{$isPromo}]");
+					
+					if (filter_var($reqConditions[$i]['request_condition_request'], FILTER_VALIDATE_BOOLEAN) == $isRequested
+						&& filter_var($reqConditions[$i]['request_condition_stamp'], FILTER_VALIDATE_BOOLEAN) == $isStampUsed
+						&& filter_var($reqConditions[$i]['request_condition_promotion'], FILTER_VALIDATE_BOOLEAN) == $isPromo) {
+						$commission += $reqConditions[$i]['request_condition_amt'];
+						break;
+					}
+				}
+			}
+			
+			Utilities::logDebug('MassageFunction.getExtraCommission() | Extra Commission: '.$commission);
+			return $commission;
 		}
 	}
 

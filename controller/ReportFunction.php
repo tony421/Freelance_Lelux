@@ -338,6 +338,13 @@ header;
 			</thead>
 colHeader;
 			
+			
+			
+			$summaryRow = $this->getSumDailyCommissionReport($reportInfo);
+			array_push($reportInfo, $summaryRow);
+			
+			Utilities::logDebug(var_export($summaryRow));
+			
 			$reportRows = "";
 			foreach ($reportInfo as $row) {
 				$commission = $row['massage_record_commission'] != '' ? '$'.$row['massage_record_commission'] : '';
@@ -349,10 +356,10 @@ colHeader;
 				
 				$com_total = '$'.number_format($total, 2);
 				// ***Enable this when staff shift control is built
-				/*if ($guarantee > $total)
+				if ($guarantee > $total)
 					$com_total = '(*) $'.number_format($guarantee, 2);
 				else
-					$com_total = '$'.number_format($total, 2);*/
+					$com_total = '$'.number_format($total, 2);
 				
 				// calculate massage duration for each staff
 				if ($row['massage_record_minutes'] == '') {
@@ -386,6 +393,33 @@ table;
 				
 			return $reportHeader.$reportTable;
 		} // getCommissionDailyReport
+		
+		private function getSumDailyCommissionReport($rows) 
+		{
+			$total = 0.0;
+			foreach ($rows as $row) {
+				$comTotal = (float)$row['massage_record_commission_total'];
+				$guarantee = (float)$row['therapist_guarantee'];
+				
+				if ($guarantee > $comTotal)
+					$comTotal = $guarantee;
+					
+				$total += $comTotal;
+			}
+			
+			$summaryRow = array();
+			$summaryRow['seq'] = 99;
+			$summaryRow['therapist_id'] = '';
+			$summaryRow['therapist_name'] = 'Total';
+			$summaryRow['therapist_guarantee'] = '';
+			$summaryRow['massage_record_minutes'] = '';
+			$summaryRow['massage_record_commission'] = '';
+			$summaryRow['massage_record_request_reward'] = '';
+			$summaryRow['massage_record_commission_total'] = '';
+			$summaryRow['massage_record_commission_total'] = $total;
+			
+			return $summaryRow;
+		}
 		
 		public function getDailyIncomeReport($date)
 		{
@@ -466,8 +500,9 @@ row;
 table;
 			
 			
-			
-			return $this->_CSS.$reportHeader.$reportTable.$this->_SEPARATE_LINE.$this->_SEPARATE_LINE.$raltedInfoTable;
+			// Do not show free stamp and voucher amount. 
+			return $this->_CSS.$reportHeader.$reportTable;
+			//return $this->_CSS.$reportHeader.$reportTable.$this->_SEPARATE_LINE.$this->_SEPARATE_LINE.$raltedInfoTable;
 		} // getIncomeDailyReport
 		
 		public function getSaleReceipt($uid)

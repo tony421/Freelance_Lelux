@@ -32,10 +32,10 @@ function initPage()
 	$btnCancelEdit = $('#btnCancelEdit');
 	
 	initTouchSpinInput($txtHour, 0, 24, 0, 1);
-	initMoneyInput($txtIncome, 0, 99999999);
-	initMoneyInput($txtStdCom, 0, 99999999);
-	initMoneyInput($txtExtraCom, 0, 99999999);
-	initMoneyInput($txtTotalCom, 0, 99999999);
+	initMoneyInput($txtIncome, 0, 99999.99);
+	initMoneyInput($txtStdCom, 0, 99999.99);
+	initMoneyInput($txtExtraCom, 0, 99999.99);
+	initMoneyInput($txtTotalCom, 0, 99999.99);
 	
 	$cbLateNightWork.change(function(){
 		//calLateNightCom();

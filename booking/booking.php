@@ -26,6 +26,7 @@
 	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css"/>
 	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css"/>
 	    <link rel="stylesheet" href="../vis-4.20.0/dist/vis-timeline-graph2d.min.css"/>
+	    <link rel="stylesheet" href="../css/popover.css"/>
 	    
 	    <script type="text/javascript" src="../js/main.js"></script>
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
@@ -35,8 +36,9 @@
 	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
 	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="../js/moment.js"></script>
+	    <script type="text/javascript" src="../js/moment-round.js"></script>
 	    <script type="text/javascript" src="../vis-4.20.0/dist/vis-timeline-graph2d.min.js"></script>
-	    <script type="text/javascript" src="booking.js"></script>
+	    <script type="text/javascript" src="booking.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="booking-var.js"></script>
 	    
 	   	<script type="text/javascript">
@@ -90,6 +92,15 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="col-sm-offset-1 col-sm-2 control-label">Massage Type</label>
+						<div id="ddlMassageTypeContainer" class="col-sm-9" style="padding: 0;">
+							<!-- MassageType dropdown will be added automatically according the number of client -->
+							<div class="col-sm-2" style="padding-bottom: 5px;"> 
+								<select id="ddlMassageType0" class="form-control"></select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
 						<div class="col-sm-12 text-center">
 							<button type="button" id="btnSearch" class="btn btn-primary btn-lg">
 								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -119,6 +130,19 @@
 					</div>
 				</form>
 			</div>
+			
+			<!-- Popover Prototype -->
+			<!--  
+			<div class="popover popover-bottom" style="top: 0px; left: 0px; position: absolute; transform: translateX(100px) translateY(100px) translateZ(0px);">
+				<h3 class="popover-title">Popover bottom</h3>
+				<div class="popover-content">
+					<p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+				</div>
+			</div>
+			-->
+			<ul id="popupContextMenu" class="dropdown-menu" style="display: none;" data-record-id>
+			    <li><a id="contextMenuShowRecord" style="cursor: pointer;">Show Record</a></li>
+			</ul>
 		</div>
 	</body>
 </html>

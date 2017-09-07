@@ -2,7 +2,7 @@ var PREFIX_BTN_DELETE = '#btnDelete';
 var PREFIX_BTN_ABSENT = '#btnAbsent';
 var PREFIX_BTN_WORKING = '#btnWorking';
 
-var $ddlTherapist, $ddlShift, $btnAdd;
+var $ddlTherapist, $ddlShift, $btnAdd, $btnDeleteAll;
 var $tableShift, _dtTableShift;
 
 function initPage() {
@@ -11,9 +11,16 @@ function initPage() {
 	$ddlTherapist = $("#ddlTherapist");
 	$ddlShift = $("#ddlShift");
 	$btnAdd = $("#btnAdd");
+	$btnDeleteAll = $('#btnDeleteAll');
 	
 	$btnAdd.click(function(){
 		addTherapistToShift();
+	});
+	$btnDeleteAll.click(function(){
+		main_confirm_message('Do you want to DELETE ALL therapists?'
+			, function(){
+				deleteAllTherapists();
+			}, function(){}, 1);
 	});
 	
 	initShiftType();
@@ -139,7 +146,14 @@ function addShiftRows(shifts) {
 function setTableShiftOption(btnName, command, shiftID, therapistName) {
 	if ($(btnName + shiftID).length) {
 		$(btnName + shiftID).click(function(){
-			main_request_ajax('therapist-boundary.php', command, {shift_id: shiftID, therapist_name: therapistName}, onTableShiftOptionDone);
+			if (btnName == PREFIX_BTN_DELETE) {
+				main_confirm_message('Do you want to DELETE the therapist?'
+					, function(){
+						main_request_ajax('therapist-boundary.php', command, {shift_id: shiftID, therapist_name: therapistName}, onTableShiftOptionDone);
+					}, function(){}, 1);
+			} else {
+				main_request_ajax('therapist-boundary.php', command, {shift_id: shiftID, therapist_name: therapistName}, onTableShiftOptionDone);
+			}
 		});
 	}		
 }
@@ -166,6 +180,19 @@ function addTherapistToShift() {
 	main_request_ajax('therapist-boundary.php', 'ADD_THERAPIST_TO_SHIFT', getShiftInfo(), onAddTherapistToShiftDone);
 }
 function onAddTherapistToShiftDone(response) {
+	if (response.success) {
+		initTherapist();	
+		getTherapistsOnShift();
+	}
+	else
+		main_alert_message(response.msg);
+}
+
+function deleteAllTherapists() {
+	selectedDate = parent.getSelectedDailyRecordDate();
+	main_request_ajax('therapist-boundary.php', 'DELETE_ALL_THERAPIST_ON_SHIFT', selectedDate, onDeleteAllTherapistsDone);
+}
+function onDeleteAllTherapistsDone(response) {
 	if (response.success) {
 		initTherapist();	
 		getTherapistsOnShift();

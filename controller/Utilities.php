@@ -5,12 +5,12 @@
 
 	class Utilities
 	{
-		const log_path = "/Freelance_Lelux/log/";
+		const log_path = "/lelux/log/";
 		//const log_path = "/support/log/";
 		
-		public static function getUniqueID()
+		public static function getUniqueID($prefix = null)
 		{
-			return uniqid();
+			return uniqid($prefix);
 		}
 		
 		public static function getResponseMassage($success, $msg)
@@ -21,6 +21,12 @@
 		public static function getResponseResult($success, $msg, $result = [])
 		{
 			return array('success' => $success, 'msg' => $msg, 'result' => $result);
+		}
+		
+		public static function getTimeoutResponseResult()
+		{
+			Utilities::logInfo('Session is expired!!');
+			return array('timeout' => true);
 		}
 		
 		public static function handleError()
@@ -112,6 +118,27 @@
 		public static function convertDatetimeForDisplay($date)
 		{
 			return date_format(date_create($date), 'd/m/Y H:i:s');
+		}
+		
+		public static function formatTime($date)
+		{
+			return date_format(date_create($date), 'h:i a'); // h:i A (12:50 AM)
+		}
+		
+		public static function dateDiff($start, $end, $unit = 'minutes')
+		{
+			$interval = date_diff(date_create($start), date_create($end));
+			$hours = 0;
+			$minutes = 0;
+			
+			switch ($unit) {
+				case 'minutes' :
+				case 'm' :
+				default :
+					$hours = $interval->format('%h') * 60;
+					$minutes = $interval->format('%i');
+					return $hours + $minutes;
+			}
 		}
 		
 		public static function redirect($page)

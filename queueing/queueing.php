@@ -34,7 +34,8 @@
 	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
 	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="../js/moment.js"></script>
-	    <script type="text/javascript" src="queueing.js"></script>
+	    <script type="text/javascript" src="../js/moment-round.js"></script>
+	    <script type="text/javascript" src="queueing.js?<?php echo time(); ?>"></script>
 	    
 	   	<script type="text/javascript">
 	    	$(document).ready(function(){
@@ -70,6 +71,18 @@
 							<button type="button" id="btnSearch" class="btn btn-primary btn-lg">
 								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 								Search
+							</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-8">
+							<div id="alertAvailability" class="alert alert-success text-center" style="display: none;"></div>
+							<div id="alertUnavailability" class="alert alert-danger text-center" style="display: none;"></div>
+						</div>
+						<div class="col-sm-offset-2 col-sm-8 text-center">
+							<button type="button" id="btnRecord" class="btn btn-primary btn-lg">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								Record
 							</button>
 						</div>
 					</div>
@@ -122,14 +135,6 @@
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-12 text-center">
-							<button type="button" id="btnRecord" class="btn btn-primary btn-lg">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-								Record
-							</button>
 						</div>
 					</div>
 				</form>

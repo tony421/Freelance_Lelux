@@ -318,7 +318,9 @@
 
     function SetDefaultButton(defaultButton) {
         // Selector ทั้ง 2 แบบ สามารถดึงปุ่มที่แสดงอยู่ ได้ทั้งคู่
-        $(messageboxButtons).children('input:visible').eq(defaultButton).focus();
+    	setTimeout(function() {
+    		$(messageboxButtons).children('input:visible').eq(defaultButton).focus();
+    	}, 50);
         //$(messageboxButtons).children('input:not(.messagebox-hide-element)').eq(defaultButton).focus();
     }
 

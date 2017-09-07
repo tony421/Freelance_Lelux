@@ -1,6 +1,9 @@
 var $txtMinutes, $txtClient, $txtTimeIn, $txtTimeOut;
 var $btnSearch, $btnRecord;
 
+var $alertAvailability, $alertUnavailability;
+var _searchResult;
+
 var $tableTherapist, _dtTableTherapist;
 var $tableRoom, _dtTableRoom;
 
@@ -13,6 +16,8 @@ function initPage() {
 	$txtTimeOut = $('#txtTimeOut');
 	$btnSearch = $('#btnSearch');
 	$btnRecord = $('#btnRecord');
+	$alertAvailability = $('#alertAvailability');
+	$alertUnavailability = $('#alertUnavailability');
 	
 	initTouchSpinInput($txtMinutes, 10, 1000, 60, 5);
 	$txtMinutes.change(function(){
@@ -21,8 +26,7 @@ function initPage() {
 	
 	initTouchSpinInput($txtClient, 1, 99, 1, 1);
 	
-	$txtTimeIn.inputmask("hh:mm"); // "hh:mm t" => 11:30 pm
-	$txtTimeIn.focus(function(){ $(this).select(); });
+	initTimeInput($txtTimeIn);
 	$txtTimeIn.change(function(){
 		calTimeOut();
 	});
@@ -52,7 +56,7 @@ function initPage() {
 	});
 	
 	$btnRecord.click(function(){
-		
+		showMassageRecord();
 	});
 	
 	initTableTherapist();
@@ -64,17 +68,17 @@ function initPage() {
 }
 
 function setTimeIn(time) {
-	time = typeof(time) === "undefined" ? moment().format(MOMENT_TIME_FORMAT) : time;
+	time = typeof(time) === "undefined" ? currentTime() : time;
 	
-	$txtTimeIn.val(time);
+	setTimeInput($txtTimeIn, time);
 	calTimeOut();
 }
 function calTimeOut() {
-	if ($txtTimeIn.inputmask("isComplete")) {
-		timeIn = $txtTimeIn.val().split(":");
+	if (isTimeInputComplete($txtTimeIn)) {
+		timeIn = getTimeInput($txtTimeIn).split(":");
 		minutes = $txtMinutes.val().trim().length ? $txtMinutes.val() : 0;
 		
-		timeOut = moment([1900, 1, 1, timeIn[0], timeIn[1], 0]).add(minutes, 'minutes').format(MOMENT_TIME_FORMAT);
+		timeOut = moment([1900, 1, 1, timeIn[0], timeIn[1], 0]).add(minutes, 'minutes').format(MOMENT_TIME_12_FORMAT);
 		$txtTimeOut.val(timeOut);
 	}
 	else {
@@ -240,7 +244,7 @@ function onInitTherapistDone(response) {
 
 function getTimeIn()
 {
-	timeIn = $txtTimeIn.val().split(":");
+	timeIn = getTimeInput($txtTimeIn).split(":");
 	date = parent.getSelectedDailyRecordDate(); // use getDate function of the parent
 	
 	return moment(date, MOMENT_DATE_FORMAT).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT);
@@ -254,6 +258,7 @@ function getTimeOut()
 function getSearchInfo() {
 	var searchInfo = {
 		date: parent.getSelectedDailyRecordDate()
+		, minutes: $txtMinutes.val()
 		, time_in: getTimeIn()
 		, time_out: getTimeOut()
 		, client_amount: $txtClient.val()
@@ -294,13 +299,87 @@ function searchQueue() {
 }
 function onSearchQueueDone(response) {
 	if (response.success) {
-		result = response.result;
+		var result = response.result;
+		_searchResult = result;
+		
+		showAlert(result['available'], result['client_amount'], result['minutes'], result['time_in'], result['time_out']);
 		
 		bindTableTherapist(result['therapists']);
 		bindTableRoom(result['rooms']);
 	}
 	else
 		main_alert_message(response.msg);
+}
+
+function showAlert(isSucceeded, clientAmt, minutes, timeIn, timeOut) {
+	var text = '';
+	var msg = '';
+	var clientUnit = '';
+	
+	hideAlert();
+	
+	if (clientAmt > 1)
+		clientUnit = 'people';
+	else
+		clientUnit = 'person';
+	
+	var startTime = formatTime(timeIn);
+	var endTime = formatTime(timeOut);
+	
+	if (isSucceeded) {
+		text = 'We are <span class="text-mark">available</span> for <span class="text-mark">{0}</span> {1} for <span class="text-mark">{2}</span> minutes from <span class="text-mark">{3}</span> to <span class="text-mark">{4}</span>';
+		msg = text.format(clientAmt, clientUnit, minutes, startTime, endTime);
+		
+		$alertAvailability.html(msg);
+		$alertAvailability.css('display', 'block');
+	} else {
+		text = '<strong>Sorry!</strong> We are <span class="text-mark">not available</span> for <span class="text-mark">{0}</span> {1} for <span class="text-mark">{2}</span> minutes from <span class="text-mark">{3}</span> to <span class="text-mark">{4}</span>';
+		msg = text.format(clientAmt, clientUnit, minutes, startTime, endTime);
+		
+		$alertUnavailability.html(msg);
+		$alertUnavailability.css('display', 'block');
+	}
+}
+function hideAlert() {
+	$alertAvailability.css('display', 'none');
+	$alertUnavailability.css('display', 'none');
+}
+
+function showMassageRecord() {	
+	var selectedTherapistIndex = _dtTableTherapist.row('.selected').index(); // can also use .id()
+	var selectedRoomIndex = _dtTableRoom.row('.selected').index();
+	
+	if (typeof(selectedTherapistIndex) === 'undefined'
+		|| typeof(selectedRoomIndex) === 'undefined') {
+		main_alert_message('Please select <strong>therapist</strong> and <strong>room</strong>!');
+	} else {
+		parent.showMassageRecord(getRecordInfo(selectedTherapistIndex, selectedRoomIndex));
+	}
+}
+//will be called by PARENT
+function onAddMassageRecordDone() {
+	// ***after recording, search again by minus 1 client amount
+	var clientAmt = _searchResult['client_amount'] - 1;
+	if (clientAmt > 0) {
+		$txtClient.val(clientAmt);
+	}
+	
+	searchQueue();
+}
+
+function getRecordInfo(selectedTherapistIndex, selectedRoomIndex) {
+	var recordInfo = {
+		date: _searchResult['date']
+		, minutes: _searchResult['minutes']
+		, time_in: _searchResult['time_in']
+		, time_out: _searchResult['time_out']
+		, therapist_id: _searchResult['therapists'][selectedTherapistIndex]['therapist_id']
+		, therapist_name: _searchResult['therapists'][selectedTherapistIndex]['therapist_name']
+		, room_no: _searchResult['rooms'][selectedRoomIndex]['room_no']
+		, massage_type_id: 0
+	};
+	
+	return recordInfo;
 }
 
 //will be called by PARENT
@@ -313,6 +392,7 @@ function clearFrameEditMode()
 function updateFrameContent()
 {
 	//alert("UPDATE - Queueing");
+	setTimeIn();
 	searchQueue();
 }
 

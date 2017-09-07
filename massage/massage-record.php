@@ -36,7 +36,8 @@
 	    <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
 	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="../js/moment.js"></script>
-	    <script type="text/javascript" src="massage-record.js"></script>	    
+	    <script type="text/javascript" src="../js/moment-round.js"></script>
+	    <script type="text/javascript" src="massage-record.js?<?php echo time(); ?>"></script>	    
 	    
 	   	<script type="text/javascript">
 	    	$(document).ready(function(){
@@ -88,6 +89,11 @@
 						<label class="col-sm-offset-1 col-sm-2 control-label">Massage Type</label>
 						<div class="col-sm-3">
 							<select id="ddlMassageType" class="form-control">
+							</select>
+						</div>
+						<label class="col-sm-1 control-label">Room</label>
+						<div class="col-sm-1">
+							<select id="ddlRoom" class="form-control">
 							</select>
 						</div>
 					</div>
@@ -146,6 +152,12 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="col-sm-offset-1 col-sm-2 control-label">Paid Total</label>
+						<div class="col-sm-2">
+							<input type="text" id="txtPaidTotal" class="form-control" value="0" disabled>
+						</div>
+					</div>
+					<div class="form-group">
 						<label class="col-sm-offset-1 col-sm-2 control-label">Commission</label>
 						<div class="col-sm-3">
 							<div class="input-group">
@@ -183,29 +195,39 @@
 							<button type="button" id="btnCancelEdit" class="btn btn-default btn-lg">Cancel</button>
 						</div>
 					</div>
+				</form>
+			</div>
+			<div class="container-fluid">
+				<form class="form-horizontal">
 					<div class="form-group">
 						<div class="col-sm-12">
 							<table id="tableRecord" class="display" cellspacing="0" width="100%">
 								<thead>
 						            <tr>
 						                <th rowspan="2">#</th>
+										<th rowspan="2">Name</th>
 						                <th rowspan="2">Therapist</th>
 						                <!--<th rowspan="2">Req.</th>-->
-						                <th rowspan="2">Type (Minute)</th>
-						                <th rowspan="2">Time In/Out</th>
-						                <th rowspan="2" style="border-right: 1px solid #000;">Free Stamp (Minute)</th>
-						                <th colspan="4" class="text-center" style="border-right: 1px solid #000;">Paid By</th>
-						                <th colspan="3" class="text-center">Commission</th>
+						                <th rowspan="2">Type</th>
+						                <th rowspan="2" class="text-center">Time In/Out<br>(minutes)</th>
+						                <th rowspan="2">Room</th>
+						                <th rowspan="2" class="text-center" style="border-right: 1px solid #000;">Stamp<br>(minutes)</th>
+						                <th colspan="5" class="text-center" style="border-right: 1px solid #000;">Paid By</th>
+						                <!--<th colspan="3" class="text-center">Commission</th>-->
+						                <th rowspan="2" class="text-center">Commission</th>
 						            </tr>
 						            <tr>
 						            	<th>Cash</th>
 						            	<!--<th>Promo. Price</th>-->
 						            	<th>Credit</th>
 						            	<th>HICAPS</th>
-						            	<th style="border-right: 1px solid #000;">Voucher</th>
+						            	<th>Voucher</th>
+						            	<th style="border-right: 1px solid #000;">Total</th>
+						            	<!--
 						            	<th>Standard</th>
 						            	<th>Extra</th>
 						            	<th>Total</th>
+						            	-->
 						            </tr>
 						        </thead>
 				            </table>

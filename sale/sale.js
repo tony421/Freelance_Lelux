@@ -247,8 +247,7 @@ function calTotal()
 {
 	total = 0;
 	
-	if (getMoneyInputValue($txtPrice).length
-			&& $txtAmt.val().length) {
+	if ($txtAmt.val().length) {
 		price = getMoneyInputValue($txtPrice);
 		amt = $txtAmt.val();
 		
@@ -508,7 +507,7 @@ function getCartItemInfo() {
 
 function validateCartItemInfo() {
 	if ($ddlProduct.val() != 'ADD_NEW_PRODUCT') {
-		if (getMoneyInputValue($txtPrice).length) {
+		if (getMoneyInputValue($txtPrice) > 0) {
 			if ($txtAmt.val().length) {
 				return true;
 			}
@@ -706,10 +705,29 @@ function isTheCartNotEmpty() {
 	return false;
 }
 
+function getCartSaleTotal() {
+	total = 0.0;
+	
+	for(var i = 0; i < _cartItems.length; i++) {
+		total += parseFloat(_cartItems[i]['sale_item_total']);
+	}
+	
+	return total;
+}
+function getPaidTotal() {
+	return parseFloat(getMoneyInputValue($txtCash)) + parseFloat(getMoneyInputValue($txtCredit));
+}
+
 function validateSaleInfo() {
 	if (isTheCartNotEmpty()) {
-		if (getMoneyInputValue($txtCash).length) {
-			if (getMoneyInputValue($txtCredit).length) {
+		var cartSaleTotal = getCartSaleTotal();
+		if (cartSaleTotal == getPaidTotal()) {
+			return true;
+		} else {
+			main_alert_message('Paid total (Cash + Credit) must be $' + cartSaleTotal, function(){ $txtCash.focus();});
+		}
+		/*if (getMoneyInputValue($txtCash)) {
+			if (getMoneyInputValue($txtCredit)) {
 				return true;
 			}
 			else {
@@ -718,7 +736,7 @@ function validateSaleInfo() {
 		}
 		else {
 			main_alert_message('Please enter "Cash"', function(){ $txtCash.focus();});
-		}
+		}*/
 	}
 	else {
 		main_alert_message('There is no item in the cart!', function(){ $ddlProduct.focus();});

@@ -27,7 +27,7 @@
 	    
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/autonumeric.js"></script>
+	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
 	    <script type="text/javascript" src="../js/main.js"></script>
 	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 	    <script type="text/javascript" src="therapist-manage.js"></script>

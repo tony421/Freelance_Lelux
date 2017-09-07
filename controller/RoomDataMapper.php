@@ -17,12 +17,12 @@
 			return $this->_dataAccess->select($sql);
 		}
 		
-		public function getDoubleRooms()
+		public function getDoubleRooms($order = "asc")
 		{
 			$sql = "
 					select room_double_no, room_no_1, room_no_2
 					from room_double
-					order by room_double_no";
+					order by room_double_no {$order}";
 				
 			return $this->_dataAccess->select($sql);
 		}

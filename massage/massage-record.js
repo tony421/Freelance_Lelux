@@ -2,12 +2,13 @@ var _is_add_mode;
 var _commissionRate, _requestConditions, _minimumRequest;
 var _records, _editingRecord;
 var _previousSelectedTherapist;
-var _therapistOptions, _massageTypeOptions, _editModeMassageTypeOptions;
+var _therapistOptions, _massageTypeOptions, _editModeMassageTypeOptions, _roomOptions;
+var _timelineSelectedRecordID;
 
 var $dateInput;
-var $txtDate, $ddlMassageType, $ddlTherapist, $cbRequested, $txtMinutes, $txtStamp;
+var $txtDate, $ddlMassageType, $ddlTherapist, $ddlRoom, $cbRequested, $txtMinutes, $txtStamp;
 var $txtTimeIn, $txtTimeOut;
-var $txtCash, $cbPromotionPrice, $txtCredit, $txtHICAPS, $txtVoucher;
+var $txtCash, $cbPromotionPrice, $txtCredit, $txtHICAPS, $txtVoucher, $txtPaidTotal;
 var $txtStdCommission, $txtReqReward, $txtCommissionTotal;
 var $btnAdd, $btnUpdate, $btnDelete, $btnCancelEdit;
 //var $btnCommissionReport, $btnIncomeReport;
@@ -25,10 +26,12 @@ function initPage()
 	main_ajax_success_hide_loading();
 	
 	_is_add_mode = true;
+	_timelineSelectedRecordID = 0;
 	
 	$dateInput = $('#dateInput');
 	//$txtDate = $('#txtDate');
 	$ddlTherapist = $('#ddlTherapist');
+	$ddlRoom = $('#ddlRoom');
 	$ddlMassageType = $('#ddlMassageType');
 	$cbRequested = $('#cbRequested');
 	$txtMinutes = $('#txtMinutes');
@@ -40,6 +43,7 @@ function initPage()
 	$txtCredit = $('#txtCredit');
 	$txtHICAPS = $('#txtHICAPS');
 	$txtVoucher = $('#txtVoucher');
+	$txtPaidTotal = $('#txtPaidTotal');
 	$txtStdCommission = $('#txtStdCommission');
 	$txtReqReward = $('#txtReqReward');
 	$txtCommissionTotal = $('#txtCommissionTotal');
@@ -119,23 +123,20 @@ function initPage()
 		calCommission();
 	});
 	
-	$txtCash.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
-	$txtCredit.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
-	$txtHICAPS.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
-	$txtVoucher.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
-	$txtStdCommission.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
-	$txtReqReward.autoNumeric('init', { vMin: 0, vMax: 1000.99, aSign: '$' });
-	$txtCommissionTotal.autoNumeric('init', { vMin: 0.0, vMax: 1000.99, aSign: '$' });
+	initMoneyInput($txtCash, 0, 1000.99);
+	initMoneyInput($txtCredit, 0, 1000.99);
+	initMoneyInput($txtHICAPS, 0, 1000.99);
+	initMoneyInput($txtVoucher, 0, 1000.99);
+	initMoneyInput($txtPaidTotal, 0, 1000.99);
+	initMoneyInput($txtStdCommission, 0, 1000.99);
+	initMoneyInput($txtReqReward, 0, 1000.99);
+	initMoneyInput($txtCommissionTotal, 0, 1000.99);
+	$txtCash.change(calPaidTotal);
+	$txtCredit.change(calPaidTotal);
+	$txtHICAPS.change(calPaidTotal);
+	$txtVoucher.change(calPaidTotal);
 	
-	$txtCash.focus(function(){ $(this).select(); });
-	$txtCredit.focus(function(){ $(this).select(); });
-	$txtHICAPS.focus(function(){ $(this).select(); });
-	$txtVoucher.focus(function(){ $(this).select(); });
-	$txtReqReward.focus(function(){ $(this).select(); });
-	
-	//$txtTimeIn.inputmask({alias:"Regex", regex:"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$", placeholder:"_"});
-	$txtTimeIn.inputmask("hh:mm"); // "hh:mm t" => 11:30 pm
-	$txtTimeIn.focus(function(){ $(this).select(); });
+	initTimeInput($txtTimeIn);
 	$txtTimeIn.change(function(){
 		calTimeOut();
 	});
@@ -188,6 +189,7 @@ function initPage()
 	
 	initTherapists();
 	initMassageTypes();
+	initRooms();
 	
 	turnOffEditMode();
 }
@@ -294,6 +296,29 @@ function onInitConfigRequestDone(response)
 	}
 }
 
+function initRooms() {
+	main_request_ajax('../queueing/queueing-boundary.php', 'GET_ROOM', {}, onInitRoomsDone);
+}
+function onInitRoomsDone(response) {
+	if (response.success) {
+		_roomOptions = response.result;
+		
+		bindRoomDDL(_roomOptions);
+	} else {
+		main_alert_message(response.msg);
+	}
+}
+function bindRoomDDL(rooms)
+{
+	$ddlRoom.empty();
+	
+	$.each(rooms, function (i, room){
+		option = "<option value='" + room['room_no'] + "'>" + room['room_desc'] + "</option>";
+		
+		$ddlRoom.append(option);
+	});	
+}
+
 /*function initDatepicker(date)
 {
 	initDatepickerInput($dateInput);
@@ -317,14 +342,17 @@ function initDataTable()
 		rowId: 'massage_record_id',
 		columns: [
 		    { data: "row_no"},
-		    { data: "therapist_name", className: 'text-nowrap'
+			{ data: "therapist_name", visible: false },
+		    { data: "therapist_name", className: 'text-nowrap', orderData: [1]
 		    	, render: function ( data, type, row ) { return (row['massage_record_requested'] == 1) ? data + ' <img src="../image/req.png" title="Requested">' : data; } },
 		    //{ data: "massage_record_requested", orderable: false, className: 'text-center'
 		    	//, render: function ( data, type, row ) { return (data == 1) ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>' } },
 		    //{ data: "massage_record_minutes", orderable: false },
-		    { data: "massage_type_name", orderable: false, className: 'text-nowrap'
-		    	, render: function ( data, type, row ) { return data + " (" + row['massage_record_minutes'] + ")"; } },
-		    { data: "massage_record_time_in_out", orderable: false, className: 'text-center text-nowrap' },
+		    { data: "massage_type_name", orderable: false, className: 'text-nowrap' },
+		    { data: "massage_record_time_in_out", orderable: false, className: 'text-nowrap'
+		    	, render: function ( data, type, row ) { 
+		    		return data + " (" + row['massage_record_minutes'] + ")"; } },
+		    { data: "room_no", orderable: false, className: 'text-center'},
 		    { data: "massage_record_stamp", orderable: false, className: 'text-center' },
 		    { data: "massage_record_cash", orderable: false, className: 'text-right text-nowrap'
 		    	, render: function ( data, type, row ) { return (row['massage_record_promotion'] == 1) ? '<img src="../image/pro.png" title="Promotion Price"> ' + '$' + data : '$' + data; } },
@@ -336,12 +364,24 @@ function initDataTable()
 		    	, render: function ( data, type, row ) { return '$'+ data; } },
 	    	{ data: "massage_record_voucher", orderable: false, className: 'text-right'
 			    , render: function ( data, type, row ) { return '$'+ data; } },
+		    { data: "massage_record_paid_total", orderable: false, className: 'text-right'
+			    , render: function ( data, type, row ) { return '$'+ data; } },
+		    { data: "massage_record_commission_total", orderable: false, className: 'text-right'
+		    	, render: function ( data, type, row ) {
+		    		amt = '$' + data;
+		    		if (row['massage_record_request_reward'] > 0)
+		    			amt += ' ($' + row['massage_record_request_reward'] + ')';
+		    		
+		    		return amt; 
+		    } }
+		    /*
 		    { data: "massage_record_commission", orderable: false, className: 'text-right'
 		    	, render: function ( data, type, row ) { return '$'+ data; } },
 		    { data: "massage_record_request_reward", orderable: false, className: 'text-right'
 		    	, render: function ( data, type, row ) { return '$'+ data; } },
 		    { data: "massage_record_commission_total", orderable: false, className: 'text-right'
 		    	, render: function ( data, type, row ) { return '$'+ data; } }
+		    */
         ]
 	});
 	$tableRecordBody = $('#tableRecord tbody');
@@ -366,9 +406,19 @@ function addRecordRows(result)
 			massage_record_credit: result[i]['massage_record_credit'],
 			massage_record_hicaps: result[i]['massage_record_hicaps'],
 			massage_record_voucher: result[i]['massage_record_voucher'],
+			massage_record_paid_total: result[i]['massage_record_paid_total'],
 			massage_record_commission: result[i]['massage_record_commission'],
 			massage_record_request_reward: result[i]['massage_record_request_reward'],
-			massage_record_commission_total: result[i]['massage_record_commission_total']}).draw();
+			massage_record_commission_total: result[i]['massage_record_commission_total'],
+			room_no: result[i]['room_no']
+		}).draw();
+		
+		if (_timelineSelectedRecordID != 0) {
+			if(result[i]['massage_record_id'] == _timelineSelectedRecordID) {
+				// select the row selected from "Booking" timeline
+				dtTableRecord.$('tr:first').addClass('selected');
+			}
+		}
 	}
 	
 	setRecordRowsSelection();
@@ -389,13 +439,36 @@ function setRecordRowsSelection()
 	$tableRecordBody.on('dblclick', 'tr', function () {
 		//main_alert_message(dtTableRecord.row('.selected').id());
 		turnOnEditMode();
-		setEditingRecord(dtTableRecord.row('.selected').index()); // can also use .id()
+		setEditingRecord(getSelectedRowIndex());
 	});
+	
+	if (_timelineSelectedRecordID != 0) {
+		//turnOnEditMode();
+		//setEditingRecord(getSelectedRowIndex());
+		
+		scrollToSelectedRow();
+		_timelineSelectedRecordID = 0;
+	}
 }
 
 function unbindRecordRowsSelection() 
 {
 	$tableRecordBody.unbind(); // unbind events to prevent duplicate events
+}
+
+function getSelectedRowIndex()
+{
+	return dtTableRecord.row('.selected').index(); // can also use .id()
+}
+function scrollToSelectedRow() {
+	tableTop = $tableRecordBody.offset().top;
+	selectedRowTop = $tableRecordBody.find('tr.selected').offset().top;
+	containerTop = selectedRowTop - tableTop;
+	
+	$('.dataTables_scrollBody').scrollTop(containerTop);
+	
+	//console.log($tableRecordBody.find('tr.selected').offset());
+	//console.log(containerTop);
 }
 
 function getRecords()
@@ -491,32 +564,30 @@ function setEditingRecord(recordIndex)
 		
 		bindTherapistOption(listWithDeletedItem);
 	}
-	else {
-		
-	}
+	
 	$ddlTherapist.val(_editingRecord['therapist_id']);
+	$ddlRoom.val(_editingRecord['room_no']);
 	
 	setEditModeMassageType();
 	$ddlMassageType.val(_editingRecord['massage_type_id']);
 	
-	if (_editingRecord['massage_record_requested'] == true) $cbRequested.prop('checked', true); 
+	if (_editingRecord['massage_record_requested'] == true) $cbRequested.prop('checked', true);
+	if (_editingRecord['massage_record_promotion'] == true) $cbPromotionPrice.prop('checked', true);
+	
 	$txtMinutes.val(_editingRecord['massage_record_minutes']);
 	$txtStamp.val(_editingRecord['massage_record_stamp']);
-	$txtCash.autoNumeric('set', _editingRecord['massage_record_cash']);
-	if (_editingRecord['massage_record_promotion'] == true) $cbPromotionPrice.prop('checked', true);
-	$txtCredit.autoNumeric('set', _editingRecord['massage_record_credit']);
-	$txtHICAPS.autoNumeric('set', _editingRecord['massage_record_hicaps']);
-	$txtVoucher.autoNumeric('set', _editingRecord['massage_record_voucher']);
-	$txtStdCommission.autoNumeric('set', _editingRecord['massage_record_commission']);
-	$txtReqReward.autoNumeric('set', _editingRecord['massage_record_request_reward']);
-	$txtCommissionTotal.autoNumeric('set', _editingRecord['massage_record_commission_total']);
-	$txtTimeIn.val(_editingRecord['massage_record_time_in']);
-	$txtTimeOut.val(_editingRecord['massage_record_time_out']);
+	setTimeInput($txtTimeIn, _editingRecord['massage_record_time_in']);
+	setTimeInput($txtTimeOut, _editingRecord['massage_record_time_out']);
 	
-	//$txtName.val(_editingTherapist['therapist_name']);
-	//$txtUsername.val(_editingTherapist['therapist_username']);
-	//$txtPassword.val(_editingTherapist['therapist_password']);
-	
+	setMoneyInputValue($txtCash, _editingRecord['massage_record_cash']);
+	setMoneyInputValue($txtCredit, _editingRecord['massage_record_credit']);
+	setMoneyInputValue($txtHICAPS, _editingRecord['massage_record_hicaps']);
+	setMoneyInputValue($txtVoucher, _editingRecord['massage_record_voucher']);
+	setMoneyInputValue($txtPaidTotal, _editingRecord['massage_record_paid_total']);
+	setMoneyInputValue($txtStdCommission, _editingRecord['massage_record_commission']);
+	setMoneyInputValue($txtReqReward, _editingRecord['massage_record_request_reward']);
+	setMoneyInputValue($txtCommissionTotal, _editingRecord['massage_record_commission_total']);
+		
 	unbindRecordRowsSelection(); // users cannot select a row in datatable during editing the item
 	main_move_to_title_text(450);
 }
@@ -527,16 +598,20 @@ function clearInputs()
 	$txtStamp.val(0);
 	$cbRequested.prop('checked', false)
 	$cbPromotionPrice.prop('checked', false)
-	$txtCash.autoNumeric('set', 0);
-	$txtCredit.autoNumeric('set', 0);
-	$txtHICAPS.autoNumeric('set', 0);
-	$txtVoucher.autoNumeric('set', 0);
-	$txtStdCommission.autoNumeric('set', 0);
-	$txtReqReward.autoNumeric('set', 0);
-	$txtCommissionTotal.autoNumeric('set', 0);
+	setMoneyInputValue($txtCash, 0);
+	setMoneyInputValue($txtCredit, 0);
+	setMoneyInputValue($txtHICAPS, 0);
+	setMoneyInputValue($txtVoucher, 0);
+	setMoneyInputValue($txtPaidTotal, 0);
+	setMoneyInputValue($txtStdCommission, 0);
+	setMoneyInputValue($txtReqReward, 0);
+	setMoneyInputValue($txtCommissionTotal, 0);
 	
-	bindTherapistOption(_therapistOptions);
-	bindMassageTypeOption(_massageTypeOptions);
+	$ddlTherapist.prop('selectedIndex', 0);
+	$ddlMassageType.prop('selectedIndex', 0);
+	$ddlRoom.prop('selectedIndex', 0);
+	//bindTherapistOption(_therapistOptions);
+	//bindMassageTypeOption(_massageTypeOptions);
 	
 	calReqReward();
 	setTimeIn();
@@ -545,19 +620,11 @@ function clearInputs()
 function calCommission()
 {
 	minutes = $txtMinutes.val();
-	reward = parseFloat($txtReqReward.autoNumeric('get'));
+	reward = getMoneyInputValue($txtReqReward);
 	commission = minutes * _commissionRate;
 
-	$txtStdCommission.autoNumeric('set', commission);
-	$txtCommissionTotal.autoNumeric('set', commission + reward);
-	
-	/*if ($ddlTherapist.find('option:selected').text() != '[Voucher]') {
-		
-	}
-	else {
-		$txtStdCommission.autoNumeric('set', 0);
-		$txtCommissionTotal.autoNumeric('set', 0);	
-	}*/
+	setMoneyInputValue($txtStdCommission, commission);
+	setMoneyInputValue($txtCommissionTotal, commission + reward);
 }
 
 function calReqReward()
@@ -591,10 +658,10 @@ function calReqReward()
 		selectedMassageType = getSelectedMassageType();
 		reward += parseFloat(selectedMassageType['massage_type_commission']);
 		
-		$txtReqReward.autoNumeric('set', reward);
+		setMoneyInputValue($txtReqReward, reward);
 	}
 	else {
-		$txtReqReward.autoNumeric('set', 0);
+		setMoneyInputValue($txtReqReward, 0);
 	}
 	
 	calCommission();
@@ -623,7 +690,7 @@ function validateRecordInfo()
 				if ($txtCredit.val().length) {
 					if ($txtHICAPS.val().length) {
 						if ($txtVoucher.val().length) {
-							if ($txtTimeIn.inputmask('isComplete')) {
+							if (isTimeInputComplete($txtTimeIn)) {
 								if ($ddlMassageType.val() != 'ADD_NEW_MASSAGE_TYPE') {
 									return true;
 								} else {
@@ -671,15 +738,16 @@ function getRecordInfo(recordID)
 		'massage_record_requested': $cbRequested.is(':checked'),
 		'massage_record_minutes': $txtMinutes.val(),
 		'massage_record_stamp': $txtStamp.val(),
-		'massage_record_cash': $txtCash.autoNumeric('get'),
+		'massage_record_cash': getMoneyInputValue($txtCash),
 		'massage_record_promotion': $cbPromotionPrice.is(':checked'),
-		'massage_record_credit': $txtCredit.autoNumeric('get'),
-		'massage_record_hicaps': $txtHICAPS.autoNumeric('get'),
-		'massage_record_voucher': $txtVoucher.autoNumeric('get'),
-		'massage_record_commission': $txtStdCommission.autoNumeric('get'),
-		'massage_record_request_reward': $txtReqReward.autoNumeric('get'),
+		'massage_record_credit': getMoneyInputValue($txtCredit),
+		'massage_record_hicaps': getMoneyInputValue($txtHICAPS),
+		'massage_record_voucher': getMoneyInputValue($txtVoucher),
+		'massage_record_commission': getMoneyInputValue($txtStdCommission),
+		'massage_record_request_reward': getMoneyInputValue($txtReqReward),
 		'massage_record_time_in': getTimeIn(),
-		'massage_record_time_out': getTimeOut()
+		'massage_record_time_out': getTimeOut(),
+		'room_no': $ddlRoom.val()
 	}
 	
 	return recordInfo;
@@ -738,11 +806,13 @@ function deleteRecord()
 	main_confirm_message('Do you want to DELETE the massage record?', function() {
 		//initDatepicker();
 		parent.initDatepicker();
-		recordID = _editingRecord['massage_record_id'];
+		//recordID = _editingRecord['massage_record_id'];
+		recordInfo = _editingRecord;
+		
 		turnOffEditMode();
 		clearInputs();
 		
-		main_request_ajax('massage-boundary.php', 'DELETE_RECORD', recordID, onDeleteRecordRequestDone);
+		main_request_ajax('massage-boundary.php', 'DELETE_RECORD', recordInfo, onDeleteRecordRequestDone);
 	}, function(){
 		$btnDelete.focus();
 	}, 1);
@@ -761,19 +831,19 @@ function onDeleteRecordRequestDone(response)
 
 function setTimeIn(time)
 {
-	time = typeof(time) === "undefined" ? moment().format(MOMENT_TIME_FORMAT) : time;
+	time = typeof(time) === "undefined" ? currentTime() : time;
 	
-	$txtTimeIn.val(time);
+	setTimeInput($txtTimeIn, time);
 	calTimeOut();
 }
 
 function calTimeOut()
 {
-	if ($txtTimeIn.inputmask("isComplete")) {
-		timeIn = $txtTimeIn.val().split(":");
+	if (isTimeInputComplete($txtTimeIn)) {
+		timeIn = getTimeInput($txtTimeIn).split(":");
 		minutes = $txtMinutes.val().trim().length ? $txtMinutes.val() : 0;
 		
-		timeOut = moment([1900, 1, 1, timeIn[0], timeIn[1], 0]).add(minutes, 'minutes').format(MOMENT_TIME_FORMAT);
+		timeOut = moment([1900, 1, 1, timeIn[0], timeIn[1], 0]).add(minutes, 'minutes').format(MOMENT_TIME_12_FORMAT);
 		$txtTimeOut.val(timeOut);
 	}
 	else {
@@ -783,13 +853,8 @@ function calTimeOut()
 
 function getTimeIn()
 {
-	timeIn = $txtTimeIn.val().split(":");
-	//date = moment($dateInput.datepicker('getDate')).format(MOMENT_DATE_FORMAT);
+	timeIn = getTimeInput($txtTimeIn).split(":");
 	date = parent.getSelectedDailyRecordDate(); // use getDate function of the parent
-	
-	//alert(moment(date));
-	//alert(moment($dateInput.datepicker('getDate')).add(timeIn[0], 'hours'));
-	//alert(moment(date).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT));
 	
 	return moment(date, MOMENT_DATE_FORMAT).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT);
 }
@@ -802,6 +867,15 @@ function getTimeOut()
 
 function getSelectedDailyRecordDate() {
 	return convertDBFormatDate(new Date());
+}
+
+function calPaidTotal() {
+	var cash = getMoneyInputValue($txtCash);
+	var credit = getMoneyInputValue($txtCredit);
+	var hicaps = getMoneyInputValue($txtHICAPS);
+	var voucher = getMoneyInputValue($txtVoucher);
+	
+	setMoneyInputValue($txtPaidTotal, cash + credit + hicaps + voucher);
 }
 
 // will be called by PARENT
@@ -823,6 +897,13 @@ function updateFrameContent()
 	//alert("UPDATE - MASSAGE");
 	initTherapists();
 	setTimeIn();
+}
+
+//will be called by PARENT
+function showMassageRecordDetails(recordID)
+{
+	initTherapists();
+	_timelineSelectedRecordID = recordID;
 }
 
 function dummyDataSet()

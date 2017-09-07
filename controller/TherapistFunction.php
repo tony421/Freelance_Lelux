@@ -201,6 +201,18 @@
 			}
 		}
 		
+		public function deleteAllTherapistOnShift($date)
+		{
+			$affectedRow = $this->_dataMapper->deleteAllTherapistOnShift($date);
+			
+			if ($affectedRow > 0) {
+				return Utilities::getResponseResult(true, "ALL therapists are deleted from the shift.");
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Deleting the therapist has failed!');
+			}
+		}
+		
 		private function manipulateNameInfo($info)
 		{
 			$info['therapist_name'] = ucwords(strtolower($info['therapist_name']));

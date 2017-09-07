@@ -32,7 +32,7 @@
 	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
 	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 	    <script type="text/javascript" src="../js/moment.js"></script>
-	    <script type="text/javascript" src="shift.js"></script>
+	    <script type="text/javascript" src="shift.js?<?php echo time(); ?>"></script>
 	    
 	   	<script type="text/javascript">
 	    	$(document).ready(function(){
@@ -62,6 +62,10 @@
 							<button type="button" id="btnAdd" class="btn btn-primary btn-lg">
 								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 								Add
+							</button>
+							<button type="button" id="btnDeleteAll" class="btn btn-danger btn-lg">
+								<span class="glyphicon glyphicon-remove"></span>
+								Delete All
 							</button>
 						</div>
 					</div>

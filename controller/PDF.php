@@ -1,4 +1,5 @@
 <?php
+	ob_start();
 	require_once '../tcpdf/config/tcpdf_config.php';
 	//require_once '../tcpdf/examples/config/tcpdf_config_alt.php';
 	//require_once '../tcpdf/tcpdf.php';
@@ -50,12 +51,13 @@
 		{
 			$this->_pdf->writeHTML($htmlReportInfo, true, false, false, false, '');
 		
-			ob_start();
+			//ob_start();
 		
 			//Close and output PDF document
+			ob_end_clean();
 			$this->_pdf->Output("$fileName.pdf", 'I');
 		
-			ob_end_flush();
+			//ob_end_flush();
 		}
 	}
 ?>

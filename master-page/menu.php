@@ -40,6 +40,9 @@
         			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'daily-record') { echo 'class="active"'; } }?>>
         				<a href="../daily-record/daily-record.php">Daily Records</a>
         			</li>
+        			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'roster') { echo 'class="active"'; } }?>>
+        				<a href="../roster/roster.php">Roster</a>
+        			</li>
         			<?php if (Authentication::isAdmin()) { ?>
 	        			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'therapist-manage') { echo 'class="active"'; } }?>>
 	        				<a href="../therapist/therapist-manage.php">Manage Therapist</a>

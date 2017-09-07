@@ -17,9 +17,9 @@
 	padding-top: 15px;
     border-bottom: #d6d6d6 1px solid;
     font-size: 40px;
-    color: #a70101;
-    font-style: italic;
-    text-shadow: #cc7b7b 0px 0px 3px;
+    /*color: #a70101;*/
+    /*font-style: italic;*/
+    /*text-shadow: #cc7b7b 0px 0px 3px;*/
 }
 
 .title-text, .title-text-sub
@@ -67,5 +67,10 @@
 .text-mark {
 	font-weight: bold; 
 	text-decoration: underline;
+}
+
+.text-sub{
+	font-weight: bold;
+	font-size: 1em;
 }
 
