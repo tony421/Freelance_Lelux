@@ -25,12 +25,12 @@
 	    <link rel="stylesheet" href="../css/loadingpanel.css">
 	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
 	    
+	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
 	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
-	    <script type="text/javascript" src="../js/main.js"></script>
 	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-	    <script type="text/javascript" src="therapist-manage.js"></script>
+	    <script type="text/javascript" src="therapist-manage.js?<?php echo time(); ?>"></script>
 	    
 	    <script type="text/javascript">
 	    	$(document).ready(function(){

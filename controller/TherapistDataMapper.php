@@ -17,6 +17,20 @@
 			return $this->_dataAccess->select($sql);
 		}
 		
+		public function getOnlyTherapists() {
+			// do not select receptions
+			$sql = "
+select * 
+from therapist 
+where therapist_active = 1
+	and therapist_permission != 7 -- Receptions
+	and therapist_permission != 0 -- Unknown
+order by therapist_name
+";
+			
+			return $this->_dataAccess->select($sql);
+		}
+		
 		public function getTherapistsForManagement()
 		{
 			$sql = "select * from therapist where therapist_active = 1 and therapist_permission != 9 and therapist_permission != 0 order by therapist_name";		
@@ -53,12 +67,12 @@
 					select therapist.therapist_id, therapist.therapist_name, therapist.therapist_guarantee
 						, shift.shift_id, shift.shift_working
 						, shift_type.shift_type_id, shift_type.shift_type_name, shift_type.shift_type_rate
-						, shift_create_datetime as shift_time_start
+						, shift_time_start, shift_create_datetime, shift_type_color
 					from therapist
 					join shift on therapist.therapist_id = shift.therapist_id
 					join shift_type on shift.shift_type_id = shift_type.shift_type_id
 					where shift.shift_date = '{$date}'
-					order by shift_create_datetime";
+					order by shift.shift_time_start, shift.shift_create_datetime";
 		
 			return $this->_dataAccess->select($sql);
 		}
@@ -163,10 +177,23 @@
 		public function addTherapistToShift($shiftInfo)
 		{
 			$sql = "
-					insert into shift (shift_date, therapist_id, shift_type_id, shift_working)
-					values ('{$shiftInfo['shift_date']}', {$shiftInfo['therapist_id']}, {$shiftInfo['shift_type_id']}, 1)";
+					insert into shift (shift_date, therapist_id, shift_type_id, shift_time_start, shift_working)
+					values ('{$shiftInfo['shift_date']}', {$shiftInfo['therapist_id']}, {$shiftInfo['shift_type_id']}, '{$shiftInfo['shift_time_start']}', 1)";
 			
 			return $this->_dataAccess->insert($sql);
+		}
+		
+		public function updateTherapistOnShift($shiftInfo)
+		{
+			$sql = "
+					update shift
+					set shift_update_datetime = now()
+						, shift_type_id = {$shiftInfo['shift_type_id']}
+						, shift_time_start = '{$shiftInfo['shift_time_start']}'
+					where shift_id = {$shiftInfo['shift_id']}
+					";
+			
+			return $this->_dataAccess->update($sql);
 		}
 		
 		public function workTherapistOnShift($shiftID)

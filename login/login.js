@@ -41,8 +41,12 @@ function login(loginInfo)
 function onLoginDone(response)
 {
 	if (response.success) {
-		//main_info_message(response.msg);
-		main_redirect('../client/client-add.php');
+		permission = response.result;
+		
+		if (permission == 9 || permission == 7)
+			main_redirect('../client/client-add.php');
+		else
+			main_redirect('../roster/roster.php');
 	}
 	else
 		main_alert_message(response.msg, function(){ $txtUsername.focus();});

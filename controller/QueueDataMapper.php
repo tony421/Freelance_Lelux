@@ -21,7 +21,7 @@
 					from (
 						select therapist_id, max(therapist_timeout) as therapist_timeout, max(massage_record_create_datetime) as massage_record_create_datetime
 						from (
-							select therapist_id, shift_create_datetime as therapist_timeout, shift_create_datetime as massage_record_create_datetime
+							select therapist_id, shift_time_start as therapist_timeout, shift_create_datetime as massage_record_create_datetime
 							from shift
 							where shift_date = '{$date}'
 								and shift_working = 1

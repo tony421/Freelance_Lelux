@@ -53,7 +53,15 @@
 				}
 				else if ($mode == "ADD_THERAPIST_TO_SHIFT") {
 					$shiftInfo = $_POST['data'];
+					Utilities::logInfo('Therapist-Boundary | data[$shiftInfo]: '.var_export($shiftInfo, true));
+					
 					$result = $therapistFunction->addTherapistToShift($shiftInfo);
+				}
+				else if ($mode == "UPDATE_THERAPIST_ON_SHIFT") {
+					$shiftInfo = $_POST['data'];
+					Utilities::logInfo('Therapist-Boundary | data[$editedShiftInfo]: '.var_export($shiftInfo, true));
+						
+					$result = $therapistFunction->updateTherapistOnShift($shiftInfo);
 				}
 				else if ($mode == "WORK_THERAPIST_ON_SHIFT") {
 					$shiftInfo = $_POST['data'];

@@ -27,7 +27,7 @@
 	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
 	    <link rel="stylesheet" href="../css/bootstrap-datepicker.css">
 	    
-	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
 	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
@@ -104,7 +104,7 @@
                     <div class="tab-content">
                     	<div class="tab-pane fade in active" id="tab4">
                         	<iframe name="frameTherapist" src="../therapist/shift.php" 
-                        		frameborder="0" width="100%" height="525"></iframe>
+                        		frameborder="0" width="100%" height="575"></iframe>
                         </div>
                         <div class="tab-pane fade" id="tab5">
                         	<iframe name="frameQueueing" src="../queueing/queueing.php" 

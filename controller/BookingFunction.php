@@ -227,6 +227,7 @@
 				$group_item['therapist_id'] = $therapists[$i]['therapist_id'];
 				$group_item['shift_type_id'] = $therapists[$i]['shift_type_id'];
 				$group_item['shift_time_start'] = $therapists[$i]['shift_time_start'];
+				$group_item['shift_create_datetime'] = $therapists[$i]['shift_create_datetime'];
 				$group_item['shift_working'] = $therapists[$i]['shift_working'];
 				$group_item['content'] = $therapists[$i]['therapist_name'];
 				$group_item['items'] = array();
@@ -666,7 +667,11 @@
 			
 			// 1.
 			foreach ($timelineTherapistGroups as $group) {
-				$queue = array('therapist_name' => $group['content'], 'therapist_id' => $group['therapist_id'], 'lastest_time_out' => $group['shift_time_start']);
+				$queue = array('therapist_name' => $group['content']
+						, 'therapist_id' => $group['therapist_id']
+						, 'lastest_time_out' => $group['shift_time_start']
+						, 'shift_create_datetime' => $group['shift_create_datetime']
+				);
 				
 				if (count($group['items']) > 0) {
 					foreach ($group['items'] as $item) {
@@ -686,8 +691,15 @@
 			}
 			
 			// 2.
+			Utilities::logDebug('Queue before sort => '.var_export($queues, true));
+			/*
+			 * This method does not provide a correct sorting result
+			 * in the case that values in each array element are equal
 			$sorter = new FieldSorter('lastest_time_out');
 			usort($queues, array($sorter, "compare"));
+			*/
+			$queues = $this->sortQueue($queues);
+			Utilities::logDebug('Queue after sort => '.var_export($queues, true));
 			
 			// 3.
 			foreach ($queues as $q) {
@@ -703,6 +715,22 @@
 			Utilities::logDebug(var_export($queues, true));
 			
 			return $newTimelineGroups;
+		}
+		
+		private function sortQueue($queues)
+		{
+			$sortingQueues = $queues;
+			
+			foreach ($sortingQueues as $key => $q) {
+				$timeout[$key]  = $q['lastest_time_out'];
+				$createDatetime[$key] = $q['shift_create_datetime'];
+			}
+			
+			// Sort the data with timeout ascending, create_datetime ascending
+			// Add $data as the last parameter, to sort by the common key
+			array_multisort($timeout, SORT_ASC, $createDatetime, SORT_ASC, $sortingQueues);
+			
+			return $sortingQueues;
 		}
 		
 		private function getQueueOfTherapistsUnderHalfDayCondition($timelineTherapistGroups, $bookingTimeIn)

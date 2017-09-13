@@ -26,12 +26,14 @@
 	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
 	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
 	    
-	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
 	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
 	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="../js/moment.js"></script>
+	    <script type="text/javascript" src="../js/moment-round.js"></script>
 	    <script type="text/javascript" src="shift.js?<?php echo time(); ?>"></script>
 	    
 	   	<script type="text/javascript">
@@ -50,11 +52,18 @@
 						<div class="col-sm-2">
 							<select id="ddlTherapist" class="form-control">
 							</select>
+							<span id="lblTherapist" class="form-control"></span>
 						</div>
-						<label class="col-sm-1 control-label">Shift</label>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-offset-2 col-sm-2 control-label">Shift</label>
 						<div class="col-sm-2">
 							<select id="ddlShift" class="form-control">
 							</select>
+						</div>
+						<label class="col-sm-1 control-label">Start at</label>
+						<div class="col-sm-2">
+							<input type="text" id="txtTimeStart" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
@@ -64,20 +73,28 @@
 								Add
 							</button>
 							<button type="button" id="btnDeleteAll" class="btn btn-danger btn-lg">
-								<span class="glyphicon glyphicon-remove"></span>
+								<span class="glyphicon glyphicon-floppy-remove"></span>
 								Delete All
+							</button>
+							<button type="button" id="btnUpdate" class="btn btn-warning btn-lg">
+								<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+								Update
+							</button>
+							<button type="button" id="btnCancel" class="btn btn-default btn-lg">
+								Cancel
 							</button>
 						</div>
 					</div>
 					
 					<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-6">
+						<div class="col-sm-offset-2 col-sm-8">
 							<table id="tableShift" class="display" cellspacing="0" width="100%">
 								<thead>
 				            		<tr>
 				            			<th>#</th>
 				               			<th>Therapist</th>
 				               			<th>Shift</th>
+				               			<th>Start at</th>
 				               			<th class="text-center">Status</th>
 				               			<th></th>
 				            		</tr>

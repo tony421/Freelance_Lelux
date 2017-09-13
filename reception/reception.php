@@ -27,7 +27,7 @@
 	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
 	    <link rel="stylesheet" href="../css/bootstrap-datepicker.css">
 	    
-	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
 	    <script type="text/javascript" src="../js/autoNumeric.js"></script>

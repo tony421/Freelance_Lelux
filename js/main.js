@@ -1,9 +1,20 @@
 _main_datatable_scroll_y = 350;
 
+var PERMISSION_ADMIN = 9;
+var PERMISSION_MANAGER = 8;
+var PERMISSION_RECEPTION = 7;
+
+var DAY_COLORS = {
+	0: '#FFCF00', 1: '#F42494', 2: 'green', 3: 'orange', 4: 'blue', 5: 'purple', 6: 'red'
+};
+
 var DATE_PICKER_FORMAT = 'DD, d MM yyyy';
 
-var MOMENT_DATE_DB_FORMAT = 'YYYY-M-D';
+var MOMENT_FULL_DAY_FORMAT = 'dddd';
+var MOMENT_FULL_DATE_FORMAT = 'D MMM YYYY';
+var MOMENT_DATE_DB_FORMAT = 'YYYY-MM-DD';
 var MOMENT_DATE_FORMAT = 'YYYY-M-D';
+
 var MOMENT_TIME_FORMAT = 'HH:mm';
 var MOMENT_TIME_12_FORMAT = 'hh:mm a';
 var MOMENT_DATE_TIME_FORMAT = 'YYYY-M-D HH:mm';
@@ -40,13 +51,7 @@ function main_request_ajax(url, mode, data, onSuccess)
 		// eg. check the actual error on PHP if we received ParserError
 		// eg. result from print_r()
 		dataType: 'json', 
-		success: function(response){
-			if (response.timeout === undefined) {
-				onSuccess(response);
-			} else {
-				main_redirect('../login/');
-			}
-		},
+		success: onSuccess,
 		error: function(xhr, errType, err){
 			//console.log(xhr.responseText.trim());
 			
@@ -54,9 +59,8 @@ function main_request_ajax(url, mode, data, onSuccess)
 			//main_alert_message('Error Type: ' + errType + ' | Error:' + err);
 			main_alert_message('System Error! Please contact admin.');
 			
-			console.log(xhr.responseText.trim());
 			// write log on the server
-			main_request_ajax('../log/log-boundary.php', '', xhr.responseText.trim(), function(response){});
+			main_request_ajax('../log/log-boundary.php', '', xhr.responseText.trim(), function(){});
 			
 			// N.B.
 			// undefined object (non-exist jquery object) from Client-Side cause ParserError
@@ -67,7 +71,7 @@ function main_request_ajax(url, mode, data, onSuccess)
 
 function main_redirect(url)
 {
-	parent.window.location.replace(url);
+	window.location.replace(url);
 }
 
 function main_open_new_tab(url)
@@ -201,12 +205,6 @@ function main_get_frame_content(frameName) {
 
 function initMoneyInput(control, min, max) {
 	$(control).autoNumeric('init', { vMin: min, vMax: max, aSign: '$' });
-	$(control).css('text-align', 'right');
-	$(control).focus(function(){ $(this).select(); });
-	$(control).change(function() {
-		if (!($(this).val().length))
-			setMoneyInputValue($(this), 0);
-	});
 }
 
 function setMoneyInputValue(control, val) {
@@ -214,7 +212,7 @@ function setMoneyInputValue(control, val) {
 }
 
 function getMoneyInputValue(control) {
-	return parseFloat($(control).autoNumeric('get'));
+	return $(control).autoNumeric('get');
 	//return $(control).val().replace(/\$/i, '');
 }
 
@@ -268,11 +266,6 @@ function initTouchSpinInput(control, min, max, initVal, step) {
 		max: max,
 		step: step
 	});
-	
-	$(control).change(function() {
-		if (!($(this).val().length))
-			$(this).val(min);
-	});
 }
 
 function setTouchSpinInputValue(control, val) {
@@ -290,7 +283,7 @@ function initTimeInput(control) {
 function setTimeInput(control, val) {
 	$(control).val(moment(currentDate() + ' ' + val).format(MOMENT_TIME_12_FORMAT));
 }
-function getTimeInput(control) {
+function getTimeInput(control) {	
 	return moment(currentDate() + ' ' + $(control).val()).format(MOMENT_TIME_FORMAT);
 }
 function isTimeInputComplete(control) {
@@ -309,14 +302,48 @@ function currentDate() {
 	return moment().format(MOMENT_DATE_FORMAT);
 }
 function currentTime() {
-	return moment().round(5, 'minutes').format(MOMENT_TIME_12_FORMAT);
+	return moment().round(5, 'minutes').format(MOMENT_TIME_FORMAT);
 }
 function currentDateTime() {
 	return moment().format(MOMENT_DATE_TIME_FORMAT);
 }
+
+function formatDate(date, formatString) {
+	formatString = typeof(formatString) === 'undefined' ? MOMENT_DATE_FORMAT : formatString;
+	return moment(date).format(formatString);
+}
 function formatTime(val) {
 	return moment(val).format(MOMENT_TIME_12_FORMAT);
 }
+
+function weekNumberOfYear(date) {
+	return moment(date).isoWeek();
+}
+function nextWeekDate(date) {
+	return moment(date).add(7, 'days').format(MOMENT_DATE_FORMAT)
+}
+function previousWeekDate(date) {
+	return moment(date).add(-7, 'days').format(MOMENT_DATE_FORMAT)
+}
+function dayNumberOfWeek(date) {
+	return moment(date).isoWeekday();
+}
+function daysOfWeek(date) {
+	days = [];
+	weekdayNo = dayNumberOfWeek(date);
+	
+	// 1 = Mon, 2 = Tue, 3 = Wed, ..., 7 = Sun
+	for(var i = 1; i <= 7; i++) {
+		weekdayDiff = i - weekdayNo;
+		
+		day = moment(date).add(weekdayDiff, 'days').format(MOMENT_DATE_DB_FORMAT);
+		days.push(day);
+	}
+	
+	return days;
+}
+
+
 
 
 

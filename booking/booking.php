@@ -28,7 +28,7 @@
 	    <link rel="stylesheet" href="../vis-4.20.0/dist/vis-timeline-graph2d.min.css"/>
 	    <link rel="stylesheet" href="../css/popover.css"/>
 	    
-	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
 	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
@@ -39,7 +39,7 @@
 	    <script type="text/javascript" src="../js/moment-round.js"></script>
 	    <script type="text/javascript" src="../vis-4.20.0/dist/vis-timeline-graph2d.min.js"></script>
 	    <script type="text/javascript" src="booking.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="booking-var.js"></script>
+	    <script type="text/javascript" src="booking-var.js?<?php echo time(); ?>"></script>
 	    
 	   	<script type="text/javascript">
 	    	$(document).ready(function(){

@@ -165,6 +165,18 @@
 			}
 		}
 		
+		public function updateTherapistOnShift($shiftInfo)
+		{
+			$affectedRow = $this->_dataMapper->updateTherapistOnShift($shiftInfo);
+			
+			if ($affectedRow > 0) {
+				return Utilities::getResponseResult(true, "Updating shift has succeeded.");
+			}
+			else {
+				return Utilities::getResponseResult(false, 'Updating shift has failed!');
+			}
+		}
+		
 		public function workTherapistOnShift($shiftInfo)
 		{
 			$affectedRow = $this->_dataMapper->workTherapistOnShift($shiftInfo['shift_id']);

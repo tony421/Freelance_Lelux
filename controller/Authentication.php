@@ -24,7 +24,7 @@
 				Authentication::setUser($therapist);
 				Utilities::logInfo('Therapist: '.$therapist->getName().'(ID:'.$therapist->getID().') logged in the system.');
 				
-				return Utilities::getResponseResult(true, 'The login has succeeded.');
+				return Utilities::getResponseResult(true, 'The login has succeeded.', $therapist->getPermission());
 			}
 			else {
 				return Utilities::getResponseResult(false, 'Username or password is not correct, please try again!');
@@ -106,13 +106,53 @@
 			{
 				$therapist = Session::getUser();
 					
-				if ($therapist->getPermission() < 9)
-					return false;
-				else 
+				if ($therapist->getPermission() == 9)
 					return true;
+				else 
+					return false;
 			}
 			else
-				return false;
+				throw new Exception('Session is expired!');
+		}
+		
+		public static function isManager()
+		{
+			if (Session::userExists())
+			{
+				$therapist = Session::getUser();
+					
+				if ($therapist->getPermission() == 8)
+					return true;
+				else
+					return false;
+			}
+			else
+				throw new Exception('Session is expired!');
+		}
+		
+		public static function isReception()
+		{
+			if (Session::userExists())
+			{
+				$therapist = Session::getUser();
+					
+				if ($therapist->getPermission() == 7)
+					return true;
+				else
+					return false;
+			}
+			else
+				throw new Exception('Session is expired!');
+		}
+		
+		public static function getPermission()
+		{
+			if (Session::userExists())
+			{
+				return Session::getUser()->getPermission();
+			}
+			else
+				throw new Exception('Session is expired!');
 		}
 	}
 ?>

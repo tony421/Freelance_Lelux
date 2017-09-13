@@ -158,5 +158,9 @@
 		{
 			return ucwords(strtolower($str));
 		}
+		
+		public static function isWeekend($date) {
+		    return (date('N', strtotime($date)) >= 6);
+		}
 	}
 ?>
