@@ -22,8 +22,8 @@
 	    
 	    <script type="text/javascript" src="../js/messagebox.js"></script>
 	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/main.js"></script>
-	    <script type="text/javascript" src="login.js"></script>
+	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
+	    <script type="text/javascript" src="login.js?<?php echo time(); ?>"></script>
 	    
 	    <script type="text/javascript">
 	    	$(document).ready(function(){
