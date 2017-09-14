@@ -282,7 +282,7 @@ function getTimelineOptions(date) {
 }
 function getTimelineStart(date) {
 	if (date == currentDate()) {
-		return date + ' ' + moment().format(MOMENT_TIME_FORMAT);
+		return currentDateTime();
 	} else {
 		return date + ' ' + OPEN_TIME;
 	}

@@ -691,7 +691,7 @@
 			}
 			
 			// 2.
-			Utilities::logDebug('Queue before sort => '.var_export($queues, true));
+			//Utilities::logDebug('Queue before sort => '.var_export($queues, true));
 			/*
 			 * This method does not provide a correct sorting result
 			 * in the case that values in each array element are equal
@@ -699,7 +699,7 @@
 			usort($queues, array($sorter, "compare"));
 			*/
 			$queues = $this->sortQueue($queues);
-			Utilities::logDebug('Queue after sort => '.var_export($queues, true));
+			//Utilities::logDebug('Queue after sort => '.var_export($queues, true));
 			
 			// 3.
 			foreach ($queues as $q) {
@@ -711,8 +711,8 @@
 				}
 			}
 			
-			Utilities::logDebug("Sorted Queue for booking at {$bookingTimeIn}");
-			Utilities::logDebug(var_export($queues, true));
+			//Utilities::logDebug("Sorted Queue for booking at {$bookingTimeIn}");
+			//Utilities::logDebug(var_export($queues, true));
 			
 			return $newTimelineGroups;
 		}
@@ -770,7 +770,7 @@
 						}
 						
 						// check if any full-therapist does not reach minimun turn
-						Utilities::logDebug("Therapist Name [{$timelineTherapistGroups[$key]['content']}] got {$sumAmount} customers before {$bookingTimeIn}");
+						//Utilities::logDebug("Therapist Name [{$timelineTherapistGroups[$key]['content']}] got {$sumAmount} customers before {$bookingTimeIn}");
 						if ($sumAmount < $minTurn) {
 							$doAllFullDayTherapistsReachMin = false;
 							//array_push($fullDayTherapistsNotReachMin, $group);
