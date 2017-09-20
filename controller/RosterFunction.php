@@ -48,6 +48,44 @@
 			//
 			$pivot = $this->convertToPivotTable($shifts, array('therapist_id', 'therapist_name'), 'shift_date', $days, 'shift_type_id');
 			
+			// if logged-in user is therapist, then move its roster to at the top
+			// 1. Find the user in the pivot data
+			//		1.1 if the user is found
+			//			1.1.1 move it to at index[0] of the array
+			//		1.2 if the user is not found
+			//			1.2.1 create a new item of pivot
+			//			1.2.2 add the item at index[0] of the array
+			//
+			if (!(Authentication::isAdmin() || Authentication::isManager() || Authentication::isReception())) {
+				$userID = Authentication::getUser()->getID();
+				$userName = Authentication::getUser()->getName();
+				
+				$isLoggedInUserInPivot = false;
+				foreach ($pivot as $key => $row) {
+					if ($row['therapist_id'] == $userID) {
+						$loggedInUser[0] = $pivot[$key];
+						
+						array_splice($pivot, $key, 1);
+						array_splice($pivot, 0, 0, $loggedInUser);
+						
+						$isLoggedInUserInPivot = true;
+					}
+				}
+				
+				if (!$isLoggedInUserInPivot) {
+					$newRow = array();
+					$newRow[0]['therapist_id'] = $userID;
+					$newRow[0]['therapist_name'] = $userName;
+					
+					foreach ($days as $val) {
+						$newRow[0][$val] = 0;
+					}
+					
+					Utilities::logDebug('Roster | $newRow => '.var_export($newRow, true));
+					array_splice($pivot, 0, 0, $newRow);
+				}
+			}
+			
 			//Utilities::logDebug('Roster | $pivot => '.var_export($pivot, true));
 
 			// sort rows by 'therapist_name'
@@ -192,13 +230,18 @@
 				} else {
 					$shiftTimeStart .= $shiftInfo['shift_type_time_start'];
 				}
+				
+				// if shift_type_id = 5 (On-Call), then set shift_working as 0, otherwise 1
+				$shiftWorking = 1;
+				if ($shiftInfo['shift_type_id'] == 5)
+					$shiftWorking = 0;
 					
-				$affectedRow = $this->_dataMapper->updateShift($therapistID, $date, $shiftTypeID, $shiftTimeStart);
+				$affectedRow = $this->_dataMapper->updateShift($therapistID, $date, $shiftTypeID, $shiftTimeStart, $shiftWorking);
 				if ($affectedRow > 0) {
 					$success = true;
 					$msg = 'Updating shift is succeeded.';
 				} else {
-					$affectedRow = $this->_dataMapper->addShift($therapistID, $date, $shiftTypeID, $shiftTimeStart);
+					$affectedRow = $this->_dataMapper->addShift($therapistID, $date, $shiftTypeID, $shiftTimeStart, $shiftWorking);
 					if ($affectedRow > 0) {
 						$success = true;
 						$msg = 'Adding shift is succeeded.';

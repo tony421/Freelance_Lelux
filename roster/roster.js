@@ -51,10 +51,14 @@ function onInitShiftTypeDone(response) {
 		$.each(shiftTypes, function (i, shiftType){
 			shiftTypeID = shiftType['shift_type_id'];
 			
-			if (shiftTypeID != 5) {
+			/*if (shiftTypeID != 5) {
 				option = "<option style='background-color: " + shiftType['shift_type_color'] + ";' value='" + shiftType['shift_type_id'] + "'>" + shiftType['shift_type_name'] + "</option>";
 				_shiftTypeOptions.push(option);
-			}
+			}*/
+			
+			// Use "On-Call" (shiftTypeID = 5) as Stand-By staff
+			option = "<option style='background-color: " + shiftType['shift_type_color'] + ";' value='" + shiftType['shift_type_id'] + "'>" + shiftType['shift_type_name'] + "</option>";
+			_shiftTypeOptions.push(option);
 		});
 		
 		// During initialization, get the roster of the current week
@@ -129,7 +133,8 @@ function initTableColumns(days, permission) {
 				if (_permission < PERMISSION_RECEPTION) {
 					$spanVal = '';
 					typeIndex = data - 1;
-					if (typeIndex >= 0 && typeIndex <= 1 )
+					//if (typeIndex >= 0 && typeIndex <= 1 )
+					if (typeIndex >= 0)
 						$spanVal = _shiftTypes[typeIndex]['shift_type_name'];
 					
 					return CONTROL_SPAN_SHIFT_TYPE.format(id, $spanVal);

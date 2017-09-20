@@ -18,11 +18,19 @@
 				$result = $authentication->login($loginInfo);
 			}
 			else if ($mode == "LOG_OUT") {
-				$result = $authentication->logout();
+				if (Authentication::userExists()) {
+					$result = $authentication->logout();
+				} else {
+					$result = Utilities::getTimeoutResponseResult();
+				}
 			}
 			else if ($mode == "CHANGE_PASSWORD") {
-				$passwordInfo = $_POST['data'];
-				$result = $authentication->changePassword($passwordInfo);
+				if (Authentication::userExists()) {
+					$passwordInfo = $_POST['data'];
+					$result = $authentication->changePassword($passwordInfo);
+				} else {
+					$result = Utilities::getTimeoutResponseResult();
+				}
 			}
 			else {
 				throw new Exception('Mode not found');

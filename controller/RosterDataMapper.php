@@ -55,11 +55,12 @@ where therapist_id = {$therapistID}
 			return $this->_dataAccess->delete($sql);
 		}
 		
-		public function updateShift($therapistID, $date, $shiftTypeID, $shiftTimeStart) {
+		public function updateShift($therapistID, $date, $shiftTypeID, $shiftTimeStart, $shiftWorking) {
 			$sql = "
 update shift
 set shift_type_id = {$shiftTypeID}
 	, shift_time_start = '{$shiftTimeStart}'
+	, shift_working = {$shiftWorking}
 	, shift_update_datetime = now()
 where therapist_id = {$therapistID}
 	and shift_date = '{$date}'
@@ -68,10 +69,10 @@ where therapist_id = {$therapistID}
 			return $this->_dataAccess->update($sql);
 		}
 		
-		public function addShift($therapistID, $date, $shiftTypeID, $shiftTimeStart) {
+		public function addShift($therapistID, $date, $shiftTypeID, $shiftTimeStart, $shiftWorking) {
 			$sql = "
 insert into shift (therapist_id, shift_date, shift_type_id, shift_time_start, shift_working)
-values ({$therapistID}, '{$date}', {$shiftTypeID}, '{$shiftTimeStart}', 1)
+values ({$therapistID}, '{$date}', {$shiftTypeID}, '{$shiftTimeStart}', {$shiftWorking})
 ";
 			
 			return $this->_dataAccess->insert($sql);
