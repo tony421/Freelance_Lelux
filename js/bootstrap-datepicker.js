@@ -548,7 +548,8 @@
 			//var timezoneOffset = this._get_timezone_offset_on_daylight_condition(utc);
 
 			// *** moment.js is needed
-			var timezoneOffset = utc.getTimezoneOffset(); // the method return a value as minute
+			/*
+			 * var timezoneOffset = utc.getTimezoneOffset(); // the method return a value as minute
 			var local = new Date(utc.getTime() + (timezoneOffset*60000));
 			
 			if (moment(utc).isDST() && !(moment(local).isDST())) {
@@ -562,6 +563,18 @@
 			} // else { return the same offset; }
 			
 			return utc && new Date(utc.getTime() + (timezoneOffset * 60000));
+			*/
+			if (!utc) {
+				return utc;
+			}
+
+			var local = new Date(utc.getTime() + (utc.getTimezoneOffset() * 60000));
+			
+			if (local.getTimezoneOffset() !== utc.getTimezoneOffset()) {
+				local = new Date(utc.getTime() + (local.getTimezoneOffset() * 60000));
+			}
+			
+			return local;
 			//return utc && utc.setTime(utc.getTime() + (utc.getTimezoneOffset()*60000));
 			//return utc;
 		},
