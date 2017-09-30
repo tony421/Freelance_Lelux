@@ -525,9 +525,45 @@
 			this.update();
 			e.preventDefault();
 		},
-
+		// thie function cannot be called, always error (not a function). do not know why
+		_get_timezone_offset_on_daylight_condition: function(utc) {
+			// *** moment.js is needed
+			var timezoneOffset = utc.getTimezoneOffset(); // the method return a value as minute
+			var local = new Date(utc.getTime() + (timezoneOffset*60000));
+			
+			if (moment(utc).isDST() && !(moment(local).isDST())) {
+				// if the datetime shifted from Daylight Saveing Time to Standard Time
+				// then adding 1 hour
+				timezoneOffset += 60;				
+			} else if (!(moment(utc).isDST()) && moment(local).isDST()) {
+				// if the datetime shifted from Standard Time to Daylight Saveing Time
+				// then subtracting 1 hour
+				timezoneOffset -= 60;
+			} // else { return the same offset; }
+			
+			return timezoneOffset;
+		},
 		_utc_to_local: function(utc){
-			return utc && new Date(utc.getTime() + (utc.getTimezoneOffset()*60000));
+			//console.log('UTC => ' + utc + ' | Time() => ' + utc.getTime() + ' | TimezoneOffset() => ' + utc.getTimezoneOffset() * 60000 + ' (' + utc.getTimezoneOffset() / 60 + ' hr)');
+			//var timezoneOffset = this._get_timezone_offset_on_daylight_condition(utc);
+
+			// *** moment.js is needed
+			var timezoneOffset = utc.getTimezoneOffset(); // the method return a value as minute
+			var local = new Date(utc.getTime() + (timezoneOffset*60000));
+			
+			if (moment(utc).isDST() && !(moment(local).isDST())) {
+				// if the datetime shifted from Daylight Saveing Time to Standard Time
+				// then adding 1 hour
+				timezoneOffset += 60;				
+			} else if (!(moment(utc).isDST()) && moment(local).isDST()) {
+				// if the datetime shifted from Standard Time to Daylight Saveing Time
+				// then subtracting 1 hour
+				timezoneOffset -= 60;
+			} // else { return the same offset; }
+			
+			return utc && new Date(utc.getTime() + (timezoneOffset * 60000));
+			//return utc && utc.setTime(utc.getTime() + (utc.getTimezoneOffset()*60000));
+			//return utc;
 		},
 		_local_to_utc: function(local){
 			return local && new Date(local.getTime() - (local.getTimezoneOffset()*60000));
@@ -550,7 +586,8 @@
 		},
 
 		getDate: function(){
-			return this._utc_to_local(this.getUTCDate());
+			var date = this._utc_to_local(this.getUTCDate());
+			return date;
 		},
 
 		getUTCDate: function(){

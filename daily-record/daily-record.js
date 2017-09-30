@@ -246,6 +246,7 @@ function showBookingDetails(minutes, date, start, end, clientAmt, singleRoomAmt,
 }
 function setBookingTime(minutes, start, end) {
 	var text = '<span class="text-mark">{0}</span> min from <span class="text-mark">{1}</span> to <span class="text-mark">{2}</span>';
+	console.log(start + ' to ' + end);
 	var startTime = formatTime(start);
 	var endTime = formatTime(end);
 	

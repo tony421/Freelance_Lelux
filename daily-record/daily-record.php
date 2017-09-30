@@ -33,11 +33,10 @@
 	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
 	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
-	    <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
 	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="../js/moment.js"></script>
 	    <script type="text/javascript" src="../js/moment-round.js"></script>
-	    <script type="text/javascript" src="../js/main.js"></script>
+	    <script type="text/javascript" src="../js/bootstrap-datepicker.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="daily-record.js?<?php echo time(); ?>"></script>
 	    
 	   	<script type="text/javascript">
