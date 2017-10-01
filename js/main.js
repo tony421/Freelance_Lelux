@@ -299,19 +299,11 @@ function initTimeInput(control) {
 	//$(control).focus(function(){ $(this).select(); });
 }
 function setTimeInput(control, val) {
-	time = moment(currentDate() + ' ' + val, MOMENT_DATE_TIME_12_FORMAT).format(MOMENT_TIME_12_FORMAT)
-	
-	console.log('setTimeInput() | val => ' + val);
-	console.log('setTimeInput() | time => ' + time);
-	
+	time = moment(currentDate() + ' ' + val, MOMENT_DATE_TIME_12_FORMAT).format(MOMENT_TIME_12_FORMAT)	
 	$(control).val(time);
 }
 function getTimeInput(control) {
 	time = moment(currentDate() + ' ' + $(control).val(), MOMENT_DATE_TIME_12_FORMAT).format(MOMENT_TIME_FORMAT);
-	
-	console.log('getTimeInput() | val => ' + $(control).val());
-	console.log('getTimeInput() | time => ' + time);
-	
 	return time;
 }
 function isTimeInputComplete(control) {
