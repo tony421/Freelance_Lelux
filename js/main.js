@@ -18,6 +18,7 @@ var MOMENT_DATE_FORMAT = 'YYYY-M-D';
 var MOMENT_TIME_FORMAT = 'HH:mm';
 var MOMENT_TIME_12_FORMAT = 'hh:mm a';
 var MOMENT_DATE_TIME_FORMAT = 'YYYY-M-D HH:mm';
+var MOMENT_DATE_TIME_12_FORMAT = 'YYYY-M-D hh:mm a';
 
 var ICON_OK = '<span class="glyphicon glyphicon-ok" style="color: green; font-size: 1.2em;" aria-hidden="true"></span>';
 var ICON_REMOVE = '<span class="glyphicon glyphicon-remove" style="color: red; font-size: 1.2em;" aria-hidden="true"></span>';
@@ -298,10 +299,20 @@ function initTimeInput(control) {
 	//$(control).focus(function(){ $(this).select(); });
 }
 function setTimeInput(control, val) {
-	$(control).val(moment(currentDate() + ' ' + val).format(MOMENT_TIME_12_FORMAT));
+	time = moment(currentDate() + ' ' + val, MOMENT_DATE_TIME_12_FORMAT).format(MOMENT_TIME_12_FORMAT)
+	
+	console.log('setTimeInput() | val => ' + val);
+	console.log('setTimeInput() | time => ' + time);
+	
+	$(control).val(time);
 }
 function getTimeInput(control) {
-	return moment(currentDate() + ' ' + $(control).val()).format(MOMENT_TIME_FORMAT);
+	time = moment(currentDate() + ' ' + $(control).val(), MOMENT_DATE_TIME_12_FORMAT).format(MOMENT_TIME_FORMAT);
+	
+	console.log('getTimeInput() | val => ' + $(control).val());
+	console.log('getTimeInput() | time => ' + time);
+	
+	return time;
 }
 function isTimeInputComplete(control) {
 	return $(control).inputmask("isComplete");
@@ -325,12 +336,17 @@ function currentDateTime() {
 	return moment().format(MOMENT_DATE_TIME_FORMAT);
 }
 
-function formatDate(date, formatString) {
-	formatString = typeof(formatString) === 'undefined' ? MOMENT_DATE_FORMAT : formatString;
-	return moment(date).format(formatString);
+function formatDate(date, fromFormat, toFormat) {
+	fromFormat = typeof(fromFormat) === 'undefined' ? MOMENT_DATE_FORMAT : fromFormat;
+	toFormat = typeof(toFormat) === 'undefined' ? MOMENT_DATE_FORMAT : toFormat;
+	
+	return moment(date, fromFormat).format(toFromat);
 }
-function formatTime(val) {
-	return moment(val).format(MOMENT_TIME_12_FORMAT);
+function formatTime(val, fromFormat, toFormat) {
+	fromFormat = typeof(fromFormat) === 'undefined' ? MOMENT_DATE_TIME_FORMAT : fromFormat;
+	toFormat = typeof(toFormat) === 'undefined' ? MOMENT_TIME_12_FORMAT : toFormat;
+	
+	return moment(val, fromFormat).format(toFormat);
 }
 
 function weekNumberOfYear(date) {
