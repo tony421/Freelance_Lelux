@@ -253,6 +253,7 @@
 			$group_item['style'] = Color_Config::BOOKING_BG;
 			//$group_item['style'] = 'font-weight: bold; color: red;';
 			//$group_item['title'] = 'Need On-Call Therapist!!!';
+			$group_item['shift_working'] = 1;
 			$group_item['items'] = array();
 			
 			return $group_item;
@@ -320,29 +321,31 @@
 					foreach ($timelineGroups as $key => $group) {
 						//Utilities::logDebug('Group #'.$group['id'].' | Item Amount:'.count($group['items']));
 						
-						// if there is no any item in group, then add the booking in the group
-						//
-						if (count($group['items']) > 0) {
-							// loop items in the group, check whether the booking item is really unique in the group
+						if ($group['shift_working'] == 1) {
+							// if there is no any item in group, then add the booking in the group
 							//
-							foreach ($group['items'] as $item) {
-								$isUniqueItem = true;
-								
-								if ($this->isDuplicateBookingTime($booking, $item)) {
-									// if booking item is duplicate with any existing items, then check with the next one
-									$isUniqueItem = false;
-									break;
+							if (count($group['items']) > 0) {
+								// loop items in the group, check whether the booking item is really unique in the group
+								//
+								foreach ($group['items'] as $item) {
+									$isUniqueItem = true;
+									
+									if ($this->isDuplicateBookingTime($booking, $item)) {
+										// if booking item is duplicate with any existing items, then check with the next one
+										$isUniqueItem = false;
+										break;
+									}
 								}
-							}
-							
-							if($isUniqueItem) {
+								
+								if($isUniqueItem) {
+									array_push($timelineGroups[$key]['items'], $this->getTimelineBookingItem($booking, $group['id'], $excessiveGroupIDs));
+									$isItemAddedToGroup = true;
+								}
+								
+							} else {
 								array_push($timelineGroups[$key]['items'], $this->getTimelineBookingItem($booking, $group['id'], $excessiveGroupIDs));
 								$isItemAddedToGroup = true;
 							}
-							
-						} else {
-							array_push($timelineGroups[$key]['items'], $this->getTimelineBookingItem($booking, $group['id'], $excessiveGroupIDs));
-							$isItemAddedToGroup = true;
 						}
 						
 						if ($isItemAddedToGroup)
@@ -600,6 +603,7 @@
 						// loop to find therapist according to the queue and find empty slot for booking item
 						foreach ($timelineTherapistGroups as $key => $group) {
 							// therapist must be in working status
+							
 							if ($group['shift_working'] == 1) {
 								if ($queue['therapist_id'] == $group['therapist_id']) {
 									$therapistID = $group['therapist_id'];

@@ -2,10 +2,11 @@
 
 class DataAccess
 {
-	private $_server = "localhost";
-	private $_user = "root";
-	private $_password = "";
-	private $_db_name = "lelux";
+	private $_conn_strings = array(
+		0 => array("server" => "localhost", "user" => "root", "password" => "", "db" => "lelux") // dev
+		, 1 => array("server" => "localhost", "user" => "leluxtha_sup1", "password" => "leluxsup1", "db" => "leluxtha_support") // production
+		, 2 => array("server" => "localhost", "user" => "id2726991_test1", "password" => "test1", "db" => "id2726991_massage") // portfolio
+	);
 	
 	//private $_server = "localhost";
 	//private $_user = "leluxtha_sup1";
@@ -18,6 +19,13 @@ class DataAccess
 	private function openConnection()
 	{
 		try {
+			$_conn_string = $this->_conn_strings[0];
+	
+			$_server = $_conn_string["server"];
+			$_user = $_conn_string["user"];
+			$_password = $_conn_string["password"];
+			$_db_name = $_conn_string["db"];
+	
 			//$mysqli = new mysqli($this->_server, $this->_user, $this->_password, $this->_db_name);
 			
 			/* check connection */
@@ -25,7 +33,7 @@ class DataAccess
 				//throw new Exception('mysqli error => '.$mysqli->connect_error);
 			//}
 			
-			$this->_conn = mysqli_connect($this->_server, $this->_user, $this->_password, $this->_db_name);
+			$this->_conn = mysqli_connect($_server, $_user, $_password, $_db_name);
 			//if (mysqli_connect_error()) throw new Exception('errorrr');
 			
 			//$this->_conn = mysql_connect($this->_server, $this->_user, $this->_password);// or die ('Unable to connect to MySQL');

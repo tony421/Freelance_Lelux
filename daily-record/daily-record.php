@@ -12,31 +12,9 @@
 	    
 	    <title>Daily Record</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
+	    <?php require_once '../master-page/script-datatable.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-
-		<link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css"/>
-	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
-	    <link rel="stylesheet" href="../css/bootstrap-datepicker.css">
-	    
-	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
-	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
-	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
-	    <script type="text/javascript" src="../js/moment.js"></script>
-	    <script type="text/javascript" src="../js/moment-round.js"></script>
-	    <script type="text/javascript" src="../js/bootstrap-datepicker.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="daily-record.js?<?php echo time(); ?>"></script>
 	    
 	   	<script type="text/javascript">
@@ -53,19 +31,21 @@
     	
     	<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Daily Records ::~</div>
+				<div class="title-text">Daily Records</div>
 			</div>
 			<div class="container">
 				<form class="form-horizontal">
-					<div class="option-container">
-						<button type="button" id="btnCommissionReport" class="btn btn-success btn-lg">
-							<span class="glyphicon glyphicon-print"></span>
-							Commission Report
-						</button>
-						<button type="button" id="btnIncomeReport" class="btn btn-success btn-lg">
-							<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
-							Income Report
-						</button>
+					<div class="form-group">
+						<div class="col-sm-12 option-container">
+							<button type="button" id="btnCommissionReport" class="btn btn-success btn-list">
+								<span class="glyphicon glyphicon-print"></span>
+								Commission Report
+							</button>
+							<button type="button" id="btnIncomeReport" class="btn btn-success btn-list">
+								<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+								Income Report
+							</button>
+						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-4 col-sm-4">
@@ -81,7 +61,7 @@
 			</div>
 			<div class="panel with-nav-tabs panel-default">
 				<div class="container">
-	                <div class="panel-heading" style="padding-bottom: 0;">
+	                <div class="panel-heading">
                         <ul id="tabDailyRecords" class="nav nav-tabs">
                         	<li class="active"><a name="frameTherapist" class="tab-title" href="#tab4" data-toggle="tab">Therapists</a></li>
                         	<li><a name="frameQueueing" class="tab-title" href="#tab5" data-toggle="tab">Walk-In</a></li>

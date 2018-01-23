@@ -12,26 +12,9 @@
 	    
 	    <title>Roster</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
+	    <?php require_once '../master-page/script-datatable.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-	    
-	    <link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
-	    
-	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/autonumeric.js"></script>
-	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-	    <script type="text/javascript" src="../js/moment.js"></script>
-	    <script type="text/javascript" src="../js/moment-round.js"></script>
 	    <script type="text/javascript" src="roster.js?<?php echo time(); ?>"></script>
 	    
 	    <script type="text/javascript">
@@ -47,23 +30,27 @@
 		
 		<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Roster ::~</div>
+				<div class="title-text">Roster</div>
 			</div>
 			<div class="container-fluid">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<div class="col-xs-1">
-							<button type="button" id="btnPrevious" class="btn btn-default btn-lg">
-								<span class="glyphicon glyphicon-chevron-left" style="font-size: 2em;"></span>
+						<div class="col-xs-1 roster-selection-res-gutter">
+							<button type="button" id="btnPrevious" class="btn btn-default">
+								<span class="roster-selection">
+									<span class="glyphicon glyphicon-chevron-left"></span>
+									</span>
 							</button>
 						</div>
 						<div class="col-xs-10">
 							<table id="tableRoster" class="display" cellspacing="0" width="100%">
 			            	</table>
 						</div>
-						<div class="col-xs-1"> 
-							<button type="button" id="btnNext" class="btn btn-default btn-lg">
-								<span class="glyphicon glyphicon-chevron-right" style="font-size: 2em;"></span>
+						<div class="col-xs-1 roster-selection-res-gutter"> 
+							<button type="button" id="btnNext" class="btn btn-default">
+								<span class="roster-selection">
+									<span class="glyphicon glyphicon-chevron-right"></span>
+								</span>
 							</button>
 						</div>
 					</div>

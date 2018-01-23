@@ -12,24 +12,10 @@
 	    
 	    <title>Client - Search client</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
+	    <?php require_once '../master-page/script-datatable.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
 	    
-	    <link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
-	    
-	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="client-search.js?<?php echo time(); ?>"></script>
 	    
 	    <script type="text/javascript">
@@ -45,38 +31,40 @@
 		
 		<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Search Client ::~</div>
+				<div class="title-text">Search Client</div>
 			</div>
-			<div class="container">
+			<div class="container res-gutter">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Search By</label>
-						<div class="col-sm-2">
+						<label class="col-xs-12 col-sm-2 control-label">Search By</label>
+						<div class="col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-3 col-md-2">
 							<label class="radio-inline">
 								<input type="radio" id="radSearchName" name="searchby" value="1" checked="checked"> Client Name
 							</label>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-xs-6 col-sm-3">
 							<input type="text" id="txtText" class="form-control">
-						</div>
-						<div class="col-sm-2">
-							<button type="button" id="btnSearchClient" class="btn btn-primary">
-								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-							Search</button>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-2">
+						<div class="col-xs-offset-1 col-xs-12 col-sm-offset-2 col-sm-4">
 							<label class="radio-inline">
 								<input type="radio" id="radSearchTel" name="searchby" value="2"> Client Phone No.
 							</label>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-2">
+						<div class="col-xs-offset-1 col-xs-12 col-sm-offset-2 col-sm-4">
 							<label class="radio-inline">
 								<input type="radio" id="radSearchMem" name="searchby" value="3"> Membership No.
 							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-offset-4 col-xs-8 col-sm-offset-4 col-sm-2">
+							<button type="button" id="btnSearchClient" class="btn btn-primary">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+							Search</button>
 						</div>
 					</div>
 					<div class="form-group">

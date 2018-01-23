@@ -12,22 +12,9 @@
 	    
 	    <title>Change Password</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-	    
-	    <link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/main.js"></script>
-	    <script type="text/javascript" src="change-password.js"></script>
+	    <script type="text/javascript" src="change-password.js?<?php echo time(); ?>"></script>
 	    
 	    <script type="text/javascript">
 	    	$(document).ready(function(){
@@ -42,25 +29,25 @@
 		
 		<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Change Password ::~</div>
+				<div class="title-text">Change Password</div>
 			</div>
-			<div class="container">
+			<div class="container res-gutter">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-offset-3 col-sm-2 control-label">Old Password</label>
-						<div class="col-sm-3">
+						<label class="col-xs-4 col-sm-offset-3 col-sm-2 control-label">Old Password</label>
+						<div class="col-xs-6 col-sm-3">
 							<input type="password" id="txtOldPassword" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-offset-3 col-sm-2 control-label">New Password</label>
-						<div class="col-sm-3">
+						<label class="col-xs-4 col-sm-offset-3 col-sm-2 control-label">New Password</label>
+						<div class="col-xs-6 col-sm-3">
 							<input type="password" id="txtNewPassword" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-offset-2 col-sm-3 control-label">New Password (Confirm)</label>
-						<div class="col-sm-3">
+						<label class="col-xs-4 col-sm-offset-2 col-sm-3 control-label">New Password (Confirm)</label>
+						<div class="col-xs-6 col-sm-3">
 							<input type="password" id="txtNewPasswordConfirm" class="form-control">
 						</div>
 					</div>

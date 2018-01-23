@@ -12,26 +12,10 @@
 	    
 	    <title>Client - Add new client</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-	    
-	    <link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
-	    
-	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
-	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 	    <script type="text/javascript" src="client-add.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="client-variable.js"></script>
+	    <script type="text/javascript" src="client-variable.js?<?php echo time(); ?>"></script>
 	    
 	    <script type="text/javascript">
 	    	$(document).ready(function(){
@@ -46,13 +30,13 @@
 		
 		<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Add Client ::~</div>
+				<div class="title-text">Add Client</div>
 			</div>
-			<div class="container">
+			<div class="container res-gutter">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-2 control-label text-danger">*Health Fund</label>
-						<div class="col-sm-4">
+						<label class="col-xs-4 col-sm-2 control-label text-danger">*Health Fund</label>
+						<div class="col-xs-8 col-sm-4">
 							<select id="ddlHealthFund" class="form-control">
 								<!--
 								<option value="0">----- Non Health Fund -----</option>
@@ -94,26 +78,26 @@
 						</div>
 					</div>
 					<div id="rowHealthFundInput" class="form-group">
-						<label class="col-sm-2 control-label text-danger">*Membership No.</label>
-						<div class="col-sm-3">
+						<label class="col-xs-4 col-sm-2 control-label text-danger">*Mem No.</label>
+						<div class="col-xs-8 col-sm-3">
 							<input type="text" id="txtMemNo" class="form-control">
 						</div>
-						<label class="col-sm-2 control-label text-danger">*Patient ID</label>
-						<div class="col-sm-2">
+						<label class="col-xs-4 col-sm-2 control-label text-danger">*Patient ID</label>
+						<div class="col-xs-8 col-sm-2">
 							<input type="text" id="txtPatientID" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label text-danger">*First Name</label>
-						<div class="col-sm-2">
+						<label class="col-xs-4 col-sm-2 control-label text-danger">*First Name</label>
+						<div class="col-xs-8 col-sm-2">
 							<input type="text" id="txtFirstName" class="form-control">
 						</div>
-						<label class="col-sm-2 control-label text-danger">*Last Name</label>
-						<div class="col-sm-2">
+						<label class="col-xs-4 col-sm-2 control-label text-danger">*Last Name</label>
+						<div class="col-xs-8 col-sm-2">
 							<input type="text" id="txtLastName" class="form-control">
 						</div>
-						<label class="col-sm-1 control-label">Gender</label>
-						<div class="col-sm-3">
+						<label class="col-xs-4 col-sm-1 control-label">Gender</label>
+						<div class="col-xs-8 col-sm-3">
 							<label class="radio-inline">
 								<input type="radio" id="radMale" name="gender" value="0" checked="checked"> Male
 							</label>
@@ -123,82 +107,88 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Address</label>
-						<div class="col-sm-5">
+						<label class="col-xs-4 col-sm-2 control-label">Address</label>
+						<div class="col-xs-8 col-sm-5">
 							<input type="text" id="txtAddress" class="form-control">
 						</div>
-						<label class="col-sm-2 control-label">Postcode</label>
-						<div class="col-sm-2">
+						<label class="col-xs-4 col-sm-2 control-label">Postcode</label>
+						<div class="col-xs-8 col-sm-2">
 							<input type="text" id="txtPostcode" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Email</label>
-						<div class="col-sm-5">
+						<label class="col-xs-4 col-sm-2 control-label">Email</label>
+						<div class="col-xs-8 col-sm-5">
 							<input type="text" id="txtEmail" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Contact No.</label>
-						<div class="col-sm-5">
+						<label class="col-xs-4 col-sm-2 control-label">Contact No.</label>
+						<div class="col-xs-8 col-sm-5">
 							<input type="text" id="txtContactNo" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Date of Birth</label>
-						<div class="col-sm-5">
+						<label class="col-xs-4 col-sm-2 control-label">Date of Birth</label>
+						<div class="col-xs-8 col-sm-5">
 							<input type="text" id="txtBirthday" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Occupation</label>
-						<div class="col-sm-5">
+						<label class="col-xs-4 col-sm-2 control-label">Occupation</label>
+						<div class="col-xs-8 col-sm-5">
 							<input type="text" id="txtOccupation" class="form-control">
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="col-sm-2 control-label">Finding us</label>
-						<div class="col-sm-10">
-							<label class="checkbox-inline">
+					<div class="form-group checkbox-list">
+						<label class="col-xs-12 col-sm-2 control-label">Finding us</label>
+						<div class="col-xs-offset-2 col-xs-10 col-sm-10">
+							<label class="col-xs-6 col-sm-3 checkbox-inline">
 								<input type="checkbox" id="cbTrueLocal" value="1"> True Local
 							</label>
-							<label class="checkbox-inline">
+							<label class="col-xs-6 col-sm-3 checkbox-inline">
 								<input type="checkbox" id="cbGoogle" value="2"> Google 
 							</label>
-							<label class="checkbox-inline">
+							<label class="col-xs-6 col-sm-3 checkbox-inline">
 								<input type="checkbox" id="cbPassing" value="3"> Passing By 
 							</label>
-							<label class="checkbox-inline">
+							<label class="col-xs-6 col-sm-3 checkbox-inline">
 								<input type="checkbox" id="cbWord" value="4"> Word of mouth 
 							</label>
-							<label class="checkbox-inline">
+							<label class="col-xs-6 col-sm-3 checkbox-inline">
 								<input type="checkbox" id="cbFlyer" value="5"> Flyer 
 							</label>
-							<label class="checkbox-inline">
+							<label class="col-xs-6 col-sm-3 checkbox-inline">
 								<input type="checkbox" id="cbFacebook" value="6"> Facebook 
 							</label>
-							<label class="checkbox-inline">
+							<label class="col-xs-6 col-sm-3 checkbox-inline">
 								<input type="checkbox" id="cbGiftVoucher" value="7"> Gift Voucher 
-							</label>						
+							</label>
+							<label class="col-xs-12 col-sm-6 checkbox-inline">
+								<input type="checkbox" id="cbReferred" value="8"> Referred by
+								<input type="text" id="txtReferred">
+							</label>													
 						</div>
 					</div>
+					<!--
 					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-5">
+						<div class="col-xs-offset-4 col-xs-8 col-sm-offset-2 col-sm-5">
 							<label class="checkbox-inline">
 								<input type="checkbox" id="cbReferred" value="8"> Referred By
 							</label>
 							<input type="text" id="txtReferred">
 						</div>
 					</div>
+					-->
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Sports/Activities</label>
-						<div class="col-sm-5">
+						<label class="col-xs-4 col-sm-2 control-label">Sports/Activities</label>
+						<div class="col-xs-8 col-sm-5">
 							<input type="text" id="txtSports" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Conditions Apply</label>
-						<div class="col-sm-4">
+						<label class="col-xs-12 col-sm-2 control-label text-nowrap">Conditions Apply</label>
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -208,7 +198,7 @@
 							    <input type="text" id="txtStroke" class="form-control">
 						    </div><!-- /input-group -->
 						</div>
-						<div class="col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -220,7 +210,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-2 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -230,7 +220,7 @@
 							    <input type="text" id="txtIsomnia" class="form-control">
 						    </div><!-- /input-group -->
 						</div>
-						<div class="col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -242,7 +232,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-2 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -252,7 +242,7 @@
 							    <input type="text" id="txtHeartCon" class="form-control">
 						    </div><!-- /input-group -->
 						</div>
-						<div class="col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -264,7 +254,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-2 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -274,7 +264,7 @@
 							    <input type="text" id="txtBloodPressure" class="form-control">
 						    </div><!-- /input-group -->
 						</div>
-						<div class="col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -286,7 +276,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-2 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -296,7 +286,7 @@
 							    <input type="text" id="txtBrokenBone" class="form-control">
 						    </div><!-- /input-group -->
 						</div>
-						<div class="col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -308,7 +298,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 ol-sm-offset-2 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -318,7 +308,7 @@
 							    <input type="text" id="txtPregnancy" class="form-control">
 						    </div><!-- /input-group -->
 						</div>
-						<div class="col-sm-4">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-5 col-md-4">
 							<div class="input-group">
 							    <span class="input-group-addon">
 							    	<label class="checkbox-inline" style="padding-top: 0;">
@@ -330,20 +320,20 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Other Conditions or Recent injuries</label>
-						<div class="col-sm-6">
+						<label class="col-xs-12 col-sm-2 control-label text-nowrap">Other Conditions</label>
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-5">
 							<input type="text" id="txtOtherCon" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Emergency Contact</label>
-						<div class="col-sm-3">
+						<label class="col-xs-12 col-sm-2 control-label">Emergency Contact</label>
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-3">
 							<div class="input-group">
 								<span class="input-group-addon">Name</span>
 								<input type="text" id="txtEmerConName" class="form-control">
 							</div>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-3">
 							<div class="input-group">
 								<span class="input-group-addon">Phone No.</span>
 								<input type="text" id="txtEmerConNo" class="form-control">
@@ -351,7 +341,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-5 col-sm-7">
+						<div class="col-sm-12 text-center">
 							<button type="button" id="btnAddClient" class="btn btn-primary btn-lg">
 								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 								Add Client

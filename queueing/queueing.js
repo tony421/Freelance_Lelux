@@ -244,10 +244,9 @@ function onInitTherapistDone(response) {
 
 function getTimeIn()
 {
-	timeIn = getTimeInput($txtTimeIn).split(":");
+	timeIn = getTimeInput($txtTimeIn);
 	date = parent.getSelectedDailyRecordDate(); // use getDate function of the parent
-	
-	return moment(date, MOMENT_DATE_FORMAT).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+	return moment(date + ' ' + timeIn, MOMENT_DATE_TIME_FORMAT).format(MOMENT_DATE_TIME_FORMAT);
 }
 function getTimeOut()
 {

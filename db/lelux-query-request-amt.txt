@@ -4,21 +4,25 @@ select Name, Date, Request_Amount
 from (
     select therapist_name as Name
         , date_format(massage_record_date, '%b %Y') as Date
-    	, date_format(massage_record_date, '%m') as Seq
+    	, date_format(massage_record_date, '%y%m') as Seq
         , sum(massage_record_requested) as 'Request_Amount'
     from massage_record
     join therapist on therapist.therapist_id = massage_record.therapist_id
-    where date_format(massage_record_date, '%Y') = 2017
+    where massage_record_date between '2017-11-1' and '2018-2-1'
+		/*date_format(massage_record_date, '%Y') = 2017
+		and date_format(massage_record_date, '%m') between 9 and 11*/
     	and massage_record.therapist_id != 0
     group by therapist.therapist_name, Date, Seq
     union all
     select therapist_name as Name
         , '== Total =='as Date
-    	, 99 as Seq
+    	, 999999 as Seq
         , sum(massage_record_requested) as 'Request_Amount'
     from massage_record
     join therapist on therapist.therapist_id = massage_record.therapist_id
-    where date_format(massage_record_date, '%Y') = 2017
+    where massage_record_date between '2017-11-1' and '2018-2-1'
+		/*date_format(massage_record_date, '%Y') = 2017
+		and date_format(massage_record_date, '%m') between 9 and 11*/
     	and massage_record.therapist_id != 0
     group by therapist.therapist_name
 ) as Request_Summary

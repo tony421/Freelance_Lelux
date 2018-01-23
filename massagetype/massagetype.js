@@ -33,8 +33,7 @@ function initPage()
 	$txtComm = $('#txtComm');
 	$txtName = $('#txtName');
 	
-	$txtComm.autoNumeric('init', { vMin: 0, vMax: 999, aSign: '$' });
-	$txtComm.focus(function(){ $(this).select(); });
+	initMoneyInput($txtComm, 0, 1000.99);
 	
 	$tableMassageType = $('#tableMassageType');
 	// keep instance of DataTable so that it will be used for row.add(), rows().remove() and others
@@ -239,7 +238,7 @@ function getEditedMassageTypeInfo()
 
 function clearInputs()
 {
-	$txtComm.val('');
+	setMoneyInputValue($txtComm, 0);
 	$txtName.val('');
 	
 	$txtName.focus();

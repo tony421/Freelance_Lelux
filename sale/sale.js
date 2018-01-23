@@ -709,7 +709,8 @@ function getCartSaleTotal() {
 	total = 0.0;
 	
 	for(var i = 0; i < _cartItems.length; i++) {
-		total += parseFloat(_cartItems[i]['sale_item_total']);
+		if (_cartItems[i]['sale_item_void_user'] == 0)
+			total += parseFloat(_cartItems[i]['sale_item_total']);
 	}
 	
 	return total;

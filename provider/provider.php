@@ -12,24 +12,10 @@
 	    
 	    <title>Provider</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
+	    <?php require_once '../master-page/script-datatable.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-
-		<link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
-	    
-	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-	    <script type="text/javascript" src="provider.js"></script>
+	    <script type="text/javascript" src="provider.js?<?php echo time(); ?>"></script>
 	    
 	   	<script type="text/javascript">
 	    	$(document).ready(function(){
@@ -41,38 +27,38 @@
 	<body>
 		<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Remedial Provider ::~</div>
+				<div class="title-text">Remedial Provider</div>
 			</div>
-			<div class="container">
+			<div class="container res-gutter">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-offset-3 col-sm-2 control-label">Provider No.</label>
-						<div class="col-sm-3">
+						<label class="col-xs-4 col-sm-offset-3 col-sm-2 control-label">Provider No.</label>
+						<div class="col-xs-6 col-sm-3">
 							<input type="text" id="txtNo" class="form-control" maxlength="15">
 						</div>
 						
 					</div>
 					<div class="form-group">
-						<label class="col-sm-offset-3 col-sm-2 control-label">Provider Name</label>
-						<div class="col-sm-3">
+						<label class="col-xs-4 col-sm-offset-3 col-sm-2 control-label">Provider Name</label>
+						<div class="col-xs-6 col-sm-3">
 							<input type="text" id="txtName" class="form-control" maxlength="30">
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
-							<button type="button" id="btnAdd" class="btn btn-primary btn-lg">
+							<button type="button" id="btnAdd" class="btn btn-primary btn-list">
 								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 								Add Provider
 							</button>
-							<button type="button" id="btnUpdate" class="btn btn-warning btn-lg hidden">
+							<button type="button" id="btnUpdate" class="btn btn-warning btn-list hidden">
 								<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
 								Update Provider
 							</button>
-							<button type="button" id="btnDelete" class="btn btn-danger btn-lg hidden">
+							<button type="button" id="btnDelete" class="btn btn-danger btn-list hidden">
 								<span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
 								Delete Provider
 							</button>
-							<button type="button" id="btnCancel" class="btn btn-default btn-lg hidden">Cancel</button>
+							<button type="button" id="btnCancel" class="btn btn-default btn-list hidden">Cancel</button>
 						</div>
 					</div>
 					<div class="form-group">

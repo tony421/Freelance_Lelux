@@ -174,11 +174,11 @@ order by therapist_name
 			return $this->_dataAccess->select($sql);
 		}
 		
-		public function addTherapistToShift($shiftInfo)
+		public function addTherapistToShift($shiftInfo, $shiftWorking)
 		{
 			$sql = "
 					insert into shift (shift_date, therapist_id, shift_type_id, shift_time_start, shift_working)
-					values ('{$shiftInfo['shift_date']}', {$shiftInfo['therapist_id']}, {$shiftInfo['shift_type_id']}, '{$shiftInfo['shift_time_start']}', 1)";
+					values ('{$shiftInfo['shift_date']}', {$shiftInfo['therapist_id']}, {$shiftInfo['shift_type_id']}, '{$shiftInfo['shift_time_start']}', {$shiftWorking})";
 			
 			return $this->_dataAccess->insert($sql);
 		}

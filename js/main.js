@@ -299,7 +299,7 @@ function initTimeInput(control) {
 	//$(control).focus(function(){ $(this).select(); });
 }
 function setTimeInput(control, val) {
-	time = moment(currentDate() + ' ' + val, MOMENT_DATE_TIME_12_FORMAT).format(MOMENT_TIME_12_FORMAT)	
+	time = moment(currentDate() + ' ' + val, MOMENT_DATE_TIME_12_FORMAT).format(MOMENT_TIME_12_FORMAT);
 	$(control).val(time);
 }
 function getTimeInput(control) {
@@ -332,7 +332,7 @@ function formatDate(date, fromFormat, toFormat) {
 	fromFormat = typeof(fromFormat) === 'undefined' ? MOMENT_DATE_FORMAT : fromFormat;
 	toFormat = typeof(toFormat) === 'undefined' ? MOMENT_DATE_FORMAT : toFormat;
 	
-	return moment(date, fromFormat).format(toFromat);
+	return moment(date, fromFormat).format(toFormat);
 }
 function formatTime(val, fromFormat, toFormat) {
 	fromFormat = typeof(fromFormat) === 'undefined' ? MOMENT_DATE_TIME_FORMAT : fromFormat;

@@ -1,0 +1,6 @@
+# HTID:2381895: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
+php_value display_errors 1
+# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:2381895:
+
+# This allows you to redirect index.html to a specific subfolder
+Redirect /index.html /login/

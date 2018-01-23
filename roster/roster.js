@@ -117,9 +117,9 @@ function initTableColumns(days, permission) {
 	columns.push({ title: '', data: 'therapist_name', className: 'text-nowrap' });
 	
 	for (var i = 0; i < days.length; i++) {
-		dateTitle = '<span style="color: ' + DAY_COLORS[i] + '">' + formatDate(days[i], MOMENT_FULL_DAY_FORMAT) + '<br>' + formatDate(days[i], MOMENT_FULL_DATE_FORMAT) + '</span>';
+		dateTitle = '<span style="color: ' + DAY_COLORS[i] + '">' + formatDate(days[i], MOMENT_DATE_FORMAT, MOMENT_FULL_DAY_FORMAT) + '<br>' + formatDate(days[i], MOMENT_DATE_FORMAT, MOMENT_FULL_DATE_FORMAT) + '</span>';
 		
-		columns.push({ title: dateTitle, data: days[i], className: 'text-center text-nowrap roster-header roster-selection'
+		columns.push({ title: dateTitle, data: days[i], className: 'text-center text-nowrap roster-header'
 			, render: function ( data, type, row, meta ) { 
 				// Rendering Issue: using days[i] only point to the lasted value of the for loop
 				// So, to find the precise date of the column is to use meta.col (column index) and minus it by 2.

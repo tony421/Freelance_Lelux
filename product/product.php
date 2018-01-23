@@ -12,25 +12,10 @@
 	    
 	    <title>Product</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
+	    <?php require_once '../master-page/script-datatable.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-
-		<link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
-	    
-	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
-	    <script type="text/javascript" src="product.js"></script>
+	    <script type="text/javascript" src="product.js?<?php echo time(); ?>"></script>
 	    
 	   	<script type="text/javascript">
 	    	$(document).ready(function(){
@@ -40,24 +25,24 @@
 	</head>
 	
 	<body>
-		<div id="content">
+		<div id="content res-gutter">
 			<div class="title-container">
-				<div class="title-text">~:: Product ::~</div>
+				<div class="title-text">Product</div>
 			</div>
 			<div class="container">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-offset-3 col-sm-2 control-label">Product Name</label>
-						<div class="col-sm-3">
+						<label class="col-xs-4 col-sm-offset-3 col-sm-2 control-label">Product Name</label>
+						<div class="col-xs-6 col-sm-3">
 							<input type="text" id="txtName" class="form-control" maxlength="30">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-offset-3 col-sm-2 control-label">Product Price</label>
-						<div class="col-sm-2">
+						<label class="col-xs-4 col-sm-offset-3 col-sm-2 control-label">Product Price</label>
+						<div class="col-xs-4 col-sm-2">
 							<input type="text" id="txtPrice" class="form-control">
 						</div>
-						<div class="col-sm-2">
+						<div class="col-xs-4 col-sm-2">
 							<label class="checkbox-inline" title="The price can be changed when recording sales">
 								<input type="checkbox" id="cbChangeable"> Changeable
 							</label>
@@ -65,19 +50,19 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
-							<button type="button" id="btnAdd" class="btn btn-primary btn-lg">
+							<button type="button" id="btnAdd" class="btn btn-primary btn-list">
 								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 								Add Product
 							</button>
-							<button type="button" id="btnUpdate" class="btn btn-warning btn-lg hidden">
+							<button type="button" id="btnUpdate" class="btn btn-warning btn-list hidden">
 								<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
 								Update Product
 							</button>
-							<button type="button" id="btnDelete" class="btn btn-danger btn-lg hidden">
+							<button type="button" id="btnDelete" class="btn btn-danger btn-list hidden">
 								<span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
 								Delete Product
 							</button>
-							<button type="button" id="btnCancel" class="btn btn-default btn-lg hidden">Cancel</button>
+							<button type="button" id="btnCancel" class="btn btn-default btn-list hidden">Cancel</button>
 						</div>
 					</div>
 					<div class="form-group">

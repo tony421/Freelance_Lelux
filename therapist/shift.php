@@ -12,28 +12,9 @@
 	    
 	    <title>Daily Records - Therapists</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
+	    <?php require_once '../master-page/script-datatable.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-
-		<link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
-	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
-	    
-	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
-	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
-	    <script type="text/javascript" src="../js/moment.js"></script>
-	    <script type="text/javascript" src="../js/moment-round.js"></script>
 	    <script type="text/javascript" src="shift.js?<?php echo time(); ?>"></script>
 	    
 	   	<script type="text/javascript">
@@ -45,24 +26,24 @@
 	
 	<body>
 		<div id="content">
-			<div class="container">
+			<div class="container res-gutter">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-offset-2 col-sm-2 control-label">Therapist</label>
-						<div class="col-sm-2">
+						<label class="col-xs-4 col-sm-offset-2 col-sm-2 control-label">Therapist</label>
+						<div class="col-xs-8 col-sm-2">
 							<select id="ddlTherapist" class="form-control">
 							</select>
 							<span id="lblTherapist" class="form-control"></span>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-offset-2 col-sm-2 control-label">Shift</label>
-						<div class="col-sm-2">
+						<label class="col-xs-4 col-sm-offset-2 col-sm-2 control-label">Shift</label>
+						<div class="col-xs-8 col-sm-2">
 							<select id="ddlShift" class="form-control">
 							</select>
 						</div>
-						<label class="col-sm-1 control-label">Start at</label>
-						<div class="col-sm-2">
+						<label class="col-xs-4 col-sm-1 control-label">Start at</label>
+						<div class="col-xs-8 col-sm-2">
 							<input type="text" id="txtTimeStart" class="form-control">
 						</div>
 					</div>

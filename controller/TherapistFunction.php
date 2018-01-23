@@ -154,8 +154,13 @@
 		}
 		
 		public function addTherapistToShift($shiftInfo)
-		{				
-			$affectedRow = $this->_dataMapper->addTherapistToShift($shiftInfo);
+		{	
+			if ($shiftInfo['shift_type_id'] == 1)
+				$shiftWorking = 1;
+			else
+				$shiftWorking = 0;
+			
+			$affectedRow = $this->_dataMapper->addTherapistToShift($shiftInfo, $shiftWorking);
 				
 			if ($affectedRow > 0) {
 				return Utilities::getResponseResult(true, "{$shiftInfo['therapist_name']} has been added to the shift.");

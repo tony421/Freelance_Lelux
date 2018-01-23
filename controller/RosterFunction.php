@@ -232,9 +232,9 @@
 				}
 				
 				// if shift_type_id = 5 (On-Call), then set shift_working as 0, otherwise 1
-				$shiftWorking = 1;
-				if ($shiftInfo['shift_type_id'] == 5)
-					$shiftWorking = 0;
+				$shiftWorking = 0;
+				if ($shiftInfo['shift_type_id'] == 1)
+					$shiftWorking = 1;
 					
 				$affectedRow = $this->_dataMapper->updateShift($therapistID, $date, $shiftTypeID, $shiftTimeStart, $shiftWorking);
 				if ($affectedRow > 0) {

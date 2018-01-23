@@ -67,6 +67,8 @@ function initPage()
 		//alert($(main_get_frame_content(frameName).document).find('html').height());
 	});
 	
+	$('#tabDailyRecords').responsiveTabs();
+	
 	// START - Booking Details
 	//
 	$modalBookingDetails = $('#modalBookingDetails');
@@ -246,7 +248,7 @@ function showBookingDetails(minutes, date, start, end, clientAmt, singleRoomAmt,
 }
 function setBookingTime(minutes, start, end) {
 	var text = '<span class="text-mark">{0}</span> min from <span class="text-mark">{1}</span> to <span class="text-mark">{2}</span>';
-	console.log(start + ' to ' + end);
+	
 	var startTime = formatTime(start);
 	var endTime = formatTime(end);
 	
@@ -759,10 +761,9 @@ function calBookingQueueTimeOut() {
 }
 function getBookingQueueTimeIn()
 {
-	timeIn = getTimeInput($txtBookingQueueTimeIn).split(":");
+	timeIn = getTimeInput($txtBookingQueueTimeIn);
 	date = parent.getSelectedDailyRecordDate(); // use getDate function of the parent
-	
-	return moment(date, MOMENT_DATE_FORMAT).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+	return moment(date + ' ' + timeIn, MOMENT_DATE_TIME_FORMAT).format(MOMENT_DATE_TIME_FORMAT);
 }
 function getBookingQueueTimeOut()
 {
@@ -969,10 +970,9 @@ function calRecordTimeOut() {
 }
 function getRecordTimeIn()
 {
-	timeIn = getTimeInput($txtRecordTimeIn).split(":");
+	timeIn = getTimeInput($txtRecordTimeIn);
 	date = parent.getSelectedDailyRecordDate(); // use getDate function of the parent
-	
-	return moment(date, MOMENT_DATE_FORMAT).add(timeIn[0], 'hours').add(timeIn[1], 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+	return moment(date + ' ' + timeIn, MOMENT_DATE_TIME_FORMAT).format(MOMENT_DATE_TIME_FORMAT);
 }
 function getRecordTimeOut()
 {

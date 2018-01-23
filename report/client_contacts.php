@@ -12,22 +12,7 @@
 	    
 	    <title>Report - Client Contacts</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
-	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-
-		<link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    
-	    <script type="text/javascript" src="../js/main.js"></script>
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/moment.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
 	    
 	   	<script type="text/javascript">
 	   		var $radAll, $radSome, $ddlYear, $ddlMonth, $btnGetReport;
@@ -105,28 +90,28 @@
     	
 		<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Report - Client Contacts ::~</div>
+				<div class="title-text">Report - Client Contacts</div>
 			</div>
-			<div class="container">
+			<div class="container res-gutter">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-offset-1 col-sm-2 control-label">Option</label>
-						<div class="col-sm-2">
+						<label class="col-xs-2 col-sm-offset-1 col-sm-2 control-label">Option</label>
+						<div class="col-xs-4 col-sm-2">
 							<label class="radio-inline">
 								<input type="radio" id="radAll" name="option" value="1" checked> All Clients
 							</label>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-2">
+						<div class="col-xs-offset-2 col-xs-3 col-sm-offset-3 col-sm-2">
 							<label class="radio-inline">
 								<input type="radio" id="radSome" name="option" value="2"> Some Clients
 							</label>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-xs-4 col-sm-2">
 							<select id="ddlYear" class="form-control"></select>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-xs-4 col-sm-2">
 							<select id="ddlMonth" class="form-control">
 								<option value="01">January</option>
 								<option value="02">February</option>

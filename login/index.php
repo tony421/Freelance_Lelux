@@ -8,21 +8,8 @@
 	    
 	    <title>Login</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-	    
-	    <link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="login.js?<?php echo time(); ?>"></script>
 	    
 	    <script type="text/javascript">
@@ -36,19 +23,19 @@
 		
 		<div id="content">
 			<div class="title-container">
-				<div class="title-text">~:: Log In ::~</div>
+				<div class="title-text">Log In</div>
 			</div>
 			<div class="container">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-offset-3 col-sm-2 control-label">Username</label>
-						<div class="col-sm-3">
+						<label class="col-xs-3 col-sm-offset-3 col-sm-2 control-label">Username</label>
+						<div class="col-xs-9 col-sm-3">
 							<input type="text" id="txtUsername" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-offset-3 col-sm-2 control-label">Password</label>
-						<div class="col-sm-3">
+						<label class="col-xs-3 col-sm-offset-3 col-sm-2 control-label">Password</label>
+						<div class="col-xs-9 col-sm-3">
 							<input type="password" id="txtPassword" class="form-control">
 						</div>
 					</div>

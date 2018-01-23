@@ -12,30 +12,9 @@
 	    
 	    <title>Reception - Reception Record</title>
 	    
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	    <?php require_once '../master-page/script-main.php';?>
+	    <?php require_once '../master-page/script-datatable.php';?>
 	    
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="../bootstrap-3.3.6/css/bootstrap.min.css">
-	    <script type="text/javascript" src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
-
-		<link rel="stylesheet" href="../css/main-id.css">
-	    <link rel="stylesheet" href="../css/main-class.css">
-	    <link rel="stylesheet" href="../css/messagebox.css">
-	    <link rel="stylesheet" href="../css/loadingpanel.css">
-	    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
-	    <link rel="stylesheet" href="../css/jquery.bootstrap-touchspin.css">
-	    <link rel="stylesheet" href="../css/bootstrap-datepicker.css">
-	    
-	    <script type="text/javascript" src="../js/main.js?<?php echo time(); ?>"></script>
-	    <script type="text/javascript" src="../js/messagebox.js"></script>
-	    <script type="text/javascript" src="../js/loadingpanel.js"></script>
-	    <script type="text/javascript" src="../js/autoNumeric.js"></script>
-	    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-	    <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
-	    <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
-	    <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
-	    <script type="text/javascript" src="../js/moment.js"></script>
 	    <script type="text/javascript" src="reception.js?<?php echo time(); ?>"></script>	    
 	    
 	   	<script type="text/javascript">
@@ -50,60 +29,60 @@
 			<!--<div class="title-container">
 				<div class="title-text">~:: Reception Record ::~</div>
 			</div>-->
-			<div class="container">
+			<div class="container res-gutter">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Reception</label>
-						<div class="col-sm-2">
+						<label class="col-xs-3 col-sm-3 control-label">Reception</label>
+						<div class="col-xs-6 col-sm-2">
 							<select id="ddlReception" class="form-control">
 							</select>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-xs-offset-3 col-xs-8 col-sm-offset-0 col-sm-4">
 							<label class="checkbox-inline">
 								<input type="checkbox" id="cbLateNightWork"> Late Work (After 9.30 PM)
 							</label>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Working</label>
-						<div class="col-sm-2">
+						<label class="col-xs-3 col-sm-3 control-label">Working</label>
+						<div class="col-xs-4 col-sm-2">
 							<label class="radio-inline">
 								<input type="radio" id="radDay" name="wokring" value="1" checked="checked"> Whole Day
 							</label>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-2">
+						<div class="col-xs-offset-3 col-xs-5 col-sm-offset-3 col-sm-2">
 							<label class="radio-inline">
 								<input type="radio" id="radHour" name="wokring" value="1"> Half Day
 							</label>
 						</div>
-						<div class="col-sm-1">
+						<div class="col-xs-offset-3 col-xs-5 col-sm-offset-0 col-sm-1">
 							<input type="text" id="txtHour" class="form-control" maxlength="2" disabled>
 						</div>
-						<label class="col-sm-1 control-label" style="text-align: left;">hours</label>
+						<label class="col-xs-2 col-sm-1 control-label" style="text-align: left;">hours</label>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Shop Income</label>
-						<div class="col-sm-2">
+						<label class="col-xs-4 col-sm-3 control-label text-nowrap">Shop Income</label>
+						<div class="col-xs-6 col-sm-2">
 							<input type="text" id="txtIncome" class="form-control" value="0" disabled>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Commission</label>
-						<div class="col-sm-3">
+						<label class="col-xs-4 col-sm-3 control-label">Commission</label>
+						<div class="col-xs-8 col-sm-3">
 							<div class="input-group">
-							    <span class="input-group-addon">Standard Commission</span>
+							    <span class="input-group-addon">Std. Commission</span>
 							    <input type="text" id="txtStdCom" class="form-control" value="0" disabled>
 						    </div>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-xs-offset-4 col-xs-8 col-sm-offset-0 col-sm-3">
 							<div class="input-group">
 							    <span class="input-group-addon">Extra Commission</span>
 							    <input type="text" id="txtExtraCom" class="form-control" value="0">
 						    </div>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-xs-offset-4 col-xs-8 col-sm-offset-0 col-sm-2">
 							<div class="input-group">
 							    <span class="input-group-addon">Total</span>
 							    <input type="text" id="txtTotalCom" class="form-control" value="0" disabled>
@@ -112,19 +91,19 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
-							<button type="button" id="btnAdd" class="btn btn-primary btn-lg">
+							<button type="button" id="btnAdd" class="btn btn-primary btn-list">
 								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 								Add Record
 							</button>
-							<button type="button" id="btnUpdate" class="btn btn-warning btn-lg">
+							<button type="button" id="btnUpdate" class="btn btn-warning btn-list">
 								<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
 								Update Record
 							</button>
-							<button type="button" id="btnDelete" class="btn btn-danger btn-lg">
+							<button type="button" id="btnDelete" class="btn btn-danger btn-list">
 								<span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
 								Delete Record
 							</button>
-							<button type="button" id="btnCancelEdit" class="btn btn-default btn-lg">Cancel</button>
+							<button type="button" id="btnCancelEdit" class="btn btn-default btn-list">Cancel</button>
 						</div>
 					</div>
 					<div class="form-group">
