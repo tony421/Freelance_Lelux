@@ -17,7 +17,7 @@
 <script type="text/javascript" src="../js/messagebox.js"></script>
 <script type="text/javascript" src="../js/loadingpanel.js"></script>
 
-<script type="text/javascript" src="../js/autonumeric.js"></script>
+<script type="text/javascript" src="../js/autoNumeric.js"></script>
 <script type="text/javascript" src="../js/jquery.bootstrap-touchspin.js"></script>
 <script type="text/javascript" src="../js/jquery.inputmask.bundle.js"></script>
 <script type="text/javascript" src="../js/moment.js"></script>
