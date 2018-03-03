@@ -116,13 +116,13 @@
 							    <input type="text" id="txtCredit" class="form-control" value="0">
 						    </div>
 						</div>
-						<div class="col-xs-offset-4 col-xs-6 col-sm-2">
+						<div class="col-xs-offset-4 col-xs-6 col-sm-offset-0 col-sm-2">
 							<div class="input-group">
 							    <span class="input-group-addon">HICAPS</span>
 							    <input type="text" id="txtHICAPS" class="form-control" value="0">
 						    </div>
 						</div>
-						<div class="col-xs-offset-4 col-xs-8 col-sm-3">
+						<div class="col-xs-offset-4 col-xs-8 col-sm-offset-0 col-sm-3">
 							<div class="input-group">
 							    <span class="input-group-addon">Redeemed Voucher</span>
 							    <input type="text" id="txtVoucher" class="form-control" value="0">
@@ -143,13 +143,13 @@
 							    <input type="text" id="txtStdCommission" class="form-control" disabled>
 						    </div>
 						</div>
-						<div class="col-xs-offset-4 col-xs-8  col-sm-3">
+						<div class="col-xs-offset-4 col-xs-8 col-sm-offset-0 col-sm-3">
 							<div class="input-group">
 							    <span class="input-group-addon">Extra Commission</span>
 							    <input type="text" id="txtReqReward" class="form-control" value="0">
 						    </div>
 						</div>
-						<div class="col-xs-offset-4 col-xs-8 col-sm-2">
+						<div class="col-xs-offset-4 col-xs-8 col-sm-offset-0 col-sm-2">
 							<div class="input-group">
 							    <span class="input-group-addon">Total</span>
 							    <input type="text" id="txtCommissionTotal" class="form-control" disabled>
