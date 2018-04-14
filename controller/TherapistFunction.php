@@ -155,7 +155,7 @@
 		
 		public function addTherapistToShift($shiftInfo)
 		{	
-			if ($shiftInfo['shift_type_id'] == 1)
+			if ($shiftInfo['shift_type_id'] == 1 || $shiftInfo['shift_type_id'] == 6)
 				$shiftWorking = 1;
 			else
 				$shiftWorking = 0;

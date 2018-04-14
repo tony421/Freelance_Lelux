@@ -78,6 +78,66 @@
 			}
 		}
 		
+		public function getReceptionistOnShift($date)
+		{
+			$result = $this->_dataMapper->getReceptionistOnShift($date);
+				
+			if (count($result) <= 0) {
+				Utilities::logInfo("There is no receptionist on shift {$date}");
+			}
+				
+			return Utilities::getResponseResult(true, '', $result);
+		}
+		
+		public function isReceptionist($therapistID)
+		{
+			$result = $this->_dataMapper->getAssignedReceptionistRoleAmt($therapistID);
+			
+			if (count($result) > 0) {
+				$amt = $result[0]['amt'];
+				
+				if ($amt > 0) {
+					return true;
+				} else {
+					Utilities::logInfo("Therapist ID:{$therapistID} never be receptionist");
+				}
+			} else {
+				Utilities::logInfo("There is no a row returned for checking the amount of assigned receptionist role");
+			}
+			
+			return false;
+		}
+		
+		public function grantReceptionistPermission($therapistID)
+		{
+			$affectedRow = $this->_dataMapper->grantReceptionistPermission($therapistID);
+				
+			if ($affectedRow > 0) {
+				Utilities::logInfo("Therapist ID:{$therapistID} is granted receptionist permission");
+				
+				return true;
+			} else {
+				Utilities::logInfo("Cannot assign receptionist role to therapist ID:{$therapistID}");
+			}
+			
+			return false;
+		}
+		
+		public function revokeReceptionistPermission($therapistID)
+		{
+			$affectedRow = $this->_dataMapper->revokeReceptionistPermission($therapistID);
+		
+			if ($affectedRow > 0) {
+				Utilities::logInfo("Therapist ID:{$therapistID} is set as therapist");
+		
+				return true;
+			} else {
+				Utilities::logInfo("Cannot assign therapist role to therapist ID:{$therapistID}");
+			}
+				
+			return false;
+		}
+		
 		private function executeCommand($recordInfo, $mode = self::MODE_ADD)
 		{
 			switch($mode) {

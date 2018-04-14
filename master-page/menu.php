@@ -22,7 +22,7 @@
     				
     		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       			<ul class="nav navbar-nav">
-      				<?php if (Authentication::isAdmin() || Authentication::isReception()) { ?>
+      				<?php if (Authentication::isAdmin() || Authentication::isReception() || Authentication::isManager()) { ?>
       				<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'client') { echo 'class="dropdown active"'; } else { echo 'class="dropdown"'; } }?>>
         				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Client <span class="caret"></span></a>
         				<ul class="dropdown-menu">

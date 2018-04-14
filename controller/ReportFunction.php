@@ -388,6 +388,7 @@ row;
 				<tbody>
 					{$reportRows}
 				</tbody>
+				<tfoot>(*) Guarantee Commission</tfoot>
 			</table>
 table;
 				

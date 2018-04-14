@@ -23,29 +23,35 @@
 		public function getDailyCommission($date)
 		{
 			$sql_details = "
-			select seq, com_details.therapist_id, therapist_name
-				, therapist_guarantee * ifnull(shift_type.shift_type_rate, 1) as therapist_guarantee
-				, sum(massage_record_minutes) as massage_record_minutes
-				, sum(massage_record_commission) as massage_record_commission
-				, sum(massage_record_request_reward) as massage_record_request_reward
-				, sum(massage_record_commission_total) as massage_record_commission_total
-			from (
-				select 1 as seq, therapist.therapist_id, therapist.therapist_name, therapist_guarantee, massage_record_minutes, massage_record_commission, massage_record_request_reward, massage_record_commission + massage_record_request_reward as massage_record_commission_total
-				from massage_record
-				join therapist on massage_record.therapist_id = therapist.therapist_id
-				where massage_record_date = '{$date}'
-					and massage_record_void_user = 0
-				union all
-	            select 9 as seq, therapist.therapist_id, therapist.therapist_name as therapist_name, reception_record_total_com as therapist_guarantee, null, reception_record_std_com, reception_record_extra_com, reception_record_total_com
-	            from reception_record
-	            join therapist on therapist.therapist_id = reception_record.therapist_id
-	            where reception_record.reception_record_date = '{$date}'
-	            	and reception_record.reception_record_void_user = 0
-	        ) as com_details
-	        left join shift on shift.therapist_id = com_details.therapist_id and shift.shift_date = '{$date}'
-	        left join shift_type on shift_type.shift_type_id = shift.shift_type_id
-	        group by therapist_name
-	        ";
+					select seq, com_details.therapist_id, therapist_name
+						, therapist_guarantee * ifnull(shift_type.shift_type_rate, 1) as therapist_guarantee
+						, sum(massage_record_minutes) as massage_record_minutes
+						, sum(massage_record_commission) as massage_record_commission
+						, sum(massage_record_request_reward) as massage_record_request_reward
+						, sum(massage_record_commission_total) as massage_record_commission_total
+					from (
+						select 1 as seq, shift.therapist_id, therapist.therapist_name, therapist.therapist_guarantee
+							, ifnull(massage_record_minutes, 0) as massage_record_minutes
+							, ifnull(massage_record_commission, 0) as massage_record_commission
+							, ifnull(massage_record_request_reward, 0) as massage_record_request_reward
+							, ifnull(massage_record_commission + massage_record_request_reward, 0) as massage_record_commission_total
+						from shift
+						left join massage_record on shift.therapist_id = massage_record.therapist_id
+					    	and massage_record_date = '{$date}'
+							and massage_record_void_user = 0
+						join therapist on therapist.therapist_id = shift.therapist_id
+						where shift.shift_date = '{$date}'
+							and shift.shift_type_id != 6 -- not Reception!
+						union all
+						select 9 as seq, therapist.therapist_id, therapist.therapist_name as therapist_name, reception_record_total_com as therapist_guarantee, null, reception_record_std_com, reception_record_extra_com, reception_record_total_com
+						from reception_record
+						join therapist on therapist.therapist_id = reception_record.therapist_id
+						where reception_record.reception_record_date = '{$date}'
+							and reception_record.reception_record_void_user = 0
+					) as com_details
+					left join shift on shift.therapist_id = com_details.therapist_id and shift.shift_date = '2018-4-9'
+					left join shift_type on shift_type.shift_type_id = shift.shift_type_id
+					group by therapist_name";
 			
 			$sql_total = "
 					select 99 as seq, null, 'Total', null, null, null, null, sum(massage_record_commission_total)

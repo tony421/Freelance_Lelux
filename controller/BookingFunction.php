@@ -101,7 +101,7 @@
 			$massageMapper = new MassageDataMapper();
 			
 			//$therapists = $queueMapper->getTherapistsOnQueue($date);
-			$therapists = $therapistMapper->getTherapistsOnShift($date);
+			$therapists = $therapistMapper->getTherapistsOnShift($date, false);
 			$records = $massageMapper->getRecords($date);
 			$bookings = $this->getBookings($date);
 			
@@ -441,9 +441,14 @@
 			$item['item_type'] = 'booking';
 			$item['group'] = $groupNumber;
 			$item['id'] = $bookingItem['booking_item_id'];
-			$item['therapist_id'] = 0;
+			$item['therapist_id'] = 0;			
 			$item['start'] = $bookingItem['booking_time_in'];
 			$item['end'] = $bookingItem['booking_time_out'];
+			/*$start = new DateTime($bookingItem['booking_time_in']);
+			$end = new DateTime($bookingItem['booking_time_out']);
+			$item['start'] = $start->format(DateTime::ATOM);
+			$item['end'] = $end->format(DateTime::ATOM);*/
+			
 			//$item['remark'] = 'B';
 			
 			$item['title'] = $this->getTimelineItemTitle($item['start'], $item['end'], "Booking"

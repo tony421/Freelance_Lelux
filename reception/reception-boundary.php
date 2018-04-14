@@ -49,6 +49,12 @@
 						
 					$result = $receptionFunction->voidRecord($recordID);
 				}
+				else if ($mode == 'GET_RECEPTIONIST_ON_SHIFT') {
+					$date = $_POST['data'];
+					Utilities::logInfo('Reception-Boundary | data[date]: '.var_export($date, true));
+					
+					$result = $receptionFunction->getReceptionistOnShift($date);					
+				}
 				else {
 					echo json_encode('Mode not found');
 				}

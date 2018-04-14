@@ -8,7 +8,7 @@ from (
         , sum(massage_record_requested) as 'Request_Amount'
     from massage_record
     join therapist on therapist.therapist_id = massage_record.therapist_id
-    where massage_record_date between '2017-11-1' and '2018-2-1'
+    where massage_record_date between '2017-10-1' and '2018-2-1'
 		/*date_format(massage_record_date, '%Y') = 2017
 		and date_format(massage_record_date, '%m') between 9 and 11*/
     	and massage_record.therapist_id != 0
@@ -20,7 +20,7 @@ from (
         , sum(massage_record_requested) as 'Request_Amount'
     from massage_record
     join therapist on therapist.therapist_id = massage_record.therapist_id
-    where massage_record_date between '2017-11-1' and '2018-2-1'
+    where massage_record_date between '2017-10-1' and '2018-2-1'
 		/*date_format(massage_record_date, '%Y') = 2017
 		and date_format(massage_record_date, '%m') between 9 and 11*/
     	and massage_record.therapist_id != 0

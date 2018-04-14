@@ -146,7 +146,8 @@ function initDataTable()
 
 function initTherapists()
 {
-	main_request_ajax('../therapist/therapist-boundary.php', 'GET_THERAPIST', {}, onInitTherapistsDone);
+	selectedDate = parent.getSelectedDailyRecordDate();
+	main_request_ajax('reception-boundary.php', 'GET_RECEPTIONIST_ON_SHIFT', selectedDate, onInitTherapistsDone);
 }
 
 function onInitTherapistsDone(response)
@@ -204,6 +205,9 @@ function onGetShopIncome(response)
 {
 	if (response.success) {
 		_shop_income = response.result['shop_income'];
+		if (_shop_income == null)
+			_shop_income = 0;
+		
 		setMoneyInputValue($txtIncome, _shop_income);
 		
 		calExtraCom();
@@ -293,6 +297,7 @@ function clearFrameEditMode()
 function updateFrameContent()
 {
 	//alert("UPDATE - RECEPTION");
+	initTherapists();
 	getShopIncome();
 	getRecords();
 }

@@ -2,6 +2,7 @@
 	require_once '../controller/Session.php';
 	require_once '../controller/AuthenticationDataMapper.php';
 	require_once '../controller/Utilities.php';
+	require_once '../controller/ReceptionFunction.php';
 	
 	require_once '../model/Therapist.php';
 	
@@ -20,6 +21,17 @@
 		
 			if (count($therapistInfo) > 0) {
 				$therapist = $this->generateTherapistModel($therapistInfo[0]);
+				
+				$receptionFunction = new ReceptionFunction();
+				if ($receptionFunction->isReceptionist($therapist->getID())) {
+					if ($receptionFunction->grantReceptionistPermission($therapist->getID())) {
+						$therapist->setPermission(7);
+					}
+				} else {
+					if ($receptionFunction->revokeReceptionistPermission($therapist->getID())) {
+						$therapist->setPermission(1);
+					}
+				}
 				
 				Authentication::setUser($therapist);
 				Utilities::logInfo('Therapist: '.$therapist->getName().'(ID:'.$therapist->getID().') logged in the system.');

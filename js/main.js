@@ -17,7 +17,8 @@ var MOMENT_DATE_FORMAT = 'YYYY-M-D';
 
 var MOMENT_TIME_FORMAT = 'HH:mm';
 var MOMENT_TIME_12_FORMAT = 'hh:mm a';
-var MOMENT_DATE_TIME_FORMAT = 'YYYY-M-D HH:mm';
+var MOMENT_DATE_TIME_FORMAT = 'YYYY-M-D HH:mm:ss';
+var MOMENT_ISO_DATE_TIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
 var MOMENT_DATE_TIME_12_FORMAT = 'YYYY-M-D hh:mm a';
 
 var ICON_OK = '<span class="glyphicon glyphicon-ok" style="color: green; font-size: 1.2em;" aria-hidden="true"></span>';

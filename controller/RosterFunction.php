@@ -220,8 +220,20 @@
 				// if not 0, then try to update first
 				// if updating is not succeeded. This means there is an existing data, then add a new shift 
 				//
-				$shiftTimeStart = $date.' ';
-				if ($shiftTypeID == 1) {
+				if ($shiftTypeID == 1 || $shiftTypeID == 6) {
+					$timeStart = date_create($date.' '.$shiftInfo['shift_type_time_start']);
+					
+					// if the shift if full-day, then check the date is weekend or weekday?
+					if (Utilities::isWeekend($date))
+						date_add($timeStart, date_interval_create_from_date_string('1 hour'));
+					
+					$shiftTimeStart = $timeStart->format('Y-m-d H:i:s');
+				} else {
+					$shiftTimeStart = $date.' '.$shiftInfo['shift_type_time_start'];
+				}
+					
+				/*$shiftTimeStart = $date.' ';
+				if ($shiftTypeID == 1 || $shiftInfo['shift_type_id'] == 6) {
 					// if the shift if full-day, then check the date is weekend or weekday?
 					if (Utilities::isWeekend($date))
 						$shiftTimeStart .= Booking_Config::DEFAULT_TIME_START_WEEKEND;
@@ -229,11 +241,11 @@
 						$shiftTimeStart .= $shiftInfo['shift_type_time_start'];
 				} else {
 					$shiftTimeStart .= $shiftInfo['shift_type_time_start'];
-				}
+				}*/
 				
 				// if shift_type_id = 5 (On-Call), then set shift_working as 0, otherwise 1
 				$shiftWorking = 0;
-				if ($shiftInfo['shift_type_id'] == 1)
+				if ($shiftTypeID == 1 || $shiftTypeID == 6) // Full or Reception
 					$shiftWorking = 1;
 					
 				$affectedRow = $this->_dataMapper->updateShift($therapistID, $date, $shiftTypeID, $shiftTimeStart, $shiftWorking);

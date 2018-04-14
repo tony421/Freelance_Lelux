@@ -5,7 +5,7 @@ var DDL_THERAPIST_ELEMENT = "<div class=\"col-sm-2\" style=\"padding-bottom: 5px
 
 var DDL_MASSAGE_TYPE_ELEMENT = "<div class=\"col-sm-2\" style=\"padding-bottom: 5px;\"> <select id=\"ddlMassageType{0}\" class=\"form-control\">{1}</select></div>";
 
-var _therapistAmt, _therapists, _therapistOptions
+var _therapistAmt, _therapists, _therapistOptions;
 var _massageTypes, _massageTypeOptions;
 var _bookings, _bookingTimelineGroups;
 var _bookingTimeline, _bookingTimelineMoveTo;
@@ -164,6 +164,17 @@ function renderBookingTimeline(timelineGroups, bgItem) {
 		items.add(bgItem);
 		
 	for (var i = 0; i < timelineGroups.length; i++) {
+		//items.add(timelineGroups[i]['items']);
+		// "Start" and "End" of each item must be converted into ISO Datetime Format so that can be used by VIS JS on IOS
+		
+		for (var j = 0; j < timelineGroups[i]['items'].length; j++) {
+			start = moment(timelineGroups[i]['items'][j]['start'], MOMENT_DATE_TIME_FORMAT).format(MOMENT_ISO_DATE_TIME_FORMAT);
+			end = moment(timelineGroups[i]['items'][j]['end'], MOMENT_DATE_TIME_FORMAT).format(MOMENT_ISO_DATE_TIME_FORMAT);
+			
+			timelineGroups[i]['items'][j]['start'] = start;
+			timelineGroups[i]['items'][j]['end'] = end;
+		}
+		
 		items.add(timelineGroups[i]['items']);
 	}
 	
@@ -171,6 +182,7 @@ function renderBookingTimeline(timelineGroups, bgItem) {
 	if (typeof(_bookingTimeline) !== 'undefined')
 		_bookingTimeline.destroy();
 	
+	selectedDate = parent.getSelectedDailyRecordDate();
 	_bookingTimeline = new vis.Timeline(container, items, groups, getTimelineOptions(selectedDate));
 	
 	// make the timeline smaller
@@ -254,8 +266,8 @@ function getTimelineOptions(date) {
 		start = getTimelineStart(date);
 		end = getTimelineEnd(date);
 	} else {
-		start = _bookingTimelineMoveTo;
-		end = moment(_bookingTimelineMoveTo, MOMENT_DATE_TIME_FORMAT).add(195, 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+		start = moment(_bookingTimelineMoveTo, MOMENT_DATE_TIME_FORMAT).format(MOMENT_ISO_DATE_TIME_FORMAT);
+		end = moment(_bookingTimelineMoveTo, MOMENT_DATE_TIME_FORMAT).add(195, 'minutes').format(MOMENT_ISO_DATE_TIME_FORMAT);
 		_bookingTimelineMoveTo = undefined;
 	}
 	
@@ -273,28 +285,32 @@ function getTimelineOptions(date) {
 			//, minHeight: '430px'
 			, maxHeight: '480px'
 			, stack: false
-			, start: start
+			, start: new Date(start)
+		    , end: new Date(end)
+		    , min: new Date(getTimelineMin(date))
+		    , max: new Date(getTimelineMax(date))
+			/*, start: start
 		    , end: end
 		    , min: getTimelineMin(date)
-		    , max: getTimelineMax(date)
+		    , max: getTimelineMax(date)*/
 		    , groupOrder: '' // this is added to fix bug when more 10 groups have to be shown
 	};
 }
 function getTimelineStart(date) {
 	if (date == currentDate()) {
-		return currentDateTime();
+		return moment(currentDateTime(), MOMENT_DATE_TIME_FORMAT).format(MOMENT_ISO_DATE_TIME_FORMAT);
 	} else {
-		return date + ' ' + OPEN_TIME;
+		return moment(date + ' ' + OPEN_TIME, MOMENT_DATE_TIME_FORMAT).format(MOMENT_ISO_DATE_TIME_FORMAT);
 	}
 }
 function getTimelineEnd(date) {
-	return moment(getTimelineStart(date), MOMENT_DATE_TIME_FORMAT).add(195, 'minutes').format(MOMENT_DATE_TIME_FORMAT);
+	return moment(getTimelineStart(date), MOMENT_DATE_TIME_FORMAT).add(195, 'minutes').format(MOMENT_ISO_DATE_TIME_FORMAT);
 }
 function getTimelineMin(date) {
-	return date + ' ' + OPEN_TIME;
+	return moment(date + ' ' + OPEN_TIME, MOMENT_DATE_TIME_FORMAT).format(MOMENT_ISO_DATE_TIME_FORMAT);
 }
 function getTimelineMax(date) {
-	return moment(date, MOMENT_DATE_FORMAT).add(1, 'days');
+	return moment(date, MOMENT_DATE_FORMAT).add(1, 'days').format(MOMENT_ISO_DATE_TIME_FORMAT);
 }
 function getTimelineGroups() {
 	var groups = [];

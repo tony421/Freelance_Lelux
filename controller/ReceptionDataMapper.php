@@ -95,6 +95,60 @@
 			
 			return $this->_dataAccess->update($sql);
 		}
+		
+		public function getReceptionistOnShift($date)
+		{
+			$sql = "
+				select therapist.therapist_id, therapist.therapist_name, therapist.therapist_guarantee
+					, shift.shift_id, shift.shift_working
+					, shift_type.shift_type_id, shift_type.shift_type_name, shift_type.shift_type_rate
+					, shift_time_start, shift_create_datetime, shift_type_color
+				from therapist
+				join shift on therapist.therapist_id = shift.therapist_id
+				join shift_type on shift.shift_type_id = shift_type.shift_type_id
+				where shift.shift_date = '{$date}'
+					and shift.shift_type_id = 6
+				order by shift.shift_time_start, shift.shift_create_datetime";
+			
+			return $this->_dataAccess->select($sql);
+		}
+		
+		public function getAssignedReceptionistRoleAmt($therapistID)
+		{
+			$receptionist_type_id = 6;
+			
+			$sql = "
+					select count(shift.shift_id) as amt
+					from shift
+					where shift.therapist_id = {$therapistID}
+						and shift.shift_type_id = {$receptionist_type_id}";
+			
+			return $this->_dataAccess->select($sql);
+		}
+		
+		public function grantReceptionistPermission($therapistID)
+		{
+			$receptionist_permission = 7;
+			
+			$sql = "
+					update therapist
+					set therapist_permission = {$receptionist_permission}
+					where therapist_id = {$therapistID}
+						and therapist_permission not in (9, 8)";
+			
+			return $this->_dataAccess->update($sql);
+		}
+		
+		public function revokeReceptionistPermission($therapistID)
+		{
+			$sql = "
+					update therapist
+					set therapist_permission = 1
+					where therapist_id = {$therapistID}
+						and therapist_permission not in (9, 8)";
+			
+			return $this->_dataAccess->update($sql);
+		}
 	}
 ?>
 

@@ -615,7 +615,7 @@ function getBookingQueueSelectedRoom(roomNo) {
 
 function validateBookingQueueInputs() {
 	if ($txtBookingQueueClientName.val().trim().length) {
-		if ($txtBookingQueueClientTel.val().trim().length) {
+		if ($txtBookingQueueClientTel.inputmask("isComplete")) {
 			if ($txtBookingQueueMinutes.val().trim().length) {
 				if (isTimeInputComplete($txtBookingQueueTimeIn)) {
 					return true;

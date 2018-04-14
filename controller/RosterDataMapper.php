@@ -33,13 +33,13 @@ left join (
     where 1
         and shift.shift_date between '{$from}' and '{$to}'
         and therapist.therapist_active = 1
-        and therapist.therapist_permission not in (0, 7)
+        and therapist.therapist_permission not in (0)
     group by therapist.therapist_id
 ) as nested on nested.therapist_id = therapist.therapist_id
 where 1
 	and therapist.therapist_active = 1
-    and therapist.therapist_permission not in (0, 7)
-order by nested.shift_count desc, therapist.therapist_name, shift.shift_date
+    and therapist.therapist_permission not in (0)
+order by therapist.therapist_permission desc, nested.shift_count desc, therapist.therapist_name, shift.shift_date
 ";
 			
 			return $this->_dataAccess->select($sql);

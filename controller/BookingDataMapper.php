@@ -43,7 +43,7 @@ order by booking.booking_time_in, booking.booking_time_out, booking.booking_crea
 				left join therapist on therapist.therapist_id = booking_item.therapist_id
 				where booking.booking_date = '{$date}'
 					and booking.booking_time_in >= '{$date} {$openHour}'
-				order by booking.booking_time_in, booking.booking_time_out, booking.booking_create_datetime
+				order by booking.booking_time_in, booking.booking_create_datetime
 					, booking.booking_id, booking_item.booking_item_status, booking_item.therapist_id desc
 			";
 			

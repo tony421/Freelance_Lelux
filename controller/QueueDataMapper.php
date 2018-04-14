@@ -41,6 +41,7 @@
 					) as lastest_timeout
 					join therapist on therapist.therapist_id = lastest_timeout.therapist_id
 					join shift on shift.therapist_id = therapist.therapist_id and shift.shift_date = '{$date}'
+					where shift.shift_type_id != 6
 					order by therapist_timeout, massage_record_create_datetime";
 		
 			return $this->_dataAccess->select($sql);
