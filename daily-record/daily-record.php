@@ -122,46 +122,46 @@
 						<form class="form-horizontal">
 							<div class="form-group">
 								<label class="col-sm-offset-1 col-sm-3 control-label">Time</label>
-								<div class="col-md-7">
+								<div class="col-sm-7">
 									<span id="lblBookingTime" class="form-control form-control-lable"><span class="text-mark">60</span> minutes from <span class="text-mark">14:00</span> to <span class="text-mark">15:15</span></span>
 									<!-- <input type="text" id="txtBookingTime" class="form-control"> -->
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-offset-1 col-sm-3 control-label">Room</label>
-								<div class="col-md-7">
+								<div class="col-sm-7">
 									<span id="lblBookingRoom" class="form-control form-control-lable" />
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-offset-1 col-sm-3 control-label">Client Amount</label>
-								<div class="col-md-7">
+								<div class="col-sm-7">
 									<span id="lblBookingClientAmt" class="form-control form-control-lable" />
 									<!-- <input type="text" id="txtBookingClient" class="form-control"> -->
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-offset-1 col-sm-3 control-label">Massage</label>
-								<div class="col-md-7">
+								<div class="col-sm-7">
 									<span id="lblBookingTherapist" class="form-control form-control-lable" style="height: 90px; overflow: auto;"/>
 									<!-- <input type="text" id="txtBookingTime" class="form-control"> -->
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-offset-1 col-sm-3 control-label">Client Name</label>
-								<div class="col-md-7">
+								<div class="col-sm-7">
 									<input type="text" id="txtBookingClientName" class="form-control" maxlength="20">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-offset-1 col-sm-3 control-label">Client Tel</label>
-								<div class="col-md-7">
+								<div class="col-sm-7">
 									<input type="text" id="txtBookingClientTel" class="form-control">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-offset-1 col-sm-3 control-label">Remark</label>
-								<div class="col-md-7">
+								<div class="col-sm-7">
 									<textarea type="text" id="txtBookingRemark" class="form-control"
 										rows="2" maxlength="100"></textarea>
 								</div>
@@ -187,14 +187,14 @@
 					<div class="modal-header panel-heading">
 						<h4 class="modal-title panel-title"><b>Booking Queue</b></h4>
 					</div>
-					<div class="modal-body panel-body" style="padding: 10px 0 0 0;">
+					<div class="modal-body panel-body res-gutter">
 						<form class="form-horizontal">
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Client</label>
-								<div class="col-sm-3">
+								<label class="col-xs-2 col-sm-3 control-label">Client</label>
+								<div class="col-xs-4 col-sm-3">
 									<input type="text" id="txtBookingQueueClientName" class="form-control" maxlength="25">
 								</div>
-								<div class="col-sm-5">
+								<div class="col-xs-6 col-sm-5">
 									<input type="text" id="txtBookingQueueClientTel" class="form-control">
 								</div>
 								<!--
@@ -204,37 +204,37 @@
 								-->
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Amount</label>
-								<div class="col-md-8">
+								<label class="col-xs-2 col-sm-3 control-label">Amount</label>
+								<div class="col-xs-10 col-sm-8">
 									<span id="lblBookingQueueAmount" class="form-control form-control-lable"><span class="text-mark">2</span> people <span class="text-mark">2</span> single rooms</span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Therapist</label>
-								<div class="col-md-8">
+								<label class="col-xs-2 col-sm-3 control-label">Therapist</label>
+								<div class="col-xs-10 col-sm-8">
 									<span id="lblBookingQueueTherapist" class="form-control form-control-lable"><span class="text-mark">Thai Massage</span> with <span class="text-mark">[Any]</span></span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Time</label>
-								<div class="col-sm-3">
+								<label class="col-xs-2 col-sm-3 control-label">Time</label>
+								<div class="col-xs-10 col-sm-3">
 									<input type="text" id="txtBookingQueueMinutes" class="form-control" maxlength="4">
 								</div>
-								<div class="col-sm-2" style="padding-right: 0;">
+								<div class="col-xs-offset-2 col-xs-4 col-sm-offset-0 col-sm-2" style="padding-right: 0;">
 									<input type="text" id="txtBookingQueueTimeIn" class="form-control">
 								</div>
-								<label class="col-sm-1 control-label"
+								<label class="col-xs-2 col-sm-1 control-label"
 									style="text-align: center; padding-left: 0; padding-right: 0;">to</label>
-								<div class="col-sm-2" style="padding-left: 0;">
+								<div class="col-xs-4 col-sm-2" style="padding-left: 0;">
 									<input type="text" id="txtBookingQueueTimeOut" class="form-control" disabled>
 								</div>
-								<div style="display: none;" class="col-md-7">
+								<div style="display: none;" class="col-sm-7">
 									<span id="lblBookingQueueTime" class="form-control form-control-lable"></span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Remark</label>
-								<div class="col-md-8">
+								<label class="col-xs-2 col-sm-3 control-label">Remark</label>
+								<div class="col-xs-10 col-sm-8">
 									<textarea type="text" id="txtBookingQueueRemark" class="form-control"
 										rows="1" maxlength="100"></textarea>
 								</div>
@@ -320,78 +320,78 @@
 					<div class="modal-header panel-heading">
 						<h4 class="modal-title panel-title"><b>Massage Record</b></h4>
 					</div>
-					<div class="modal-body panel-body">
+					<div class="modal-body panel-body res-gutter">
 						<form class="form-horizontal">
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Time</label>
-								<div class="col-sm-3">
+								<label class="col-xs-2 col-sm-3 control-label">Time</label>
+								<div class="col-xs-10 col-sm-3">
 									<input type="text" id="txtRecordMinutes" class="form-control" maxlength="4">
 								</div>
-								<div class="col-sm-2" style="padding-right: 0;">
+								<div class="col-xs-offset-2 col-xs-4 col-sm-offset-0 col-sm-2" style="padding-right: 0;">
 									<input type="text" id="txtRecordTimeIn" class="form-control">
 								</div>
-								<label class="col-sm-1 control-label"
+								<label class="col-xs-2 col-sm-1 control-label"
 									style="text-align: center; padding-left: 0; padding-right: 0;">to</label>
-								<div class="col-sm-2" style="padding-left: 0;">
+								<div class="col-xs-4 col-sm-2" style="padding-left: 0;">
 									<input type="text" id="txtRecordTimeOut" class="form-control" disabled>
 								</div>
-								<div style="display: none;" class="col-md-7">
+								<div style="display: none;" class="col-sm-7">
 									<span id="lblRecordTime" class="form-control form-control-lable"><span class="text-mark">60</span> minutes from <span class="text-mark">14:00</span> to <span class="text-mark">15:15</span></span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Therapist</label>
-								<div class="col-sm-2">
+								<label class="col-xs-2 col-sm-3 control-label">Therapist</label>
+								<div class="col-xs-4 col-sm-2">
 									<span id="lblRecordTherapist" class="form-control form-control-lable"></span>
 								</div>
-								<div class="col-sm-2">
+								<div class="col-xs-4 col-sm-2">
 									<label class="checkbox-inline">
 										<input type="checkbox" id="cbRecordRequested"> Requested
 									</label>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Room</label>
-								<div class="col-sm-2">
+								<label class="col-xs-2 col-sm-3 control-label">Room</label>
+								<div class="col-xs-4 col-sm-2">
 									<span id="lblRecordRoom" class="form-control form-control-lable"></span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Massage Type</label>
-								<div class="col-sm-4">
+								<label class="col-xs-2 col-sm-3 control-label">Massage Type</label>
+								<div class="col-xs-10 col-sm-4">
 									<select id="ddlRecordMassageType" class="form-control">
 									</select>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Free Stamp</label>
-								<div class="col-sm-2">
+								<label class="col-xs-2 col-sm-3 control-label">Free Stamp</label>
+								<div class="col-xs-6 col-sm-2">
 									<input type="text" id="txtRecordStamp" class="form-control">
 								</div>
-								<label class="col-sm-2 control-label" style="padding-left: 0px; font-weight: normal; text-align: left;">minutes</label>
+								<label class="col-xs-3 col-sm-2 control-label" style="padding-left: 0px; font-weight: normal; text-align: left;">minutes</label>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Paid by</label>
-								<div class="col-sm-4">
+								<label class="col-xs-2 col-sm-3 control-label">Paid by</label>
+								<div class="col-xs-10 col-sm-4">
 									<div class="input-group">
 									    <span class="input-group-addon">Cash</span>
 									    <input type="text" id="txtRecordCash" class="form-control" value="0">
 								    </div>
 								</div>
-								<div class="col-sm-4">
+								<div class="col-xs-offset-2 col-xs-10 col-sm-offset-0 col-sm-4">
 									<label class="checkbox-inline">
 										<input type="checkbox" id="cbRecordPromo"> Promotion Price
 									</label>
 								</div>
 							</div>
 							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-4">
+								<div class="col-xs-offset-2 col-xs-10 col-sm-offset-3 col-sm-4">
 									<div class="input-group">
 									    <span class="input-group-addon">Credit</span>
 									    <input type="text" id="txtRecordCredit" class="form-control" value="0">
 								    </div>
 								</div>
-								<div class="col-sm-4">
+								<div class="col-xs-offset-2 col-xs-10 col-sm-offset-3 col-sm-4">
 									<div class="input-group">
 									    <span class="input-group-addon">HICAPS</span>
 									    <input type="text" id="txtRecordHICAPS" class="form-control" value="0">
@@ -399,7 +399,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-5">
+								<div class="col-xs-offset-2 col-xs-10 col-sm-offset-3 col-sm-5">
 									<div class="input-group">
 									    <span class="input-group-addon">Redeemed Voucher</span>
 									    <input type="text" id="txtRecordVoucher" class="form-control" value="0">
@@ -407,8 +407,8 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Paid Total</label>
-								<div class="col-sm-3">
+								<label class="col-xs-2 col-sm-3 control-label">Paid Total</label>
+								<div class="col-xs-10 col-sm-3">
 									<input type="text" id="txtRecordTotal" class="form-control" value="0" disabled>
 								</div>
 							</div>

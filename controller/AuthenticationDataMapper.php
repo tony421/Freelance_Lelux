@@ -12,11 +12,12 @@
 		
 		public function verifyUser($loginInfo)
 		{
-			$sql_format = "select * from therapist where lower(therapist_name) = lower('%s') and lower(therapist_password) = lower('%s')";
-				
-			$sql = sprintf($sql_format
-					, $loginInfo['therapist_username']
-					, $loginInfo['therapist_password']);
+			$sql = "
+					select * 
+					from therapist 
+					where lower(therapist_name) = lower('{$loginInfo['therapist_username']}') 
+						and lower(therapist_password) = lower('{$loginInfo['therapist_password']}')
+						and therapist_active = 1";
 				
 			return $this->_dataAccess->select($sql);
 		} // verifyUser
@@ -28,7 +29,8 @@
 					set therapist_password = '%s'
 						, therapist_update_datetime = NOW()
 					where therapist_id = '%s'
-						and lower(therapist_password) = lower('%s')";
+						and lower(therapist_password) = lower('%s')
+						and therapist_active = 1";
 			
 			$sql = sprintf($sql_format
 					, $passwordInfo['therapist_new_password']
