@@ -9,6 +9,7 @@ var DAY_COLORS = {
 };
 
 var DATE_PICKER_FORMAT = 'DD, d MM yyyy';
+var DATE_PICKER_SHORT_FORMAT = 'd MM yyyy';
 
 var MOMENT_FULL_DAY_FORMAT = 'dddd';
 var MOMENT_FULL_DATE_FORMAT = 'D MMM YYYY';
@@ -248,9 +249,12 @@ function setTextAllSelection(control) {
 	$(control).focus(function(){ $(this).select(); });
 }
 
-function initDatepickerInput(control) {
+function initDatepickerInput(control, date_format) {
+	if (typeof(date_format) === 'undefined')
+		date_format = DATE_PICKER_FORMAT;
+	
 	$(control).datepicker({
-	    format: DATE_PICKER_FORMAT,
+	    format: date_format,
 	    weekStart: 1,
 	    todayBtn: "linked",
 	    daysOfWeekHighlighted: "0,6",
@@ -271,6 +275,27 @@ function getDatepickerValue(control) {
 
 function setDatepickerInputValue(control, date) {
 	$(control).datepicker('setDate', date);
+}
+
+function initSelectpicker(control, selectAll) {
+    $(control).selectpicker({
+    	actionsBox: true
+    	, liveSearch: true
+    });
+    
+    if (typeof(selectAll) === 'undefined')
+    	selectAll = false;
+    
+    if (selectAll)
+    	$(control).selectpicker('selectAll');
+}
+
+function destroySelectpicker(control) {
+	$(control).selectpicker('destroy');
+}
+
+function getSelectpickerValues(control) {
+	return $(control).selectpicker('val');
 }
 
 function initTouchSpinInput(control, min, max, initVal, step) {

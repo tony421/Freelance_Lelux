@@ -108,7 +108,55 @@
 			
 			sendExcelFile($excelInfo);
 		}
+		else if ($reportType == 'HICAP') {
+			if (!empty($_GET['date_start'])
+				&& !empty($_GET['date_end'])
+				&& !empty($_GET['providers'])
+				&& !empty($_GET['hicaps'])) 
+			{
+			
+				$dateStart = $_GET['date_start'];
+				$dateEnd = $_GET['date_end'];
+				$providers = $_GET['providers'];;
+				$hicaps = $_GET['hicaps'];
+	
+				Utilities::logInfo('Report | criteria_data[date_start]: '.$dateStart);
+				Utilities::logInfo('Report | criteria_data[date_end]: '.$dateEnd);
+				Utilities::logInfo('Report | criteria_data[providers]: '.$providers);
+				Utilities::logInfo('Report | criteria_data[hicaps]: '.$hicaps);
+	
+				$htmlReportInfo = $reportFunction->getHicapReport($dateStart, $dateEnd, $providers, $hicaps);
+	
+				$pdf->show('hicap', $htmlReportInfo);
+				//echo $htmlReportInfo;
+			}
+			else {
+				echo 'Some of criteria data is missing.';
+			}
+		}
+		else if ($reportType == 'REQUEST_AMOUNT') {
+			if (!empty($_GET['date_start'])
+					&& !empty($_GET['date_end'])
+					&& !empty($_GET['therapists']))
+			{
+					
+				$dateStart = $_GET['date_start'];
+				$dateEnd = $_GET['date_end'];
+				$therapists = $_GET['therapists'];;
 		
+				Utilities::logInfo('Report | criteria_data[date_start]: '.$dateStart);
+				Utilities::logInfo('Report | criteria_data[date_end]: '.$dateEnd);
+				Utilities::logInfo('Report | criteria_data[therapists]: '.$therapists);
+		
+				$htmlReportInfo = $reportFunction->getRequestAmtReport($dateStart, $dateEnd, $therapists);
+		
+				$pdf->show('request-amount', $htmlReportInfo);
+				//echo $htmlReportInfo;
+			}
+			else {
+				echo 'Some of criteria data is missing.';
+			}
+		}
 		else {
 			echo 'Report type is not found.';
 		}

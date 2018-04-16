@@ -1,0 +1,19 @@
+select report.report_date 
+	, provider.provider_name, health_fund.health_fund_name
+	, client.client_membership_no, client.client_patient_id
+	, concat(client.client_first_name, ' ', client.client_last_name) as client_name
+    , therapist.therapist_name
+from report
+join client on client.client_id = report.client_id
+join health_fund on health_fund.health_fund_id = client.health_fund_id
+join provider on provider.provider_id = report.provider_id
+join therapist on therapist.therapist_id = report.therapist_id
+where 1 = 1
+	and report.report_date between '2018-4-15' and '2018-4-15'
+    and health_fund.health_fund_id = 1
+    and provider.provider_id = 1
+order by report.report_date
+	, provider.provider_id
+    , health_fund.health_fund_name
+    , client.client_membership_no, client.client_patient_id
+    , client_name

@@ -1,5 +1,7 @@
 <?php
 	require_once '../login/page-authentication.php';
+	
+	Authentication::permissionCheck(basename($_SERVER['PHP_SELF']));
 ?>
 
 <!DOCTYPE html>

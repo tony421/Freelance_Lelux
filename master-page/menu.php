@@ -40,15 +40,21 @@
         			<?php if (Authentication::isAdmin()) { ?>
         			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'therapist-manage') { echo 'class="active"'; } }?>>
 	        				<a href="../therapist/therapist-manage.php">Manage Therapist</a>
-	        			</li>
+	        		</li>
+        			<?php } ?>
         			
-	        			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'report') { echo 'class="dropdown active"'; } else { echo 'class="dropdown"'; } }?>>
+	        		<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'report') { echo 'class="dropdown active"'; } else { echo 'class="dropdown"'; } }?>>
         				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <span class="caret"></span></a>
         				<ul class="dropdown-menu">
-            				<li><a href="../report/client_contacts.php">Client Contacts</a></li>
+        					<?php if (Authentication::isAdmin()) { ?>
+            				<li><a href="../report/client-contact.php">Client Contacts</a></li>
+            				<li><a href="../report/request-amount.php">Request Amount</a></li>
+            				<?php } ?>
+            				<?php if (Authentication::isAdmin() || Authentication::isManager() || Authentication::isReception()) { ?>
+            				<li><a href="../report/hicap.php">HICAP</a></li>
+            				<?php } ?>
             			</ul>
         			</li>
-        			<?php } ?>
       			</ul>
       			<ul class="nav navbar-nav navbar-right">
       				<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'change-password') { echo 'class="active"'; } }?>>

@@ -553,6 +553,177 @@ table;
 			return $this->_CSS.$reportHeader.$reportTable;
 		} // getSaleReceipt
 		
+		public function getHicapReport($dateStart, $dateEnd, $providers, $hicaps)
+		{
+			$reportInfo = $this->_dataMapper->getHicapReport($dateStart, $dateEnd, $providers, $hicaps);
+				
+			$fullDateStart = Utilities::convertDateFullMonthDisplay($dateStart);
+			$fullDateEnd = Utilities::convertDateFullMonthDisplay($dateEnd);
+				
+			$reportHeader = <<<header
+			<h1 style="text-align: center;">HICAP Report</h1>
+			<h2 style="text-align: center;">from <u>{$fullDateStart}</u> to <u>{$fullDateEnd}</u></h2>
+header;
+				
+			$columnHeaders = <<<colHeader
+			<thead>
+				<tr style="text-align: center; font-weight: bold;">
+					<th>Date</th>
+					<th>Provider</th>
+					<th>HICAP</th>
+					<th>Mem No <br>(Patient ID)</th>
+					<th>Client Name</th>
+					<th>Staff</th>
+				</tr>
+			</thead>
+colHeader;
+			
+			$reportRows = "";
+			$prevDate = ""; $prevProvider = ""; $prevHicap = "";
+			
+			foreach ($reportInfo as $row) {
+				$date = $row['report_date'];
+				$provider = $row['provider_name'];
+				$hicap = $row['health_fund_name'];
+				
+				if ($date == $prevDate) {
+					$date = "";
+					if ($provider == $prevProvider) {
+						$provider = "";
+						if ($hicap == $prevHicap) {
+							//$hicap = "";
+						}
+					} else {
+						$providerClaimAmt = $this->getHicapProviderClaimAmt($reportInfo, $row['report_date'], $provider);
+						$provider = $provider.'<br>('.$providerClaimAmt.' claims)';
+					}
+				} else {
+					$totalClaimAmt = $this->getHicapTotalClaimAmt($reportInfo, $date);
+					$date = Utilities::convertDateFullMonthDisplay($date).'<br>('.$totalClaimAmt.' claims)';
+					
+					// Due to new provider may occur while starting new date, gotta check this condition again
+					if ($row['report_date'] == $prevDate && $provider == $prevProvider) {
+						$provider = "";
+					} else {
+						$providerClaimAmt = $this->getHicapProviderClaimAmt($reportInfo, $row['report_date'], $provider);
+						$provider = $provider.'<br>('.$providerClaimAmt.' claims)';
+					} 
+				}
+				
+				$reportRows .= <<<row
+				<tr>
+					<td><b>{$date}</b></td>
+					<td><b>{$provider}</b></td>
+					<td>{$hicap}</td>
+					<td>{$row['client_membership_no']} ({$row['client_patient_id']})</td>
+					<td>{$row['client_name']}</td>
+					<td>{$row['therapist_name']}</td>
+				</tr>
+row;
+				
+				$prevDate = $row['report_date'];
+				$prevProvider = $row['provider_name'];
+				$prevHicap = $row['health_fund_name'];
+			}
+			
+			$reportTable = <<<table
+			<table cellspacing="0" cellpadding="5" border="1">
+				{$columnHeaders}
+				<tbody>
+					{$reportRows}
+				</tbody>
+			</table>
+table;
+
+			return $reportHeader.$reportTable;
+		} // getHicapReport()
+		
+		private function getHicapTotalClaimAmt($hicapInfo, $date)
+		{
+			$count = 0;
+			
+			foreach ($hicapInfo as $i) {
+				if ($i['report_date'] == $date)
+					$count++;
+			}
+			
+			return $count;
+		}
+		
+		private function getHicapProviderClaimAmt($hicapInfo, $date, $provider)
+		{
+			$count = 0;
+				
+			foreach ($hicapInfo as $i) {
+				if ($i['report_date'] == $date) {
+					if ($i['provider_name'] == $provider) {
+						$count++;
+					}
+				}
+			}
+				
+			return $count;
+		}
+		
+		public function getRequestAmtReport($dateStart, $dateEnd, $therapists)
+		{
+			$reportInfo = $this->_dataMapper->getRequestAmtReport($dateStart, $dateEnd, $therapists);
+			
+			$fullDateStart = Utilities::convertDateFullMonthDisplay($dateStart);
+			$fullDateEnd = Utilities::convertDateFullMonthDisplay($dateEnd);
+			
+			$reportHeader = <<<header
+			<h1 style="text-align: center;">Request Amount Report</h1>
+			<h2 style="text-align: center;">from <u>{$fullDateStart}</u> to <u>{$fullDateEnd}</u></h2>
+header;
+			
+			$columnHeaders = <<<colHeader
+			<thead>
+				<tr style="text-align: center; font-weight: bold;">
+					<th></th>
+					<th class="border">Name</th>
+					<th class="border">Date</th>
+					<th class="border">Request Amount</th>
+					<th></th>
+				</tr>
+			</thead>
+colHeader;
+			
+			$reportRows = "";
+			$prevName = "";
+				
+			foreach ($reportInfo as $row) {
+				$name = $row['therapist_name'];
+			
+				if ($name == $prevName) {
+					$name = "";
+				}
+			
+				$reportRows .= <<<row
+				<tr>
+					<td></td>
+					<td class="text border"><b>{$name}</b></td>
+					<td class="text border">{$row['date']}</td>
+					<td class="text border">{$row['request_amt']}</td>
+					<td></td>
+				</tr>
+row;
+			
+				$prevName = $row['therapist_name'];
+			}
+			
+			$reportTable = <<<table
+			<table cellspacing="0" cellpadding="5" border="0">
+				{$columnHeaders}
+				<tbody>
+					{$reportRows}
+				</tbody>
+			</table>
+table;
+			
+			return $this->_CSS.$reportHeader.$reportTable;
+		} // getRequestAmtReport()
+		
 		public function getDailyIncomeSummary($date)
 		{
 			$result['shop_income'] = $this->_dataMapper->getDailyIncomeSummary($date)[0]['amount']; 

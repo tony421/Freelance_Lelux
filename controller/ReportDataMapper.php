@@ -190,6 +190,80 @@
 			
 			return $this->_dataAccess->select($sql);
 		}
+		
+		public function getHicapReport($dateStart, $dateEnd, $providers, $hicaps)
+		{
+			$provider_condition = "";
+			$hicap_condition = "";
+			
+			// Providers and Hicaps received as string via GET method
+			/*
+			 * if (count($providers) > 0)
+				$provider_condition = "and provider.provider_id in (".implode(",", $providers).")";
+			
+			if (count($hicaps) > 0)
+				$hicap_condition = "and health_fund.health_fund_id in (".implode(",", $hicaps).")";
+			*/
+			
+			$provider_condition = "and provider.provider_id in (".$providers.")";
+			$hicap_condition = "and health_fund.health_fund_id in (".$hicaps.")";
+			
+			$sql = "
+select report.report_date 
+	, provider.provider_name, health_fund.health_fund_name
+	, client.client_membership_no, client.client_patient_id
+	, concat(client.client_first_name, ' ', client.client_last_name) as client_name
+    , therapist.therapist_name
+from report
+join client on client.client_id = report.client_id
+join health_fund on health_fund.health_fund_id = client.health_fund_id
+join provider on provider.provider_id = report.provider_id
+join therapist on therapist.therapist_id = report.therapist_id
+where report.report_date between '{$dateStart}' and '{$dateEnd}'
+    {$provider_condition}
+    {$hicap_condition}
+order by report.report_date
+	, provider.provider_id
+    , health_fund.health_fund_name
+    , client.client_membership_no, client.client_patient_id
+    , client_name";
+			
+			return $this->_dataAccess->select($sql);
+		}
+		
+		public function getRequestAmtReport($dateStart, $dateEnd, $therapists)
+		{
+			$therapist_condition = "and therapist.therapist_id in (".$therapists.")";
+			
+			$sql = "
+select therapist_name, date, request_amt
+from (
+    select therapist_name
+        , date_format(massage_record_date, '%b %Y') as date
+    	, date_format(massage_record_date, '%y%m') as seq
+        , sum(massage_record_requested) as request_amt
+    from massage_record
+    join therapist on therapist.therapist_id = massage_record.therapist_id
+    where massage_record_date between '{$dateStart}' and '{$dateEnd}'
+    	and massage_record.therapist_id != 0
+    	{$therapist_condition}
+    group by therapist.therapist_name, date, seq
+    union all
+    select therapist_name
+        , '== Total =='as date
+    	, 999999 as seq
+        , sum(massage_record_requested) as request_amt
+    from massage_record
+    join therapist on therapist.therapist_id = massage_record.therapist_id
+    where massage_record_date between '{$dateStart}' and '{$dateEnd}'
+    	and massage_record.therapist_id != 0
+    	{$therapist_condition}
+    group by therapist.therapist_name
+) as Request_Summary
+order by therapist_name, seq";
+			
+			return $this->_dataAccess->select($sql);
+		}
 	}
 ?>
 

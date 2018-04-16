@@ -166,5 +166,40 @@
 			else
 				throw new Exception('Session is expired!');
 		}
+		
+		public static function permissionCheck($file)
+		{
+			$isAllowed = false;
+			
+			switch ($file) {
+				case "therapist-mamange.php":
+				case "client-contact.php":
+				case "request-amount.php":
+					if (Authentication::isAdmin())
+						$isAllowed = true;
+					break;
+				case "client-add.php":
+				case "client-search.php":
+				case "client-report.php":
+				case "daily-record.php":
+				case "hicap.php":
+					if (Authentication::isAdmin() || Authentication::isManager() || Authentication::isReception())
+						$isAllowed = true;
+					break;
+				case "roster.php":
+					$isAllowed = true;
+					break;
+				case "":
+			}
+			
+			if (!$isAllowed)
+				Utilities::redirect('../login/');
+		}
 	}
 ?>
+
+
+
+
+
+
