@@ -49,7 +49,7 @@
 						where reception_record.reception_record_date = '{$date}'
 							and reception_record.reception_record_void_user = 0
 					) as com_details
-					left join shift on shift.therapist_id = com_details.therapist_id and shift.shift_date = '2018-4-9'
+					left join shift on shift.therapist_id = com_details.therapist_id and shift.shift_date = '{$date}'
 					left join shift_type on shift_type.shift_type_id = shift.shift_type_id
 					group by therapist_name";
 			
