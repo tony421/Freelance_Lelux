@@ -59,17 +59,14 @@
 				$doubleRoomsNeededAmt = $this->_dataMapper->getDoubleRoomsNeededAmount($timeIn, $timeOut);				
 				$availableRooms = $this->excludeDoubleRoomsNeeded($availableRooms, $availableDoubleRooms, $doubleRoomsNeededAmt);
 				
-				/*
-				 * do not check the availability of single room for now
 				// exclude single rooms needed for bookings
 				$availableSingleRooms = $this->getAvailableSingleRooms($availableRooms);
 				$singleRoomsNeededAmt = $this->_dataMapper->getSingleRoomsNeededAmount($timeIn, $timeOut);
 				
-				$isSingleRoomsAvailableForWalkIn = $this->isSingleRoomsAvailableForWalkIn($availableSingleRooms, $singleRoomsNeededAmt);
-				if (!$isSingleRoomsAvailableForWalkIn) {
+				$isAnySingleRoomAvailable = $this->isAnySingleRoomAvailable($availableSingleRooms, $singleRoomsNeededAmt);
+				if (!$isAnySingleRoomAvailable) {
 					$availableRooms = $this->disableSingleRooms($availableRooms, $availableSingleRooms);
 				}
-				*/
 				//
 				// END  - Room Availability
 				
@@ -117,6 +114,9 @@
 				$availableDoubleRooms = $this->getAvailableDoubleRooms($availableRooms, $allDoubleRooms);
 				$doubleRoomsNeededAmt = $this->_dataMapper->getDoubleRoomsNeededAmount($timeIn, $timeOut, $bookingID);
 				$availableRooms = $this->excludeDoubleRoomsNeeded($availableRooms, $availableDoubleRooms, $doubleRoomsNeededAmt);
+				
+				// *** No need to disable needed single rooms, becuase they must be enable to be choosen  
+				
 				//
 				// END - Room Availability
 				
@@ -221,8 +221,7 @@
 						if (count($availableDoubleRooms) >= $doubleRoomsNeededAmt) {
 							$result['available'] = true;
 							$result['remark'] = "Booking is available";
-							/*
-							 * do not check the availability of signle rooms for now
+							
 							$availableRooms = $this->excludeDoubleRoomsNeeded($availableRooms, $availableDoubleRooms, $doubleRoomsNeededAmt);
 							
 							// exclude single rooms needed for bookings
@@ -237,7 +236,6 @@
 								$result['available'] = false;
 								$result['remark'] = "Not enough room";
 							}
-							*/
 						} else {
 							$result['available'] = false;
 							$result['remark'] = "Not enough double room";
@@ -622,6 +620,7 @@
 				for ($j = 0; $j < count($singleRooms); $j++) {
 					if ($singleRooms[$j]['room_no'] == $singleRoom['room_no']) {
 						$roomExisted = true;
+						// if a room is part of double room, both must be available
 						$singleRooms[$j]['room_available'] = $singleRooms[$j]['room_available'] && $singleRoom['room_available'];
 						break;
 					}
@@ -643,7 +642,7 @@
 			return $availableSingleRooms;
 		}
 		
-		private function isSingleRoomsAvailableForWalkIn($availableSingleRooms, $singleRoomsNeededAmt)
+		private function isAnySingleRoomAvailable($availableSingleRooms, $singleRoomsNeededAmt)
 		{
 			Utilities::logInfo("QueueFunction.isSingleRoomsAvailableForWalkIn() | Needed Single Rooms: {$singleRoomsNeededAmt}");
 			
