@@ -425,7 +425,9 @@
 			//$item['remark'] = 'B';
 			
 			$item['title'] = $this->getTimelineItemTitle($item['start'], $item['end'], "Booking"
-				, $bookingItem['booking_tel'], $bookingItem['booking_client']
+				, $bookingItem['booking_tel']
+				, $bookingItem['massage_type_name']
+				, $bookingItem['booking_client']
 				, $bookingItem['single_room_amount'], $bookingItem['double_room_amount']
 				, $bookingItem['booking_remark']);
 			
@@ -452,7 +454,9 @@
 			//$item['remark'] = 'B';
 			
 			$item['title'] = $this->getTimelineItemTitle($item['start'], $item['end'], "Booking"
-					, $bookingItem['booking_tel'], $bookingItem['booking_client']
+					, $bookingItem['booking_tel']
+					, $bookingItem['massage_type_name']
+					, $bookingItem['booking_client']
 					, $bookingItem['single_room_amount'], $bookingItem['double_room_amount']
 					, $bookingItem['booking_remark']);
 			
@@ -477,7 +481,7 @@
 			return $item;
 		}
 		
-		private function getTimelineItemTitle($start, $end, $header, $tel = '', $clientAmt = 1, $singleRoomAmt = 0, $doubleRoomAmt = 0, $remark = "")
+		private function getTimelineItemTitle($start, $end, $header, $tel = '', $msgType = '', $clientAmt = 1, $singleRoomAmt = 0, $doubleRoomAmt = 0, $remark = "")
 		{
 			$title = "";
 			
@@ -492,6 +496,9 @@
 			
 			if (!empty($tel))
 				$title .= '<br><b>Tel</b>: '.$tel;
+			
+			if (!empty($msgType))
+				$title .= '<br><b>Type</b>: '.$msgType;
 			
 			if ($clientAmt > 1) {
 				if ($singleRoomAmt > 0)
