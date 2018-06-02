@@ -11,7 +11,7 @@
 			$this->_dataAccess = new DataAccess();
 		}
 		
-		public function getBookingItems($date)
+		public function getBookingItems($date, $exceptedBookingID = "")
 		{
 			/*$sql = "
 select booking.booking_id, booking.booking_date, booking.booking_time_in, booking.booking_time_out, booking.booking_name
@@ -30,6 +30,10 @@ where booking.booking_date = '{$date}'
 order by booking.booking_time_in, booking.booking_time_out, booking.booking_create_datetime";*/
 			$openHour = Booking_Config::OPEN_HOUR;
 			
+			$exceptedBookingIDCondition = "";
+			if (!empty($exceptedBookingID))
+				$exceptedBookingIDCondition = " and booking.booking_id != '{$exceptedBookingID}'";
+			
 			$sql = "
 				select booking.booking_id, booking.booking_date, booking.booking_time_in, booking.booking_time_out, booking.booking_name
 					, booking.booking_tel, booking.booking_client, booking.booking_status_id
@@ -43,6 +47,7 @@ order by booking.booking_time_in, booking.booking_time_out, booking.booking_crea
 				left join therapist on therapist.therapist_id = booking_item.therapist_id
 				where booking.booking_date = '{$date}'
 					and booking.booking_time_in >= '{$date} {$openHour}'
+					{$exceptedBookingIDCondition}
 				order by booking.booking_time_in, booking.booking_create_datetime
 					, booking.booking_id, booking_item.booking_item_status, booking_item.therapist_id desc
 			";
@@ -108,6 +113,20 @@ order by booking.booking_time_in, booking.booking_time_out, booking.booking_crea
 			from booking
 			join booking_room on booking_room.booking_id = booking.booking_id
 			where booking.booking_id = '{$bookingID}' 
+			";
+				
+			return $this->_dataAccess->select($sql);
+		}
+		
+		public function getBookingItemsForSearching($bookingID)
+		{
+			$sql = "
+			select booking_item.therapist_id, ifnull(therapist.therapist_name, '[Any]') as therapist_name
+			from booking
+			join booking_item on booking_item.booking_id = booking.booking_id
+			left join therapist on therapist.therapist_id = booking_item.therapist_id
+			and booking_item.booking_item_status = 1
+			where booking.booking_id = '{$bookingID}'
 			";
 				
 			return $this->_dataAccess->select($sql);

@@ -151,6 +151,137 @@
 		public function searchAvailabilityForBooking($searchInfo)
 		{
 			try {
+				$date = $searchInfo['date'];
+				$timeIn = $searchInfo['time_in'];
+				$timeOut = $searchInfo['time_out'];
+				$singleRoomAmt = $searchInfo['single_room_amount'];
+				$doubleRoomAmt = $searchInfo['double_room_amount'];
+				$requestedTherapists = $searchInfo['therapists'];
+				
+				// setting [clientAmt] & [requestedTherapists] for a booking being updated 
+				if (isset($searchInfo['booking_id'])) {
+					$exceptedBookingID = $searchInfo['booking_id'];
+						
+					// must get updated client amount => count items only that have "booking_item_status" == 1
+					$bookingMapper = new BookingDataMapper();
+					$result = $bookingMapper->getBookingItemsForSearching($exceptedBookingID);
+					
+					if (count($result) > 0) {
+						$clientAmt = count($result);
+						$requestedTherapists = $result;
+					} else {
+						$clientAmt= $searchInfo['client_amount'];		
+					}
+				} else {
+					$exceptedBookingID = "";
+					$clientAmt= $searchInfo['client_amount'];
+				}
+				
+				
+				/*
+				 *** client amount must be minus according to number of recorded booking items
+				 */
+				
+				// init $result values with $searchInfo
+				$result = $searchInfo;
+				
+				// Therapist Availability
+				//
+				// creating dummy booking items and allocate them to the Booking timeline to excessive items
+				// if there is any excessive item, it means NOT AVAILABLE
+				$dummyBookingItems = array();
+				for ($i = 0; $i < $clientAmt; $i++) {
+					$bookingItem = array();
+					
+					// dummy booking item
+					$bookingItem['booking_item_id'] = 0;
+					$bookingItem['booking_item_status'] = 1;
+					$bookingItem['booking_name'] = "Dummy";
+					$bookingItem['booking_tel'] = "Dummy";
+					$bookingItem['booking_client'] = "Dummy";
+					$bookingItem['massage_type_name'] = "Dummy";
+					$bookingItem['booking_remark'] = "Dummy";
+					$bookingItem['booking_group_total'] = 0;
+					$bookingItem['booking_group_item_no'] = 0;
+					
+					$bookingItem['booking_id'] = $exceptedBookingID;
+					$bookingItem['booking_date'] = $date;
+					$bookingItem['booking_time_in'] = $timeIn;
+					$bookingItem['booking_time_out'] = $timeOut;
+					$bookingItem['therapist_id'] = $requestedTherapists[$i]['therapist_id'];
+					$bookingItem['therapist_name'] = $requestedTherapists[$i]['therapist_name'];
+					$bookingItem['single_room_amount'] = $singleRoomAmt;
+					$bookingItem['double_room_amount'] = $doubleRoomAmt;
+					
+					array_push($dummyBookingItems, $bookingItem);
+				}
+				
+				$bookingFunction = new BookingFunction();
+				$arrangedBookings = $bookingFunction->arrangeBookingTimeline($date, $exceptedBookingID, $dummyBookingItems);
+				
+				// Check availability by counting a number of excessive items, if more than 0 = NOT AVAILABLE
+				//
+				if (count($arrangedBookings['excessive_groups']) > 0) {
+					// *** NOT AVAILABLE
+					$result['available'] = false;
+					
+					$notAvailableTherapists = array();
+					for ($i = 0; $i < count($arrangedBookings['excessive_groups']); $i++) {
+						if ($arrangedBookings['excessive_groups'][$i]['therapist_id'] != 0)
+							array_push($notAvailableTherapists, $arrangedBookings['excessive_groups'][$i]['therapist_name']);
+					}
+					
+					if (count($notAvailableTherapists) > 0)
+						$result['remark'] = implode(', ', $notAvailableTherapists).' not available';
+					else
+						$result['remark'] = "Not enough therapist";
+				} else {
+					// Checking Room Availability
+					//
+					$records = $this->_dataMapper->getRecords($timeIn, $timeOut);
+					
+					$roomDataMapper = new RoomDataMapper();
+					$allRooms = $roomDataMapper->getAllRooms();
+					$allDoubleRooms = $roomDataMapper->getDoubleRooms();
+					
+					// Excluding rooms on records
+					$availableRooms = $this->excludeRoomsOnRecords($allRooms, $records);
+					
+					// Excluding double rooms needed for bookings
+					$availableDoubleRooms = $this->getAvailableDoubleRooms($availableRooms, $allDoubleRooms);
+					$doubleRoomsNeededAmt = $this->_dataMapper->getDoubleRoomsNeededAmount($timeIn, $timeOut, $exceptedBookingID);
+					$doubleRoomsNeededAmt += $doubleRoomAmt;
+					
+					if (count($availableDoubleRooms) >= $doubleRoomsNeededAmt) {							
+						$availableRooms = $this->excludeDoubleRoomsNeeded($availableRooms, $availableDoubleRooms, $doubleRoomsNeededAmt);
+						
+						// Excluding single rooms needed for bookings
+						$availableSingleRooms = $this->getAvailableSingleRooms($availableRooms);
+						$singleRoomsNeededAmt = $this->_dataMapper->getSingleRoomsNeededAmount($timeIn, $timeOut);
+						$singleRoomsNeededAmt += $singleRoomAmt;
+						
+						if (count($availableSingleRooms) >= $singleRoomsNeededAmt) {
+							$result['available'] = true;
+							$result['remark'] = "Booking is available";
+						} else {
+							$result['available'] = false;
+							$result['remark'] = "Not enough room";
+						}
+					} else {
+						$result['available'] = false;
+						$result['remark'] = "Not enough double room";
+					}
+				}
+				
+				return Utilities::getResponseResult(true, '', $result);
+			} catch(Exception $e) {
+				return Utilities::getResponseResult(false, 'Getting availability for booking is failed');
+			}
+		}
+		
+		public function searchAvailabilityForBookingV0($searchInfo)
+		{
+			try {
 				if (isset($searchInfo['booking_id'])) {
 					$exceptedBookingID = $searchInfo['booking_id'];
 					
@@ -198,7 +329,8 @@
 				$isTherapistAvailable = $this->isTherapistAvailable($availableTherapists, $bookings, $clientAmt);
 				if ($isTherapistAvailable) {
 					$availableTherapists = $this->excludeTherapistsOnBookings($availableTherapists, $bookings);
-					// including ['available'] & ['unavailable_therapists']
+					
+					// returning ['available'] & ['unavailable_therapists']
 					$checkResult = $this->isRequestedTherapistAvailable($availableTherapists, $requestedTherapists);
 					$result['available'] = $checkResult['available'];
 					$result['unavailable_therapists'] = $checkResult['unavailable_therapists'];
@@ -258,6 +390,8 @@
 				return Utilities::getResponseResult(false, 'Getting availability for booking is failed');
 			}
 		}
+		
+		
 		
 		private function addQueueSequence($therapists)
 		{
@@ -594,11 +728,16 @@
 			// amount of double room must be more than needed amount of it 
 			for ($i = 0; ($i < $doubleRoomsNeededAmt) && ($i < count($availableDoubleRooms)); $i++) {
 				for ($j = 0; $j < count($allRooms); $j++) {
+					// adding the attribute in case to show a room in the list but remark with "reserved"
+					$allRooms[$j]['room_reserved'] = 0;
+					$allRooms[$j]['room_remark'] = '';
+					
 					if ($availableDoubleRooms[$i]['room_no_1'] == $allRooms[$j]['room_no']
 							|| $availableDoubleRooms[$i]['room_no_2'] == $allRooms[$j]['room_no']) {
 						Utilities::logInfo("QueueFunction.excludeDoubleRoomsNeeded() | Disabling Room No. ".$allRooms[$j]['room_no']);
 						$allRooms[$j]['room_available'] = 0;
-						$allRooms[$j]['room_remark'] = 'Reserved For Booking';
+						$allRooms[$j]['room_reserved'] = 1;
+						$allRooms[$j]['room_remark'] = '<b><span class=\'text-danger\'> (Reserved)</span></b>';
 					}
 				}
 			}

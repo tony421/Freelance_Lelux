@@ -72,9 +72,9 @@
 			}
 		}
 		
-		public function getBookings($date)
+		public function getBookings($date, $exceptedBookingID = "")
 		{
-			$bookings = $this->_dataMapper->getBookingItems($date);
+			$bookings = $this->_dataMapper->getBookingItems($date, $exceptedBookingID);
 			$bookingGroups = $this->_dataMapper->getBookingGroups($date);
 			$bookings = $this->countBookingItemsInGroup($bookings, $bookingGroups);
 			
@@ -95,42 +95,8 @@
 		}
 		
 		public function getBookingTimeline($date)
-		{
-			//$queueMapper = new QueueDataMapper();
-			$therapistMapper = new TherapistDataMapper();
-			$massageMapper = new MassageDataMapper();
-			
-			//$therapists = $queueMapper->getTherapistsOnQueue($date);
-			$therapists = $therapistMapper->getTherapistsOnShift($date, false);
-			$records = $massageMapper->getRecords($date);
-			$bookings = $this->getBookings($date);
-			
-			/*
-			 * Codes under this comment is about separation between non-requested bookings and therapist groups 
-			$timelineBookingGroups = array();
-			$timelineBookingGroups = $this->getTimelineBookingItems($bookings, $therapists, $timelineBookingGroups);
-			
-			// Therapists are to be created as a group
-			$timelineTherapistGroups = $this->getTimelineTherapistGroups($therapists, count($timelineBookingGroups));
-			
-			// Records will be added into the group of each therapist
-			$timelineTherapistGroups = $this->getTimelineRecordItems($records, $bookings, $timelineTherapistGroups);
-			
-			// Merge 2 timeline groups 
-			$timelineGroups = array_merge($timelineBookingGroups, $timelineTherapistGroups);
-			*/
-			
-			/*
-			 But they wanted to merge both non-requested bookings and therapist groups together
-			*/
-			// Therapists are to be created as a group
-			$timelineTherapistGroups = $this->getTimelineTherapistGroups($therapists);
-				
-			// Records and requested bookings will be added into the group of each therapist
-			$timelineTherapistGroups = $this->getTimelineRecordItems($records, $bookings, $timelineTherapistGroups);
-			
-			// Add non-requested bookings into groups
-			$resultGroups = $this->mergeNonRequestedBookingIntoTherapistGroups($timelineTherapistGroups, $bookings);
+		{			
+			$resultGroups = $this->arrangeBookingTimeline($date);
 			
 			$timelineTherapistGroups = $resultGroups['timeline_groups'];
 			// Merge excessive items into excessive groups 
@@ -139,10 +105,41 @@
 			// Get available gaps between timeline items in each group
 			$timelineGroups = $this->getTimelineAvailableGapItems($timelineTherapistGroups);
 			
-			$result['bookings'] = $bookings;
+			$result['bookings'] = $resultGroups['bookings'];
 			$result['timeline_groups'] = $timelineGroups;
 			
 			return Utilities::getResponseResult(true, '', $result);
+		}
+		
+		// This function will be used for creating Booking Timeline and calculating availability when making a booking
+		// returning
+		// 		1. $resultGroups['bookings']			
+		//		2. $resultGroups['timeline_groups']		*for records and bookings allocation
+		//		3. $resultGroups['excessive_groups']	*for any excessive bookings (NOT enough staff)
+		//
+		public function arrangeBookingTimeline($date, $exceptedBookingID = "", $dummyBookings = array()) {
+			//$queueMapper = new QueueDataMapper();
+			$therapistMapper = new TherapistDataMapper();
+			$massageMapper = new MassageDataMapper();
+				
+			$therapists = $therapistMapper->getTherapistsOnShift($date, false);
+			$records = $massageMapper->getRecords($date);
+			$bookings = $this->getBookings($date, $exceptedBookingID);
+			
+			$bookings = array_merge($bookings, $dummyBookings);
+			
+			//Utilities::logInfo('QueueingFunction.arrangeBookingTimeline() | $bookings | '.var_export($bookings, true));
+			
+			// Therapists are to be created as a group
+			$timelineTherapistGroups = $this->getTimelineTherapistGroups($therapists);
+			
+			// Records and requested bookings will be added into the group of each therapist
+			$timelineTherapistGroups = $this->getTimelineRecordItems($records, $bookings, $timelineTherapistGroups);
+				
+			// Add non-requested bookings into groups
+			$resultGroups = $this->mergeNonRequestedBookingIntoTherapistGroups($timelineTherapistGroups, $bookings);
+			 
+			return $resultGroups;
 		}
 		
 		public function deleteBooking($bookingID)
@@ -401,7 +398,13 @@
 			$item['end'] = $recordItem['massage_record_date_time_out'];
 			//$item['remark'] = 'R';
 			
-			$item['title'] = $this->getTimelineItemTitle($item['start'], $item['end'], "Record", $recordItem['booking_tel']);
+			$item['title'] = $this->getTimelineItemTitle($item['start'], $item['end'], "Record"
+				, $recordItem['booking_name']
+				, $recordItem['booking_tel']
+				, ''
+				, $recordItem['therapist_name']
+				, $recordItem['room_no']
+				, $recordItem['massage_type_name']);
 			
 			//$item['style'] = Color_Config::RECORD_FG_DEFAULT.Color_Config::RECORD_BG_DEFAULT;
 			$item['style'] = $style;
@@ -425,7 +428,11 @@
 			//$item['remark'] = 'B';
 			
 			$item['title'] = $this->getTimelineItemTitle($item['start'], $item['end'], "Booking"
+				, $bookingItem['booking_name']
 				, $bookingItem['booking_tel']
+				, $bookingItem['therapist_name']
+				, ''
+				, ''
 				, $bookingItem['massage_type_name']
 				, $bookingItem['booking_client']
 				, $bookingItem['single_room_amount'], $bookingItem['double_room_amount']
@@ -454,7 +461,11 @@
 			//$item['remark'] = 'B';
 			
 			$item['title'] = $this->getTimelineItemTitle($item['start'], $item['end'], "Booking"
+					, $bookingItem['booking_name']
 					, $bookingItem['booking_tel']
+					, ''
+					, ''
+					, ''
 					, $bookingItem['massage_type_name']
 					, $bookingItem['booking_client']
 					, $bookingItem['single_room_amount'], $bookingItem['double_room_amount']
@@ -481,7 +492,7 @@
 			return $item;
 		}
 		
-		private function getTimelineItemTitle($start, $end, $header, $tel = '', $msgType = '', $clientAmt = 1, $singleRoomAmt = 0, $doubleRoomAmt = 0, $remark = "")
+		private function getTimelineItemTitle($start, $end, $header, $clientName = '', $tel = '', $reqTherapistName = '', $therapistName = '', $roomNo = '', $msgType = '', $clientAmt = 1, $singleRoomAmt = 0, $doubleRoomAmt = 0, $remark = "")
 		{
 			$title = "";
 			
@@ -494,11 +505,23 @@
 			
 			$title .= "<br><b>{$minutes} minutes</b> ({$start} to {$end})";
 			
+			if (!empty($clientName))
+				$title .= '<br><b>Client</b>: '.$clientName;
+			
 			if (!empty($tel))
-				$title .= '<br><b>Tel</b>: '.$tel;
+				$title .= ' ('.$tel.')';
+			
+			if (!empty($reqTherapistName))
+				$title .= '<br><b>Request</b>: '.$reqTherapistName;
+			
+			if (!empty($therapistName))
+				$title .= '<br><b>Massage with</b>: '.$therapistName;
+			
+			if (!empty($roomNo))
+				$title .= '<br><b>Room #</b>: '.$roomNo;
 			
 			if (!empty($msgType))
-				$title .= '<br><b>Type</b>: '.$msgType;
+				$title .= '<br><b>Massage Type</b>: '.$msgType;
 			
 			if ($clientAmt > 1) {
 				if ($singleRoomAmt > 0)
@@ -598,6 +621,7 @@
 		{
 			$result['timeline_groups'] = array();
 			$result['excessive_groups'] = array();
+			$result['bookings'] = $bookings;
 			
 			foreach ($bookings as $booking) {
 				// loop for a booking that is non-requested and active

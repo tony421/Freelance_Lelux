@@ -534,10 +534,10 @@ function bindTableBookingQueueTherapist(therapists, requestedTherapistID) {
 }
 function bindTableBookingQueueRoom(rooms) {
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i]['room_available'] == 1) {
+		if (rooms[i]['room_available'] == 1 || rooms[i]['room_reserved'] == 1) {
 			_dtTableBookingQueueRoom.row.add({
 				room_no: rooms[i]['room_no']
-				, room_desc: rooms[i]['room_desc']
+				, room_desc: rooms[i]['room_desc'] + rooms[i]['room_remark']
 			}).draw();
 		}
 	}
@@ -808,7 +808,7 @@ function showMassageRecord(recordInfo, bookingInfo) {
 	
 	clearRecordInputs();
 	setRecordTime(recordInfo['minutes'], recordInfo['time_in'], recordInfo['time_out']);
-	setRecordTherapist(recordInfo['therapist_name']);
+	setRecordTherapist(recordInfo['therapist_name'], bookingInfo['therapist_name']);
 	setRecordRow(recordInfo['room_no']);
 	setRecordMassageType(recordInfo['massage_type_id']);
 	
@@ -845,8 +845,11 @@ function setRecordTime(minutes, start, end) {
 		$txtRecordTimeIn.prop('disabled', 'disabled');
 	}
 }
-function setRecordTherapist(name) {
+function setRecordTherapist(name, reqName) {
 	$lblRecordTherapist.html('<span class="text-mark">' + name + '</span>');
+	
+	if (name == reqName)
+		$cbRecordRequested.prop('checked', true);
 }
 function setRecordRow(roomNo) {
 	$lblRecordRoom.html('<span class="text-mark">' + roomNo + '</span>');
