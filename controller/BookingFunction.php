@@ -134,10 +134,12 @@
 			$timelineTherapistGroups = $this->getTimelineTherapistGroups($therapists);
 			
 			// Records and requested bookings will be added into the group of each therapist
-			$timelineTherapistGroups = $this->getTimelineRecordItems($records, $bookings, $timelineTherapistGroups);
-				
-			// Add non-requested bookings into groups
-			$resultGroups = $this->mergeNonRequestedBookingIntoTherapistGroups($timelineTherapistGroups, $bookings);
+			$timelineTherapistGroups = $this->getTimelineRecordItems($records, $timelineTherapistGroups);
+			//$timelineTherapistGroups = $this->getTimelineRecordItems($records, $timelineTherapistGroups, $bookings);
+			
+			// Add bookings (both requested and non-requested) into groups
+			$resultGroups = $this->mergeBookingsIntoTherapistGroups($timelineTherapistGroups, $bookings);
+			//$resultGroups = $this->mergeNonRequestedBookingIntoTherapistGroups($timelineTherapistGroups, $bookings);
 			 
 			return $resultGroups;
 		}
@@ -157,6 +159,10 @@
 			for ($i = 0; $i < count($bookings); $i++) {
 				$bookings[$i]['booking_group_total'] = 0;
 				$bookings[$i]['booking_group_item_no'] = 0;
+				
+				// encoding to avoid parsing error
+				$bookings[$i]['booking_name'] = htmlentities($bookings[$i]['booking_name']);
+				$bookings[$i]['booking_remark'] = htmlentities($bookings[$i]['booking_remark']); 
 				
 				for ($j = 0; $j < count($bookingGroups); $j++) {
 					if ($bookings[$i]['booking_id'] == $bookingGroups[$j]['booking_id']) {
@@ -256,7 +262,7 @@
 			return $group_item;
 		}
 		
-		private function getTimelineRecordItems($records, $bookings, $timelineGroups)
+		private function getTimelineRecordItems($records, $timelineGroups, $bookings = array())
 		{			
 			foreach($records as $record) {
 				$therapistID = $record['therapist_id'];
@@ -269,16 +275,18 @@
 				}
 			}
 			
-			foreach($bookings as $booking) {
-				if ($booking['booking_item_status'] == 1) {
-					$therapistID = $booking['therapist_id'];
-					
-					if ($therapistID != 0) {
-						foreach($timelineGroups as $key => $group) {
-							if ($group['therapist_id'] == $therapistID) {
-								//Utilities::logDebug("Booking Item ID [{$booking['booking_item_id']}] is being added");
-								array_push($timelineGroups[$key]['items'], $this->getTimelineRequestedBookingItem($booking, $group['id'], $group['style']));
-								break;
+			if (count($bookings) > 0) {
+				foreach($bookings as $booking) {
+					if ($booking['booking_item_status'] == 1) {
+						$therapistID = $booking['therapist_id'];
+						
+						if ($therapistID != 0) {
+							foreach($timelineGroups as $key => $group) {
+								if ($group['therapist_id'] == $therapistID) {
+									//Utilities::logDebug("Booking Item ID [{$booking['booking_item_id']}] is being added");
+									array_push($timelineGroups[$key]['items'], $this->getTimelineRequestedBookingItem($booking, $group['id'], $group['style']));
+									break;
+								}
 							}
 						}
 					}
@@ -617,63 +625,111 @@
 			usort($timelineGroups, array($sorter, "compare"));
 		}
 		
-		private function mergeNonRequestedBookingIntoTherapistGroups($timelineTherapistGroups, $bookings)
+		private function mergeBookingsIntoTherapistGroups($timelineTherapistGroups, $bookings)
 		{
 			$result['timeline_groups'] = array();
 			$result['excessive_groups'] = array();
 			$result['bookings'] = $bookings;
 			
+			// 1st Priorty : mergeing requested bookings 
 			foreach ($bookings as $booking) {
 				// loop for a booking that is non-requested and active
-				if ($booking['booking_item_status'] == 1 
-					&& $booking['therapist_id'] == 0)
+				if ($booking['booking_item_status'] == 1)
 				{
 					$isBookingItemAdded = false;
-					$refinedQueue = $this->getRefinedQueueOfTherapists($timelineTherapistGroups, $booking['booking_time_in']);
 					
-					// Find queue for booking
-					foreach ($refinedQueue as $queue) {
-						$therapistID = 0;
+					// Checking whether a booking requests specific therapist or not
+					$requestedTherapistID = $booking['therapist_id'];
+					if ($requestedTherapistID != 0) {
 						$isBookingDuplicated = false;
 						
-						// loop to find therapist according to the queue and find empty slot for booking item
 						foreach ($timelineTherapistGroups as $key => $group) {
-							// therapist must be in working status
-							
-							if ($group['shift_working'] == 1) {
-								if ($queue['therapist_id'] == $group['therapist_id']) {
-									$therapistID = $group['therapist_id'];
-									
-									// Find available slot for booking
-									foreach ($timelineTherapistGroups[$key]['items'] as $item) {
-										if ($this->isDuplicateBookingTime($booking, $item)) {
-											// if find any duplicate item, then stop loop
-											$isBookingDuplicated = true;
-											break;
-										}
+							if ($requestedTherapistID == $group['therapist_id']) {
+								// Find available slot for booking
+								foreach ($timelineTherapistGroups[$key]['items'] as $item) {
+									if ($this->isDuplicateBookingTime($booking, $item)) {
+										// if find any duplicate item, then stop loop
+										$isBookingDuplicated = true;
+										break;
 									}
-									
-									// If slot is found, then add the item into the group
-									if(!$isBookingDuplicated) {
-										$isBookingItemAdded = true;
-										// add item into the group
-										array_push($timelineTherapistGroups[$key]['items'], $this->getTimelineBookingItem($booking, $group['id']));
-									}
-									
-									break;
 								}
+								
+								// If slot is found, then add the item into the group
+								if(!$isBookingDuplicated) {
+									$isBookingItemAdded = true;
+									// add item into the group
+									array_push($timelineTherapistGroups[$key]['items'], $this->getTimelineRequestedBookingItem($booking, $group['id'], $group['style']));
+								}
+									
+								break;
 							}
 						}
 						
-						// Stop queue loop if the item is added
-						if($isBookingItemAdded) {							
-							break;
+						// if item is not added, then push item into the excessive group
+						if(!$isBookingItemAdded) {
+							array_push($result['excessive_groups'], $booking);
 						}
 					}
-					
-					// if item is not added, then push item into the excessive group
-					if(!$isBookingItemAdded) {
-						array_push($result['excessive_groups'], $booking);
+				}
+			}
+			
+			// 2st Priorty : mergeing non-requested bookings
+			foreach ($bookings as $booking) {
+				// loop for a booking that is non-requested and active
+				if ($booking['booking_item_status'] == 1)
+				{
+					$isBookingItemAdded = false;
+						
+					// Checking whether a booking requests specific therapist or not
+					$requestedTherapistID = $booking['therapist_id'];
+					if ($requestedTherapistID == 0) {
+						// Allocating booking items according to Queue
+						$refinedQueue = $this->getRefinedQueueOfTherapists($timelineTherapistGroups, $booking['booking_time_in']);
+							
+						// Find queue for booking
+						foreach ($refinedQueue as $queue) {
+							$therapistID = 0;
+							$isBookingDuplicated = false;
+			
+							// loop to find therapist according to the queue and find empty slot for booking item
+							foreach ($timelineTherapistGroups as $key => $group) {
+								// therapist must be in working status
+									
+								if ($group['shift_working'] == 1) {
+									if ($queue['therapist_id'] == $group['therapist_id']) {
+										$therapistID = $group['therapist_id'];
+											
+										// Find available slot for booking
+										foreach ($timelineTherapistGroups[$key]['items'] as $item) {
+											if ($this->isDuplicateBookingTime($booking, $item)) {
+												// if find any duplicate item, then stop loop
+												$isBookingDuplicated = true;
+												break;
+											}
+										}
+											
+										// If slot is found, then add the item into the group
+										if(!$isBookingDuplicated) {
+											$isBookingItemAdded = true;
+											// add item into the group
+											array_push($timelineTherapistGroups[$key]['items'], $this->getTimelineBookingItem($booking, $group['id']));
+										}
+											
+										break;
+									}
+								}
+							}
+			
+							// Stop queue loop if the item is added
+							if($isBookingItemAdded) {
+								break;
+							}
+						}
+							
+						// if item is not added, then push item into the excessive group
+						if(!$isBookingItemAdded) {
+							array_push($result['excessive_groups'], $booking);
+						}
 					}
 				}
 			}
@@ -682,6 +738,79 @@
 			//Utilities::logDebug('Excessive => '.var_export($result['excessive_groups'], true));
 			$result['timeline_groups'] = $timelineTherapistGroups;
 			
+			return $result;
+		}
+		
+		private function mergeNonRequestedBookingIntoTherapistGroups($timelineTherapistGroups, $bookings)
+		{
+			$result['timeline_groups'] = array();
+			$result['excessive_groups'] = array();
+			$result['bookings'] = $bookings;
+				
+			foreach ($bookings as $booking) {
+				// loop for a booking that is non-requested and active
+				if ($booking['booking_item_status'] == 1)
+				{
+					$isBookingItemAdded = false;
+						
+					// Checking whether a booking requests specific therapist or not
+					$requestedTherapistID = $booking['therapist_id'];
+					if ($requestedTherapistID == 0) {
+						// Allocating booking items according to Queue
+						$refinedQueue = $this->getRefinedQueueOfTherapists($timelineTherapistGroups, $booking['booking_time_in']);
+							
+						// Find queue for booking
+						foreach ($refinedQueue as $queue) {
+							$therapistID = 0;
+							$isBookingDuplicated = false;
+		
+							// loop to find therapist according to the queue and find empty slot for booking item
+							foreach ($timelineTherapistGroups as $key => $group) {
+								// therapist must be in working status
+									
+								if ($group['shift_working'] == 1) {
+									if ($queue['therapist_id'] == $group['therapist_id']) {
+										$therapistID = $group['therapist_id'];
+											
+										// Find available slot for booking
+										foreach ($timelineTherapistGroups[$key]['items'] as $item) {
+											if ($this->isDuplicateBookingTime($booking, $item)) {
+												// if find any duplicate item, then stop loop
+												$isBookingDuplicated = true;
+												break;
+											}
+										}
+											
+										// If slot is found, then add the item into the group
+										if(!$isBookingDuplicated) {
+											$isBookingItemAdded = true;
+											// add item into the group
+											array_push($timelineTherapistGroups[$key]['items'], $this->getTimelineBookingItem($booking, $group['id']));
+										}
+											
+										break;
+									}
+								}
+							}
+		
+							// Stop queue loop if the item is added
+							if($isBookingItemAdded) {
+								break;
+							}
+						}
+							
+						// if item is not added, then push item into the excessive group
+						if(!$isBookingItemAdded) {
+							array_push($result['excessive_groups'], $booking);
+						}
+					}
+				}
+			}
+				
+				
+			//Utilities::logDebug('Excessive => '.var_export($result['excessive_groups'], true));
+			$result['timeline_groups'] = $timelineTherapistGroups;
+				
 			return $result;
 		}
 		

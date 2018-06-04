@@ -1,0 +1,25 @@
+DELETE FROM booking where booking_date = '2018-06-03';
+
+update booking set booking_date = '2018-06-03' where booking_date = '2018-06-10';
+
+delete from massage_record where massage_record.massage_record_date = '2018-06-03';
+
+update massage_record set massage_record.massage_record_date = '2018-06-03' where massage_record.massage_record_date = '2018-06-10';
+
+UPDATE reception_record set reception_record.reception_record_date = '2018-06-03' where reception_record.reception_record_date = '2018-06-10';
+
+UPDATE booking
+set booking_time_in = concat('2018-06-03', ' ', date_format(booking_time_in, '%H:%i:%s'))
+where booking_date = '2018-06-03';
+
+UPDATE booking
+set booking_time_out = concat('2018-06-03', ' ', date_format(booking_time_out, '%H:%i:%s'))
+where booking_date = '2018-06-03';
+
+UPDATE massage_record
+set massage_record_time_in = concat('2018-06-03', ' ', date_format(massage_record_time_in, '%H:%i:%s'))
+where massage_record_date = '2018-06-03';
+
+UPDATE massage_record
+set massage_record_time_out = concat('2018-06-03', ' ', date_format(massage_record_time_out, '%H:%i:%s'))
+where massage_record_date = '2018-06-03';

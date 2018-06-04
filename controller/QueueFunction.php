@@ -148,7 +148,127 @@
 			return Utilities::getResponseResult(true, '', $therapists);
 		}
 		
-		public function searchAvailabilityForBooking($searchInfo)
+		public function searchAvailabilityForBookingV0($searchInfo)
+		{
+			try {
+				if (isset($searchInfo['booking_id'])) {
+					$exceptedBookingID = $searchInfo['booking_id'];
+						
+					// must get updated client amount => count items only that have "booking_item_status" == 1
+					$bookingMapper = new BookingDataMapper();
+					$result = $bookingMapper->getBookingClientAmount($exceptedBookingID);
+					if (count($result) > 0) {
+						$clientAmt = $result[0]['client_amount'];
+		
+						if ($clientAmt < 1) {
+							Utilities::logInfo('QueueFunction.searchAvailabilityForBooking() | "cleint_amount" must not be less than 1!!');
+							$clientAmt = 1;
+						}
+					} else {
+						$clientAmt= $searchInfo['client_amount'];
+					}
+				} else {
+					$exceptedBookingID = "";
+					$clientAmt= $searchInfo['client_amount'];
+				}
+		
+				$date = $searchInfo['date'];
+				$timeIn = $searchInfo['time_in'];
+				$timeOut = $searchInfo['time_out'];
+				$singleRoomAmt = $searchInfo['single_room_amount'];
+				$doubleRoomAmt = $searchInfo['double_room_amount'];
+				$requestedTherapists = $searchInfo['therapists'];
+		
+				/*
+				 *** client amount must be minus according to number of recorded booking items
+				 */
+		
+				// init $result values with $searchInfo
+				$result = $searchInfo;
+		
+				// Therapist Availability
+				//
+				$allTherapists = $this->_dataMapper->getTherapistsOnQueue($date);
+		
+				$records = $this->_dataMapper->getRecords($timeIn, $timeOut);
+				$availableTherapists = $this->excludeTherapistsOnRecords($allTherapists, $records);
+		
+				$bookings = $this->_dataMapper->getBookings($timeIn, $timeOut, "", $exceptedBookingID);
+		
+				$isTherapistAvailable = $this->isTherapistAvailable($availableTherapists, $bookings, $clientAmt);
+				if ($isTherapistAvailable) {
+					$availableTherapists = $this->excludeTherapistsOnBookings($availableTherapists, $bookings);
+						
+					// returning ['available'] & ['unavailable_therapists']
+					$checkResult = $this->isRequestedTherapistAvailable($availableTherapists, $requestedTherapists);
+					$result['available'] = $checkResult['available'];
+					$result['unavailable_therapists'] = $checkResult['unavailable_therapists'];
+						
+					if ($result['available']) {
+						// Room Availability
+						//
+						$roomDataMapper = new RoomDataMapper();
+						$allRooms = $roomDataMapper->getAllRooms();
+						$allDoubleRooms = $roomDataMapper->getDoubleRooms();
+		
+						// exclude rooms on records
+						$availableRooms = $this->excludeRoomsOnRecords($allRooms, $records);
+		
+						// exclude double rooms needed for bookings
+						$availableDoubleRooms = $this->getAvailableDoubleRooms($availableRooms, $allDoubleRooms);
+						//$doubleRoomsNeededAmt = $this->_dataMapper->getDoubleRoomsNeededAmount($timeIn, $timeOut, $exceptedBookingID);
+						$dblConsecUse = $this->getDoubleRoomsConsecutiveUseForBooking($timeIn, $timeOut, $exceptedBookingID);
+						$doubleRoomsNeededAmt = count($dblConsecUse) + $doubleRoomAmt;
+		
+						Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | Needed Double Rooms: ".$doubleRoomsNeededAmt);
+		
+						if (count($availableDoubleRooms) >= $doubleRoomsNeededAmt) {
+							$result['available'] = true;
+							$result['remark'] = "Booking is available";
+								
+							$availableRooms = $this->excludeDoubleRoomsNeeded($availableRooms, $availableDoubleRooms, $doubleRoomsNeededAmt);
+								
+							// exclude single rooms needed for bookings
+							$availableSingleRooms = $this->getAvailableSingleRooms($availableRooms);
+							//$singleRoomsNeededAmt = $this->_dataMapper->getSingleRoomsNeededAmount($timeIn, $timeOut);
+							$sglConsecUse = $this->getSingleRoomsConsecutiveUseForBooking($timeIn, $timeOut, $dblConsecUse, $exceptedBookingID);
+							$singleRoomsNeededAmt = count($sglConsecUse) + $singleRoomAmt;
+								
+							Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | Single Room Consecutive Use Amount: ".count($sglConsecUse));
+							Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | Single Room Booking Amount: ".$singleRoomAmt);
+							Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | Needed Single Rooms: ".$singleRoomsNeededAmt);
+								
+							if (count($availableSingleRooms) >= $singleRoomsNeededAmt) {
+								$result['available'] = true;
+								$result['remark'] = "Booking is available";
+							} else {
+								$result['available'] = false;
+								$result['remark'] = "Not enough room";
+							}
+						} else {
+							$result['available'] = false;
+							$result['remark'] = "Not enough double room";
+						}
+					} else {
+						$result['remark'] = '';
+						foreach ($result['unavailable_therapists'] as $therapist)
+							$result['remark'] .= '['.$therapist.'] ';
+		
+							$result['remark'] .= "not available";
+					}
+				} else {
+					// cannot book
+					$result['available'] = false;
+					$result['remark'] = "No therapist available";
+				}
+		
+				return Utilities::getResponseResult(true, '', $result);
+			} catch(Exception $e) {
+				return Utilities::getResponseResult(false, 'Getting availability for booking is failed');
+			}
+		}
+		
+		public function searchAvailabilityForBookingV1($searchInfo)
 		{
 			try {
 				$date = $searchInfo['date'];
@@ -219,6 +339,9 @@
 				$bookingFunction = new BookingFunction();
 				$arrangedBookings = $bookingFunction->arrangeBookingTimeline($date, $exceptedBookingID, $dummyBookingItems);
 				
+				Utilities::logInfo('============= Timeline Groups ========= | '.var_export($arrangedBookings['timeline_groups'], true));
+				Utilities::logInfo('============= Excessive Groups ========= | '.var_export($arrangedBookings['excessive_groups'], true));
+				
 				// Check availability by counting a number of excessive items, if more than 0 = NOT AVAILABLE
 				//
 				if (count($arrangedBookings['excessive_groups']) > 0) {
@@ -279,7 +402,7 @@
 			}
 		}
 		
-		public function searchAvailabilityForBookingV0($searchInfo)
+		public function searchAvailabilityForBooking($searchInfo)
 		{
 			try {
 				if (isset($searchInfo['booking_id'])) {
@@ -342,26 +465,52 @@
 						$allRooms = $roomDataMapper->getAllRooms();
 						$allDoubleRooms = $roomDataMapper->getDoubleRooms();
 						
-						// exclude rooms on records
-						$availableRooms = $this->excludeRoomsOnRecords($allRooms, $records);
+						// A. Finding double room availability
+						//	A.1. adding double rooms that is being used (on records) into consecutive list
+						//	A.2. adding double rooms that is needed for bookings in the system into consecutive list
+						//	A.3. calculating the availability 
+						//		by (count(consec list) + needed amt) <= count(all double room)
 						
-						// exclude double rooms needed for bookings
-						$availableDoubleRooms = $this->getAvailableDoubleRooms($availableRooms, $allDoubleRooms);
-						$doubleRoomsNeededAmt = $this->_dataMapper->getDoubleRoomsNeededAmount($timeIn, $timeOut, $exceptedBookingID);
-						$doubleRoomsNeededAmt += $doubleRoomAmt;
+						// A.1
+						$dblConsecUse = $this->getDoubleRoomsConsecutiveUseForRecord($timeIn, $timeOut);
 						
-						if (count($availableDoubleRooms) >= $doubleRoomsNeededAmt) {
+						// A.2
+						$dblConsecUse = $this->getDoubleRoomsConsecutiveUseForBooking($timeIn, $timeOut, $dblConsecUse, $exceptedBookingID);
+						
+						// A.3
+						$doubleRoomsNeededAmt = count($dblConsecUse) + $doubleRoomAmt;
+						
+						Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | Needed Double Rooms: ".$doubleRoomsNeededAmt);
+						Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | All Double Rooms: ".count($allDoubleRooms));
+						
+						if ($doubleRoomsNeededAmt <= count($allDoubleRooms)) {
 							$result['available'] = true;
 							$result['remark'] = "Booking is available";
 							
-							$availableRooms = $this->excludeDoubleRoomsNeeded($availableRooms, $availableDoubleRooms, $doubleRoomsNeededAmt);
+							// B. Finding single room availability
+							//	B.1. adding single rooms that is being used (on records) into consecutive list of double room
+							//	B.2. adding single rooms that is needed for bookings in the system into the consecutive list
+							//	B.3. calculating the availability
+							//		by (count(consec list) + needed amt) <= count(all double room)
 							
-							// exclude single rooms needed for bookings
-							$availableSingleRooms = $this->getAvailableSingleRooms($availableRooms);
-							$singleRoomsNeededAmt = $this->_dataMapper->getSingleRoomsNeededAmount($timeIn, $timeOut);
-							$singleRoomsNeededAmt += $singleRoomAmt;
+							// B.1
+							$sglConsecUse = $this->getSingleRoomsConsecutiveUseForRecord($timeIn, $timeOut, $dblConsecUse);
 							
-							if (count($availableSingleRooms) >= $singleRoomsNeededAmt) {
+							// B.2
+							$sglConsecUse = $this->getSingleRoomsConsecutiveUseForBooking($timeIn, $timeOut, $sglConsecUse, $exceptedBookingID);
+							
+							// B.3
+							$singleRoomsNeededAmt = count($sglConsecUse) + $singleRoomAmt;
+							
+							Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | Single Room Consecutive Use Amount: ".count($sglConsecUse));
+							Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | Single Room Booking Amount: ".$singleRoomAmt);
+							Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | Needed Single Rooms: ".$singleRoomsNeededAmt);
+							
+							$allSingleRooms = $roomDataMapper->getSingleRooms();
+							
+							Utilities::logInfo("QueueFunction.searchAvailabilityForBooking() | All Single Rooms: ".count($allSingleRooms));
+							
+							if ($singleRoomsNeededAmt <= count($allSingleRooms)) {
 								$result['available'] = true;
 								$result['remark'] = "Booking is available";
 							} else {
@@ -390,8 +539,6 @@
 				return Utilities::getResponseResult(false, 'Getting availability for booking is failed');
 			}
 		}
-		
-		
 		
 		private function addQueueSequence($therapists)
 		{
@@ -473,6 +620,50 @@
 			return $allTherapists;
 		}
 		
+		private function isTherapistAvailableV1($availableTherapists, $bookings, $clientAmt)
+		{
+			$consecutiveBookings = $this->getConsecutiveBookings($bookings);
+			$therapistNeededForBookingsAmt = count($consecutiveBookings);
+				
+			$availableTherapistsAmt = 0;
+			for ($i = 0; $i < count($availableTherapists); $i++) {
+				if ($availableTherapists[$i]['therapist_available'] == 1) {
+					$availableTherapistsAmt++;
+				} else {
+					// if therapist is not available, then check whether she can continue with any booking or not
+					$time_start = $availableTherapists[$i]['massage_record_time_in'];
+					$time_end = $availableTherapists[$i]['massage_record_time_out'];
+						
+					$consecutiveItemIndex = $this->getConsecutiveSlot($consecutiveBookings, $time_start, $time_end);
+						
+					if (is_null($consecutiveItemIndex)) {
+						// the record does not match any booking, then do not count availability
+					} else {
+						$availableTherapistsAmt++;
+		
+						$virtualBooking = array();
+						$virtualBooking['booking_id'] = $availableTherapists[$i]['massage_record_id'];
+						$virtualBooking['booking_item_id'] = $availableTherapists[$i]['massage_record_id'];
+						$virtualBooking['therapist_id'] = $availableTherapists[$i]['therapist_id'];
+						$virtualBooking['booking_time_in'] = $availableTherapists[$i]['massage_record_time_in'];
+						$virtualBooking['booking_time_out'] = $availableTherapists[$i]['massage_record_time_out'];
+		
+						array_push($consecutiveBookings[$consecutiveItemIndex]['consecutive_bookings'], $virtualBooking);
+					}
+				}
+			}
+				
+			//Utilities::logInfo('QueueingFunction.isTherapistAvailable() | '.var_export($consecutiveBookings, true));
+				
+			$availableAmt = $availableTherapistsAmt - $therapistNeededForBookingsAmt;
+			Utilities::logInfo("QueueFunction.isTherapistAvailable() | \$availableTherapistsAmt[{$availableTherapistsAmt}] - \$therapistNeededForBookingsAmt[{$therapistNeededForBookingsAmt}] = {$availableAmt}");
+				
+			if ($availableAmt >= $clientAmt)
+				return true;
+				else
+					return false;
+		}
+		
 		private function isTherapistAvailable($availableTherapists, $bookings, $clientAmt)
 		{	
 			$consecutiveBookings = $this->getConsecutiveBookings($bookings);
@@ -506,7 +697,7 @@
 				}
 			}
 			
-			Utilities::logInfo('QueueingFunction.isTherapistAvailable() | '.var_export($consecutiveBookings, true));
+			//Utilities::logInfo('QueueingFunction.isTherapistAvailable() | '.var_export($consecutiveBookings, true));
 			
 			$availableAmt = $availableTherapistsAmt - $therapistNeededForBookingsAmt;	
 			Utilities::logInfo("QueueFunction.isTherapistAvailable() | \$availableTherapistsAmt[{$availableTherapistsAmt}] - \$therapistNeededForBookingsAmt[{$therapistNeededForBookingsAmt}] = {$availableAmt}");
@@ -532,24 +723,70 @@
 					
 					if (is_null($consecutiveItemIndex)) {
 						$consecutiveBookings = $this->addMainConsecutiveBooking($consecutiveBookings, $bookings[$i]);
-						/*
-						$bookings[$i]['consecutive_bookings'] = array();
-						array_push($manipulatedBookings, $bookings[$i]);
-						*/
 					} else {
 						array_push($consecutiveBookings[$consecutiveItemIndex]['consecutive_bookings'], $bookings[$i]);
-						/*
-						$manipulatedBookings[$consecutiveItemIndex]['consecutive_booking_id'] = $bookings[$i]['booking_id'];
-						$manipulatedBookings[$consecutiveItemIndex]['consecutive_booking_item_id'] = $bookings[$i]['booking_item_id'];
-						$manipulatedBookings[$consecutiveItemIndex]['consecutive_therapist_id'] = $bookings[$i]['therapist_id'];
-						$manipulatedBookings[$consecutiveItemIndex]['consecutive_booking_time_in'] = $bookings[$i]['booking_time_in'];
-						$manipulatedBookings[$consecutiveItemIndex]['consecutive_booking_time_out'] = $bookings[$i]['booking_time_out'];
-						*/
 					}
 				}
 			}
 			
 			//Utilities::logInfo('QueueingFunction.getConsecutiveBookings() | '.var_export($consecutiveBookings, true));
+			return $consecutiveBookings;
+		}
+		
+		private function getConsecutiveBookingsForRoomAmount($bookings, $consecutiveRoomUse = array()) {
+			$consecutiveBookings = $consecutiveRoomUse;
+				
+			for ($i = 0; $i < count($bookings); $i++) {
+				for ($j = 0; $j < $bookings[$i]['booking_room_amount']; $j++) {
+					if ($i == 0 && $j == 0 && count($consecutiveRoomUse) == 0) {
+						$consecutiveBookings = $this->addMainConsecutiveBooking($consecutiveBookings, $bookings[$i]);
+					} else {
+						$time_start = $bookings[$i]['booking_time_in'];
+						$time_end = $bookings[$i]['booking_time_out'];
+					
+						$consecutiveItemIndex = $this->getConsecutiveSlot($consecutiveBookings, $time_start, $time_end);
+						//Utilities::logInfo("consecutiveItemIndex = {$consecutiveItemIndex}");
+					
+						if (is_null($consecutiveItemIndex)) {
+							$consecutiveBookings = $this->addMainConsecutiveBooking($consecutiveBookings, $bookings[$i]);
+						} else {
+							array_push($consecutiveBookings[$consecutiveItemIndex]['consecutive_bookings'], $bookings[$i]);
+						}
+					}	
+				}
+			}
+				
+			//Utilities::logInfo('QueueingFunction.getConsecutiveBookings() | '.var_export($consecutiveBookings, true));
+			return $consecutiveBookings;
+		}
+		
+		private function getConsecutiveRecordsForRoomAmount($records, $consecutiveRoomUse = array()) {
+			$consecutiveBookings = $consecutiveRoomUse;
+			
+			for ($i = 0; $i < count($records); $i++) {
+				$booking = array();
+				$booking['booking_id'] = 'R-'.$records[$i]['massage_record_id'];
+				$booking['booking_time_in'] = $records[$i]['massage_record_time_in'];
+				$booking['booking_time_out'] = $records[$i]['massage_record_time_out'];
+				
+				if ($i == 0 && count($consecutiveRoomUse) == 0) {
+					$consecutiveBookings = $this->addMainConsecutiveBooking($consecutiveBookings, $booking);
+				} else {
+					$time_start = $booking['booking_time_in'];
+					$time_end = $booking['booking_time_out'];
+						
+					$consecutiveItemIndex = $this->getConsecutiveSlot($consecutiveBookings, $time_start, $time_end);
+					//Utilities::logInfo("consecutiveItemIndex = {$consecutiveItemIndex}");
+						
+					if (is_null($consecutiveItemIndex)) {
+						$consecutiveBookings = $this->addMainConsecutiveBooking($consecutiveBookings, $booking);
+					} else {
+						array_push($consecutiveBookings[$consecutiveItemIndex]['consecutive_bookings'], $booking);
+					}
+				}
+			}
+			
+			//Utilities::logInfo('QueueingFunction.getConsecutiveRecordsForRoomAmount() | '.var_export($consecutiveBookings, true));
 			return $consecutiveBookings;
 		}
 		
@@ -728,10 +965,6 @@
 			// amount of double room must be more than needed amount of it 
 			for ($i = 0; ($i < $doubleRoomsNeededAmt) && ($i < count($availableDoubleRooms)); $i++) {
 				for ($j = 0; $j < count($allRooms); $j++) {
-					// adding the attribute in case to show a room in the list but remark with "reserved"
-					$allRooms[$j]['room_reserved'] = 0;
-					$allRooms[$j]['room_remark'] = '';
-					
 					if ($availableDoubleRooms[$i]['room_no_1'] == $allRooms[$j]['room_no']
 							|| $availableDoubleRooms[$i]['room_no_2'] == $allRooms[$j]['room_no']) {
 						Utilities::logInfo("QueueFunction.excludeDoubleRoomsNeeded() | Disabling Room No. ".$allRooms[$j]['room_no']);
@@ -818,6 +1051,56 @@
 			$result['rooms'] = $availableRooms;
 			
 			return $result;
+		}
+		
+		private function getDoubleRoomsConsecutiveUseForRecord($timeIn, $timeOut)
+		{
+			$records = $this->_dataMapper->getRecords($timeIn, $timeOut, 2);
+			$noDoubleRoomDupRecords = array();
+			
+			for ($i = 0; $i < count($records); $i++) {
+				if (count($noDoubleRoomDupRecords) > 0) {
+					$roomNo = intval($records['room_no']);
+					for ($j = 0; $j < count($noDoubleRoomDupRecords); $j++) {
+						if ($roomNo != intval($noDoubleRoomDupRecords[$j]['room_no'])) {
+							array_push($noDoubleRoomDupRecords, $records);
+							break;
+						}
+					}
+				} else {
+					array_push($noDoubleRoomDupRecords, $records);
+				}
+			}
+			
+			$consecDblRoomRecords = $this->getConsecutiveRecordsForRoomAmount($noDoubleRoomDupRecords);
+		
+			return $consecDblRoomRecords;
+		}
+		
+		private function getSingleRoomsConsecutiveUseForRecord($timeIn, $timeOut, $doubleRoomsConsecutiveUse)
+		{
+			$records = $this->_dataMapper->getRecords($timeIn, $timeOut, 1);
+			$consecDblRoomRecords = $this->getConsecutiveRecordsForRoomAmount($records, $doubleRoomsConsecutiveUse);
+		
+			return $consecDblRoomRecords;
+		}
+		
+		private function getDoubleRoomsConsecutiveUseForBooking($timeIn, $timeOut, $doubleRoomsConsecutiveUse, $exceptedBookingID = "")
+		{
+			$dblRoomBookings = $this->_dataMapper->getDoubleRoomsNeededForBookings($timeIn, $timeOut, $exceptedBookingID);
+			$consecDblRoomBookings = $this->getConsecutiveBookingsForRoomAmount($dblRoomBookings, $doubleRoomsConsecutiveUse);
+		
+			return $consecDblRoomBookings;
+		}
+		
+		// getting the consecutive usage of double rooms, and use them as a signle room
+		//
+		private function getSingleRoomsConsecutiveUseForBooking($timeIn, $timeOut, $doubleRoomsConsecutiveUse, $exceptedBookingID = "")
+		{
+			$sglRoomBookings = $this->_dataMapper->getSingleRoomsNeededForBookings($timeIn, $timeOut, $exceptedBookingID);
+			$consecSglRoomBookings = $this->getConsecutiveBookingsForRoomAmount($sglRoomBookings, $doubleRoomsConsecutiveUse);
+			
+			return $consecSglRoomBookings;
 		}
 	}
 ?>

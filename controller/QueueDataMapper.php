@@ -98,12 +98,13 @@
 		}
 		
 		// get being used "therapists" and "rooms" during the selected time period
-		public function getRecords($timeIn, $timeOut)
+		public function getRecords($timeIn, $timeOut, $roomTypeID = "")
 		{
 			$sql = "
-					select therapist_id, room_no
+					select therapist_id, massage_record.room_no
 						, massage_record_id, massage_record_time_in, massage_record_time_out
 					from massage_record
+					join room on room.room_no = massage_record.room_no
 					where (
 					    	('{$timeIn}' > massage_record_time_in and '{$timeIn}' < massage_record_time_out)
 							or ('{$timeOut}' > massage_record_time_in and '{$timeOut}' < massage_record_time_out)
@@ -112,6 +113,11 @@
 					    	or ('{$timeIn}' = massage_record_time_in and '{$timeOut}' = massage_record_time_out)
 					    )
 					    and massage_record_void_user = 0";
+			
+			if (!empty($roomTypeID))
+				$sql .= " and room.room_type_id = {$roomTypeID}";
+			
+			$sql .= " order by massage_record_time_in, massage_record_create_datetime";
 			
 			return $this->_dataAccess->select($sql);
 		}
@@ -219,7 +225,31 @@
 				return 0;
 		}
 		
-		public function getSingleRoomsNeededAmount($timeIn, $timeOut)
+		public function getDoubleRoomsNeededForBookings($timeIn, $timeOut, $exceptedBookingID = "")
+		{
+			$sql = "
+			select booking.booking_id, booking.booking_time_in, booking.booking_time_out, booking_room.booking_room_amount
+			from booking
+			join booking_room on booking_room.booking_id = booking.booking_id
+			where (
+				('{$timeIn}' > booking_time_in and '{$timeIn}' < booking_time_out)
+					or ('{$timeOut}' > booking_time_in and '{$timeOut}' < booking_time_out)
+					or (booking_time_in > '{$timeIn}' and booking_time_in < '{$timeOut}')
+					or (booking_time_out > '{$timeIn}' and booking_time_out < '{$timeOut}')
+					or ('{$timeIn}' = booking_time_in and '{$timeOut}' = booking_time_out)
+				)
+			and booking_status_id = 1
+			and room_type_id = 2";
+				
+			if (!empty($exceptedBookingID))
+				$sql .= " and booking.booking_id != '{$exceptedBookingID}'";
+			
+			$sql .= " order by booking.booking_time_in, booking.booking_create_datetime";
+					
+			return $this->_dataAccess->select($sql);
+		}
+		
+		public function getSingleRoomsNeededAmount($timeIn, $timeOut, $exceptedBookingID = "")
 		{
 			$sql = "
 			select ifnull(sum(booking_room_amount), 0) as room_single_needed_amt
@@ -234,6 +264,9 @@
 					)
 					and booking_status_id = 1
 					and room_type_id = 1";
+			
+			if (!empty($exceptedBookingID))
+				$sql .= " and booking.booking_id != '{$exceptedBookingID}'";
 				
 			$result = $this->_dataAccess->select($sql);
 				
@@ -241,6 +274,30 @@
 				return $result[0]['room_single_needed_amt'];
 			else
 				return 0;
+		}
+		
+		public function getSingleRoomsNeededForBookings($timeIn, $timeOut, $exceptedBookingID = "")
+		{
+			$sql = "
+			select booking.booking_id, booking.booking_time_in, booking.booking_time_out, booking_room.booking_room_amount 
+			from booking
+			join booking_room on booking_room.booking_id = booking.booking_id
+			where (
+				('{$timeIn}' > booking_time_in and '{$timeIn}' < booking_time_out)
+				or ('{$timeOut}' > booking_time_in and '{$timeOut}' < booking_time_out)
+				or (booking_time_in > '{$timeIn}' and booking_time_in < '{$timeOut}')
+				or (booking_time_out > '{$timeIn}' and booking_time_out < '{$timeOut}')
+				or ('{$timeIn}' = booking_time_in and '{$timeOut}' = booking_time_out)
+			)
+			and booking_status_id = 1
+			and room_type_id = 1";
+			
+			if (!empty($exceptedBookingID))
+				$sql .= " and booking.booking_id != '{$exceptedBookingID}'";
+		
+			$sql .= " order by booking.booking_time_in, booking.booking_create_datetime";
+				
+			return $this->_dataAccess->select($sql);
 		}
 	}
 ?>

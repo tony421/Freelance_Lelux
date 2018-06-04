@@ -68,9 +68,9 @@ function main_request_ajax(url, mode, data, onSuccess)
 			//main_alert_message('Error Type: ' + errType + ' | Error:' + err);
 			main_alert_message('System Error! Please contact admin.');
 			
-			console.log(xhr.responseText.trim());
+			console.log(errType + ': ' + xhr.responseText.trim());
 			// write log on the server
-			main_request_ajax('../log/log-boundary.php', '', xhr.responseText.trim(), function(response){});
+			main_request_ajax('../log/log-boundary.php', '', errType + ': ' + xhr.responseText.trim(), function(response){});
 			
 			// N.B.
 			// undefined object (non-exist jquery object) from Client-Side cause ParserError

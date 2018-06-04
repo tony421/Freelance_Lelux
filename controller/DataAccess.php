@@ -34,6 +34,11 @@ class DataAccess
 			//}
 			
 			$this->_conn = mysqli_connect($_server, $_user, $_password, $_db_name);
+			// Setting character set to utf8 to support Thai language
+			//
+			//mysqli_query($this->_conn, "SET NAMES utf8");
+			// *** But doing this way affect the function of upper the first letter of words
+			
 			//if (mysqli_connect_error()) throw new Exception('errorrr');
 			
 			//$this->_conn = mysql_connect($this->_server, $this->_user, $this->_password);// or die ('Unable to connect to MySQL');

@@ -12,7 +12,25 @@
 		
 		public function getAllRooms()
 		{
-			$sql = "select room_no, concat(room_no, ' ', room_remark) as room_desc, 1 as room_available from room";
+			// adding [room_reserve] & [room_remark] attributes in case to show a room in the list but remark with "reserved"
+			//
+			
+			$sql = "select room_no
+						, concat(room_no, ' ', room_remark) as room_desc
+						, 1 as room_available
+						, 0 as room_reserved
+						, '' as room_remark
+					from room";
+		
+			return $this->_dataAccess->select($sql);
+		}
+		
+		public function getSingleRooms($order = "asc")
+		{
+			$sql = "
+			select distinct convert(room_no, signed) as room_no
+			from room
+			order by room_no {$order}";
 		
 			return $this->_dataAccess->select($sql);
 		}

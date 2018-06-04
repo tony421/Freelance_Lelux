@@ -152,7 +152,7 @@
 							<div class="form-group">
 								<label class="col-sm-offset-1 col-sm-3 control-label">Client Name</label>
 								<div class="col-sm-7">
-									<input type="text" id="txtBookingClientName" class="form-control" maxlength="20">
+									<input type="text" id="txtBookingClientName" class="form-control" maxlength="15">
 								</div>
 							</div>
 							<div class="form-group">
@@ -165,7 +165,7 @@
 								<label class="col-sm-offset-1 col-sm-3 control-label">Remark</label>
 								<div class="col-sm-7">
 									<textarea type="text" id="txtBookingRemark" class="form-control"
-										rows="2" maxlength="100"></textarea>
+										rows="2" maxlength="50"></textarea>
 								</div>
 							</div>
 						</form>
