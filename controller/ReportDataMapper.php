@@ -220,6 +220,7 @@ join health_fund on health_fund.health_fund_id = client.health_fund_id
 join provider on provider.provider_id = report.provider_id
 join therapist on therapist.therapist_id = report.therapist_id
 where report.report_date between '{$dateStart}' and '{$dateEnd}'
+	and report.report_void_user = 0
     {$provider_condition}
     {$hicap_condition}
 order by report.report_date
