@@ -172,7 +172,7 @@
 			$isAllowed = false;
 			
 			switch ($file) {
-				case "therapist-mamange.php":
+				case "therapist-manage.php":
 				case "client-contact.php":
 				case "request-amount.php":
 					if (Authentication::isAdmin())
