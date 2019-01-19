@@ -175,7 +175,7 @@ order by therapist_name
 		
 		public function getShiftType()
 		{
-			$sql = "select * from shift_type";
+			$sql = "select * from shift_type order by shift_type_seq";
 			
 			return $this->_dataAccess->select($sql);
 		}
