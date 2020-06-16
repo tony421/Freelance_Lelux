@@ -234,6 +234,19 @@
 	font-size: 1em;
 }
 
+.remark-req {
+	background-repeat: no-repeat;
+	background-image: url("../image/req.png");
+	background-position: center;
+	background-size: contain;
+}
+
+.remark-size {
+	width: 1em;
+	height: 1em;
+	display: inline-block;
+}
+
 @media (min-width: 768px) {
 	.roster-selection-res-gutter {
 		padding: 0 15px;	

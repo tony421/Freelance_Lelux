@@ -31,6 +31,8 @@
     	
     	<?php $_GET['page'] = 'daily-record'; require_once '../master-page/menu.php';?>
     	
+		<input id="hiddenUserName" type="hidden" value="<?php echo Authentication::getUser()->getName(); ?>" />
+		
     	<div id="content">
 			<div class="title-container">
 				<div class="title-text">Daily Records</div>

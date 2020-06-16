@@ -205,7 +205,19 @@ function destroyDatepicker() {
 
 function getSelectedDailyRecordDate()
 {
-	return getDatepickerValue($dateInput);
+	var selectedDate = getDatepickerValue($dateInput);
+	
+	//console.log('user: ' + $('#hiddenUserName').val().toLowerCase());
+	//console.log('selected: ' + moment(selectedDate));
+	//console.log('now: ' + moment(moment().format(MOMENT_DATE_FORMAT)));
+	
+	if ($('#hiddenUserName').val().toLowerCase() == 'paris') {
+		if (moment(selectedDate) < moment())
+			selectedDate =  moment().format(MOMENT_DATE_FORMAT);
+	}
+	
+	//console.log('returning: ' + selectedDate);
+	return selectedDate;
 }
 
 function clearFramesEditMode()
