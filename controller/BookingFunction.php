@@ -94,9 +94,9 @@
 				
 		}
 		
-		public function getBookingTimeline($date)
+		public function getBookingTimeline($date, $showAllStaff)
 		{			
-			$resultGroups = $this->arrangeBookingTimeline($date);
+			$resultGroups = $this->arrangeBookingTimeline($date, $showAllStaff);
 			
 			$timelineTherapistGroups = $resultGroups['timeline_groups'];
 			// Merge excessive items into excessive groups 
@@ -117,12 +117,12 @@
 		//		2. $resultGroups['timeline_groups']		*for records and bookings allocation
 		//		3. $resultGroups['excessive_groups']	*for any excessive bookings (NOT enough staff)
 		//
-		public function arrangeBookingTimeline($date, $exceptedBookingID = "", $dummyBookings = array()) {
+		public function arrangeBookingTimeline($date, $showAllStaff, $exceptedBookingID = "", $dummyBookings = array()) {
 			//$queueMapper = new QueueDataMapper();
 			$therapistMapper = new TherapistDataMapper();
 			$massageMapper = new MassageDataMapper();
 				
-			$therapists = $therapistMapper->getTherapistsOnShift($date, false);
+			$therapists = $therapistMapper->getTherapistsOnShift($date, $showAllStaff, false);
 			$records = $massageMapper->getRecords($date);
 			$bookings = $this->getBookings($date, $exceptedBookingID);
 			

@@ -53,5 +53,15 @@
 				
 			return $this->_dataAccess->select($sql);
 		}
+		
+		public function getDoubleRoomNo($roomNo)
+		{
+			$sql = "
+			select room_double_no
+			from room_double
+			where room_no_1 = {$roomNo} or room_no_2 = {$roomNo}";
+		
+			return $this->_dataAccess->select($sql);
+		}
 	}
 ?>

@@ -65,6 +65,12 @@
 				
 					$result = $clientFunction->deleteReportItem($reportItemInfo);
 				}
+				else if ($mode == 'GET_BOOKING_HISTORY') {
+					$search = $_POST['data'];
+					Utilities::logInfo('Client-Boundary | GET_BOOKING_HISTORY | data[search]: '.var_export($search, true));
+				
+					$result = $clientFunction->getBookingHistory($search);
+				}
 				else {
 					throw new Exception('Mode not found');
 				}

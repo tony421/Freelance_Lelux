@@ -5,6 +5,7 @@
 	require_once '../controller/BookingDataMapper.php';
 	require_once '../controller/TherapistFunction.php';
 	require_once '../controller/RoomDataMapper.php';
+	require_once '../controller/RoomFunction.php';
 	require_once '../controller/Utilities.php';
 	require_once '../config/Queue_Config.php';
 	
@@ -337,7 +338,7 @@
 				}
 				
 				$bookingFunction = new BookingFunction();
-				$arrangedBookings = $bookingFunction->arrangeBookingTimeline($date, $exceptedBookingID, $dummyBookingItems);
+				$arrangedBookings = $bookingFunction->arrangeBookingTimeline($date, true, $exceptedBookingID, $dummyBookingItems);
 				
 				Utilities::logInfo('============= Timeline Groups ========= | '.var_export($arrangedBookings['timeline_groups'], true));
 				Utilities::logInfo('============= Excessive Groups ========= | '.var_export($arrangedBookings['excessive_groups'], true));
@@ -1055,20 +1056,35 @@
 		
 		private function getDoubleRoomsConsecutiveUseForRecord($timeIn, $timeOut)
 		{
+			$roomFunc = new RoomFunction();
+			
 			$records = $this->_dataMapper->getRecords($timeIn, $timeOut, 2);
 			$noDoubleRoomDupRecords = array();
 			
 			for ($i = 0; $i < count($records); $i++) {
 				if (count($noDoubleRoomDupRecords) > 0) {
-					$roomNo = intval($records['room_no']);
-					for ($j = 0; $j < count($noDoubleRoomDupRecords); $j++) {
-						if ($roomNo != intval($noDoubleRoomDupRecords[$j]['room_no'])) {
-							array_push($noDoubleRoomDupRecords, $records);
-							break;
-						}
+					//$roomNo = intval($records[$i]['room_no']);
+					$roomNo = $records[$i]['room_no'];
+					
+					// Table: room_double
+					// room_double_no	room_no_1	room_no_2
+					//		1			4.1			4.2
+					//		2			2.1			2.2
+					//		3			6			8
+					$doubleRoomNo = $roomFunc->getDoubleRoomNo($roomNo);
+					
+					if ($doubleRoomNo > 0) {
+						for ($j = 0; $j < count($noDoubleRoomDupRecords); $j++) {
+							if ($doubleRoomNo != $noDoubleRoomDupRecords[$j]['room_no']) {
+								array_push($noDoubleRoomDupRecords, $records[$i]);
+								break;
+							}
+						}	
+					} else {
+						Utilities::logInfo("QueueFunction.getDoubleRoomsConsecutiveUseForRecord() | Room no:".$roomNo." is not double room");
 					}
 				} else {
-					array_push($noDoubleRoomDupRecords, $records);
+					array_push($noDoubleRoomDupRecords, $records[$i]);
 				}
 			}
 			

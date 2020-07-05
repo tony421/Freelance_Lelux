@@ -52,20 +52,29 @@
 		
 		public static function logDebug($line)
 		{
-			$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].self::log_path.'log-'.date('Ymd'), KLogger::DEBUG);
-			$logger->LogDebug($line);
+			try {
+				$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].self::log_path.'log-'.date('Ymd'), KLogger::DEBUG);
+				$logger->LogDebug($line);
+			} catch (Exception $e) {
+			}
 		}
 		
 		public static function logInfo($line)
 		{
-			$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].self::log_path.'log-'.date('Ymd'), KLogger::DEBUG);
-			$logger->LogInfo($line);
+			try {
+				$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].self::log_path.'log-'.date('Ymd'), KLogger::DEBUG);
+				$logger->LogInfo($line);
+			} catch (Exception $e) {
+			}
 		}
 		
 		public static function logError($line)
 		{
-			$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].self::log_path.'log-'.date('Ymd'), KLogger::DEBUG);
-			$logger->LogError($line);
+			try {
+				$logger = new KLogger($_SERVER['DOCUMENT_ROOT'].self::log_path.'log-'.date('Ymd'), KLogger::DEBUG);
+				$logger->LogError($line);
+			} catch (Exception $e) {
+			}
 		}
 		
 		public static function getDateTimeNow()

@@ -33,6 +33,17 @@
 				return 0;
 			}
 		}
+		
+		public function getDoubleRoomNo($roomNo)
+		{
+			$result = $this->_dataMapper->getDoubleRoomNo($roomNo);
+				
+			if (count($result) > 0) {
+				return $result[0]['room_double_no'];
+			} else {
+				return 0;
+			}
+		}
 	}
 ?>
 

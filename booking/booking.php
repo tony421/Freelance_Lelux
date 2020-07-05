@@ -14,6 +14,7 @@
 	    
 	    <?php require_once '../master-page/script-main.php';?>
 	    <?php require_once '../master-page/script-timeline.php';?>
+	    <?php require_once '../master-page/script-toggle.php';?>
 	    
 	    <script type="text/javascript" src="booking.js?<?php echo time(); ?>"></script>
 	    <script type="text/javascript" src="booking-var.js?<?php echo time(); ?>"></script>
@@ -97,6 +98,7 @@
 									<div class="panel-title">
 										<span class="glyphicon glyphicon-book" aria-hidden="true"></span>
 										<b>Booking Timeline</b>
+										<input id="toggleShowAllStaff" type="checkbox" checked data-width="160" data-toggle="toggle" data-on="Show all staff" data-off="Show only working staff" data-size="small">
 									</div>
 								</div>
 								<div class="panel-body">

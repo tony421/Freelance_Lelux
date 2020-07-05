@@ -23,10 +23,14 @@
 					$result = $bookingFunction->getConfig($date);
 				}
 				else if ($mode == 'GET_BOOKING_TIMELINE') {
-					$date = $_POST['data'];
-					Utilities::logInfo('Booking-Boundary | data[$date]: '.$date);
-				
-					$result = $bookingFunction->getBookingTimeline($date);
+					//$date = $_POST['data'];
+					$search = $_POST['data'];					
+					Utilities::logInfo('Booking-Boundary | data[$search]: '.var_export($search, true));
+					
+					$date = $search['date'];
+					$showAllStaff = $search['showAllStaff'] === 'true'? true: false;
+					
+					$result = $bookingFunction->getBookingTimeline($date, $showAllStaff);
 				}
 				else if ($mode == 'ADD_BOOKING') {
 					$bookingInfo = $_POST['data'];

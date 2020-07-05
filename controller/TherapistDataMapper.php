@@ -61,12 +61,16 @@ order by therapist_name
 			return $this->_dataAccess->select($sql);
 		}
 		
-		public function getTherapistsOnShift($date, $receptionIncluded = true)
+		public function getTherapistsOnShift($date, $showAllStaff = true, $receptionIncluded = true)
 		{
 			$conditionReception = '';
 			if (!$receptionIncluded)
 				$conditionReception = 'and shift.shift_type_id != 6';
 			
+			$conditionShowAllStaff = '';
+			if (!$showAllStaff)
+				$conditionShowAllStaff = 'and shift.shift_working = 1';
+				
 			$sql = "
 					select therapist.therapist_id, therapist.therapist_name, therapist.therapist_guarantee
 						, shift.shift_id, shift.shift_working
@@ -77,6 +81,7 @@ order by therapist_name
 					join shift_type on shift.shift_type_id = shift_type.shift_type_id
 					where shift.shift_date = '{$date}'
 						{$conditionReception}
+						{$conditionShowAllStaff}
 					order by shift.shift_time_start, shift.shift_create_datetime";
 		
 			return $this->_dataAccess->select($sql);

@@ -295,6 +295,22 @@
 				return Utilities::getResponseResult(false, 'There is no therapist data in the system!');
 			}
 		} // getTherapists
+		
+		public function getBookingHistory($search)
+		{
+			$result = $this->_dataMapper->getBookingHistory($search);
+			$countResult = count($result);
+				
+			if ($countResult > 0)
+			{
+				$msg = ($countResult > 1) ? 'The '.$countResult.' bookins are found' : 'The only 1 booking is found';
+				return Utilities::getResponseResult(true, $msg, $result);
+			}
+			else
+			{
+				return Utilities::getResponseResult(false, 'No bookings found!');
+			}
+		} // getBookingHistory
 	}
 ?>
 

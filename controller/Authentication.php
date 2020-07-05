@@ -48,7 +48,7 @@
 			$therapist = new Therapist();
 			$therapist->setID(Utilities::getVal($therapistInfo, 'therapist_id'));
 			$therapist->setName(Utilities::getVal($therapistInfo, 'therapist_name'));
-			$therapist->setUsername(Utilities::getVal($therapistInfo, 'therapist_username'));
+			//$therapist->setUsername(Utilities::getVal($therapistInfo, 'therapist_username'));
 			$therapist->setPermission(Utilities::getVal($therapistInfo, 'therapist_permission'));
 // 			$therapist->setID($therapistInfo['therapist_id']);
 // 			$therapist->setName($therapistInfo['therapist_name']);
@@ -181,6 +181,7 @@
 				case "client-add.php":
 				case "client-search.php":
 				case "client-report.php":
+				case "client-booking-history.php":
 				case "daily-record.php":
 				case "hicap.php":
 					if (Authentication::isAdmin() || Authentication::isManager() || Authentication::isReception())

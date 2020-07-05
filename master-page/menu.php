@@ -28,6 +28,7 @@
         				<ul class="dropdown-menu">
             				<li><a href="../client/client-add.php">Add Client</a></li>
             				<li><a href="../client/client-search.php">Search Client</a></li>
+            				<li><a href="../client/client-booking-history.php">Booking History</a></li>
             			</ul>
         			</li>
         			<li <?php if (isset($_GET['page'])) { if ($_GET['page'] == 'daily-record') { echo 'class="active"'; } }?>>

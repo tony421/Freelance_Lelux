@@ -457,6 +457,42 @@ order by client_name";
 			
 			return $this->_dataAccess->select($sql);
 		}
+		
+		public function getBookingHistory($search)
+		{
+			try 
+			{
+				$dateStart = $search['date_start'];
+				$dateEnd = $search['date_end'];
+				$searchByName = $search['search_name'];
+				$searchByTel = $search['search_tel'];
+				$text = $search['search_text'];
+					
+				$sql = "
+select b.booking_id, b.booking_name, b.booking_tel, booking_date, b.booking_time_in, b.booking_time_out, b.booking_remark
+	, ifnull(t.therapist_name, '-') as therapist_name, ifnull(mt.massage_type_name, '-') as massage_type_name
+	, date_format(b.booking_date, '%e %b %Y') as booking_date_formated
+	, concat(date_format(b.booking_time_in, '%l:%i %p'), ' - ', date_format(b.booking_time_out, '%l:%i %p')) as booking_time_formated
+from booking b
+join booking_item bi on bi.booking_id = b.booking_id
+left join massage_record m on m.booking_item_id = bi.booking_item_id
+left join therapist t on t.therapist_id = m.therapist_id
+left join massage_type mt on mt.massage_type_id = m.massage_type_id
+where 1 = 1
+	and b.booking_date between '{$dateStart}' and '{$dateEnd}'
+	and (
+		({$searchByName} and b.booking_name like '%{$text}%')
+		or
+		({$searchByTel} and b.booking_tel like '%{$text}%')
+	)
+order by b.booking_name, b.booking_date";
+					
+				return $this->_dataAccess->select($sql);
+			}
+			catch (Exception $e) {
+				throw $e;
+			}
+		}
 	}
 ?>
 

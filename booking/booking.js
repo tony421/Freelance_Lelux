@@ -16,6 +16,7 @@ var $btnSearch;
 var $contextMenuShowRecord;
 var $ddlTherapistContainer, $ddlMassageTypeContainer;
 var $bookingTimeline;
+var $toggleShowAllStaff;
 
 function initPage() {
 	main_ajax_success_hide_loading();
@@ -31,6 +32,7 @@ function initPage() {
 	$ddlTherapistContainer = $('#ddlTherapistContainer');
 	$ddlMassageTypeContainer = $('#ddlMassageTypeContainer');
 	$bookingTimeline = $('#bookingTimeline');
+	$toggleShowAllStaff = $('#toggleShowAllStaff');
 	
 	initTouchSpinInput($txtMinutes, 10, 1000, 60, 5);
 	$txtMinutes.change(calTimeOut);
@@ -104,6 +106,8 @@ function initPage() {
 		$('#popupContextMenu').css('display', 'none');
 	});
 	
+	$toggleShowAllStaff.change(onToggleShowAllStaffChanged);
+	
 	initConfig();
 }
 
@@ -140,7 +144,12 @@ function onInitConfigDone(response) {
 
 function initBookingTimeline() {
 	selectedDate = parent.getSelectedDailyRecordDate();	
-	main_request_ajax('../booking/booking-boundary.php', 'GET_BOOKING_TIMELINE', selectedDate, onInitBookingTimelineDone);
+	var search = {
+		date: selectedDate,
+		showAllStaff: $toggleShowAllStaff.prop('checked')
+	};
+
+	main_request_ajax('../booking/booking-boundary.php', 'GET_BOOKING_TIMELINE', search, onInitBookingTimelineDone);
 }
 function onInitBookingTimelineDone(response) {
 	if (response.success) {
@@ -617,6 +626,11 @@ function onDeleteBookingDone(moveTo) {
 	setTimelineMoveTo(moveTo);
 	initBookingTimeline();
 }
+
+function onToggleShowAllStaffChanged() {
+	initBookingTimeline();
+}
+
 
 
 
