@@ -1,0 +1,1 @@
+find /home/leluxtha/public_html/support/support-db-backup -name 'lelux-backup-*' -mtime +30 -delete

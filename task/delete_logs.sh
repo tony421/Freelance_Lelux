@@ -1,0 +1,1 @@
+find /home/leluxtha/public_html/support/log -name 'log-2*' -mtime +5 -delete
